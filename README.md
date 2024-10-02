@@ -74,8 +74,10 @@ For other operating systems you should be able to modify the commands below appr
 
 If attempting this on Windows, note that currently the modeling software only works with very specific drivers. The implementation currently works with older windows drivers. 
 
-One of the implentations that this currently works for is:
+One of the implentations that this currently works for is: <br>
 Windows Driver: 10.0.22621.1
+
+Needing to update the list of drivers that can be used by the libraries
 
 - **macOS**: Because this uses the MKL, it's not certain to run on Apple silicone.
 - **macOS**: If you're running a mac, it's highly recommended you use a package manager like [MacPorts](https://www.macports.org/install.php) or [homebrew](https://brew.sh/). Instructions below are for MacPorts.
