@@ -72,6 +72,8 @@ There are some dependencies required prior to compilation.
 Instructions for macOS and Ubuntu are similar (presented below).
 For other operating systems you should be able to modify the commands below appropriately.
 
+If attempting this on Windows, note that currently the modeling software only works with very specific drivers. 
+
 - **macOS**: Because this uses the MKL, it's not certain to run on Apple silicone.
 - **macOS**: If you're running a mac, it's highly recommended you use a package manager like [MacPorts](https://www.macports.org/install.php) or [homebrew](https://brew.sh/). Instructions below are for MacPorts.
 - **Note**: Some of these packages are installed to the system library for convenience. You may want to install locally to e.g., `~/.local` to avoid conflicts with system libraries. Add the `cmake` flag: `-D CMAKE_INSTALL_PREFIX=~/.local`. Then `sudo` is not required to install. You'll need to ensure subsequent builds know where to find the build libraries.
