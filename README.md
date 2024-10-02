@@ -169,6 +169,10 @@ Below is an example rendering.
   - Before downloading magnum, users must first build and install Magnum's utility library [Corrade](https://magnum.graphics/corrade/).
     Install instructions for various platforms can be found [here](https://doc.magnum.graphics/corrade/building-corrade.html).
   - After installing Corrade, install instructions for Magnum can similarly be found [here](https://doc.magnum.graphics/magnum/building.html).
+  Ubuntu:
+  ```bash
+  
+  ```
   - Finally, Magnum allows users to save each rendered frame as a png file which can be used to create videos such as `ffmpeg`.
   For this feature, we must download and build [magnum-plugins](https://doc.magnum.graphics/magnum/building-plugins.html#building-plugins-manual) as follows.
      ```bash
