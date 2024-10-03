@@ -74,8 +74,10 @@ For other operating systems you should be able to modify the commands below appr
 
 If attempting this on Windows, note that currently the modeling software only works with very specific drivers. The implementation currently works with older windows drivers. 
 
-One of the implentations that this currently works for is:
+One of the implentations that this currently works for is: <br>
 Windows Driver: 10.0.22621.1
+
+Needing to update the list of drivers that can be used by the libraries
 
 - **macOS**: Because this uses the MKL, it's not certain to run on Apple silicone.
 - **macOS**: If you're running a mac, it's highly recommended you use a package manager like [MacPorts](https://www.macports.org/install.php) or [homebrew](https://brew.sh/). Instructions below are for MacPorts.
@@ -167,6 +169,10 @@ Below is an example rendering.
   - Before downloading magnum, users must first build and install Magnum's utility library [Corrade](https://magnum.graphics/corrade/).
     Install instructions for various platforms can be found [here](https://doc.magnum.graphics/corrade/building-corrade.html).
   - After installing Corrade, install instructions for Magnum can similarly be found [here](https://doc.magnum.graphics/magnum/building.html).
+  Ubuntu:
+  ```bash
+  
+  ```
   - Finally, Magnum allows users to save each rendered frame as a png file which can be used to create videos such as `ffmpeg`.
   For this feature, we must download and build [magnum-plugins](https://doc.magnum.graphics/magnum/building-plugins.html#building-plugins-manual) as follows.
      ```bash
