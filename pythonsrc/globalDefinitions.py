@@ -7,7 +7,7 @@ class IntegratorMethod(Enum):
     BACKWARD_EULER = "BACKWARD_EULER"
     IMPLICIT_MIDPOINT = "IMPLICIT_MIDPOINT"
 
-class RengerEngine(Enum):
+class RenderEngine(Enum):
     HEADLESS = "HEADLESS"
     OPENGL = "OPENGL"
     MAGNUM = "MAGNUM"
@@ -49,3 +49,33 @@ class SimParams:
         self.line_search = line_search
         self.adaptive_time_stepping = adaptive_time_stepping
         self.enable_2d_sim = enable_2d_sim
+
+class RenderParams:
+    """
+    Parameters for rendering.
+    """
+    def __init__(self, 
+                 renderer: RenderEngine = RenderEngine.OPENGL, 
+                 render_scale: float = 1.0, 
+                 cmd_line_per: int = 1, 
+                 render_per: int = 1, 
+                 render_record_path: str = '', 
+                 show_mat_frames: bool = False, 
+                 debug_verbosity: int = 1):
+        """
+        Parameters for rendering.
+        :param renderer: Renderer type.
+        :param render_scale: Scale factor applied to Cartesian DOFs before rendering.
+        :param cmd_line_per: Command line simulation info output period.
+        :param render_per: Rendering period for frames.
+        :param render_record_path: Path for recording frames as PNGs.
+        :param show_mat_frames: Whether to show material frames (for OpenGL).
+        :param debug_verbosity: Debug verbosity level.
+        """
+        self.renderer = renderer
+        self.render_scale = render_scale
+        self.cmd_line_per = cmd_line_per
+        self.render_per = render_per
+        self.render_record_path = render_record_path
+        self.show_mat_frames = show_mat_frames
+        self.debug_verbosity = debug_verbosity
