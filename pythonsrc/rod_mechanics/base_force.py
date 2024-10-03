@@ -1,10 +1,9 @@
 import globalDefinitions
 
 class BaseForce:
-    def __init__(self, pointers):
+    def __init__(self, soft_robots):
         print('none')
-
-    def baseForce():
-        return None
+        self.soft_robots = soft_robots
+        self.stepper = None
     
     def computeForce
