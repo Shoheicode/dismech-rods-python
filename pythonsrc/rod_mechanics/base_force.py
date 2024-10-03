@@ -7,6 +7,10 @@ class BaseForce:
         self.soft_robots = soft_robots
         self.stepper = None
     
-
+    @abstractmethod
     def computeForce(self, dt):
+        pass
+
+    @abstractmethod
+    def compute_force_and_jacobian(self, dt):
         pass
