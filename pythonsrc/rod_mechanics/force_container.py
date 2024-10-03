@@ -15,10 +15,10 @@ class forceContainer:
     def computeForce(self,dt):
         pass
 
-    def computeForcesAndJacobian(dt):
+    def computeForcesAndJacobian(self, dt):
         pass
 
-    def setupForceStepperAccess(stepper):
+    def setupForceStepperAccess(self, stepper):
         pass
     
     def addForce(force):
