@@ -14,3 +14,6 @@ class BaseForce:
     @abstractmethod
     def compute_force_and_jacobian(self, dt):
         pass
+
+    def set_time_stepper(self, stepper):
+        self.stepper = stepper
