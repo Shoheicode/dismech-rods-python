@@ -15,12 +15,10 @@ class forceContainer:
         self.ff = None
         for force in m_forces:
             self.addForce(force)
-        pass
 
     def computeForce(self,dt):
         for force in self.__forces:
             force.computeForce(dt)
-        pass
 
     def computeForcesAndJacobian(self, dt):
         for force in self.__forces:
@@ -30,7 +28,12 @@ class forceContainer:
         for force in self.__forces:
             force.setTimeStepper(stepper)
     
-    def addForce(force):
-        pass
+    def addForce(self,force):
+        if self.cf == None:
+            cf = force # NEED TO TYPE CAST THIS TO A CONTACT FORCE
+        if self.ff == None:
+            ff = force # NEED TO TYPE CASE THIS AS A FLOOR CONTACT FORCE
+        
+        self.__forces.append(force)
 
     
