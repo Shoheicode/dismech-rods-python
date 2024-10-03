@@ -7,3 +7,7 @@ class IntegratorMethod(Enum):
     BACKWARD_EULER = "BACKWARD_EULER"
     IMPLICIT_MIDPOINT = "IMPLICIT_MIDPOINT"
 
+class RengerEngine(Enum):
+    HEADLESS = "HEADLESS"
+    OPENGL = "OPENGL"
+    MAGNUM = "MAGNUM"
