@@ -1,4 +1,5 @@
 import globalDefinitions
+from abc import ABC, abstractmethod
 
 class BaseForce:
     def __init__(self, soft_robots):
@@ -6,4 +7,6 @@ class BaseForce:
         self.soft_robots = soft_robots
         self.stepper = None
     
-    def computeForce
+
+    def computeForce(self, dt):
+        pass
