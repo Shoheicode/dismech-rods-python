@@ -21,3 +21,5 @@ log_files/
 *.so
 *.egg-info
 __pycache__
+
+.venv
