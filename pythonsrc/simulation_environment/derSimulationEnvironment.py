@@ -32,8 +32,8 @@ class derSimulationEnvironment(object):
         :param s_cmdline_per: The command line verbosity frequency.
         """
         if s_cmdline_per == 0: return
-        if s_world_p.getTimeStep() % s_cmdline_per == 0:
-            s_world_p.printSimData()
+        if s_world_p.get_time_step() % s_cmdline_per == 0:
+            s_world_p.print_sim_data()
     
     def cleanShutdown(self):
         """

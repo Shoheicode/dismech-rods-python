@@ -8,7 +8,7 @@ class BaseForce(object):
         self.stepper = None
     
     @abstractmethod
-    def computeForce(self, dt):
+    def compute_force(self, dt):
         pass
 
     @abstractmethod
