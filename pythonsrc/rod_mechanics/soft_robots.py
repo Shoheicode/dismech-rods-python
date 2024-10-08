@@ -1,6 +1,11 @@
+from typing import List
+
+from pythonsrc.rod_mechanics.elastic_rod import elasticRod
+
+
 class SoftRobots():
     def __init__(self):
-        self.limbs = []
+        self.limbs = List[elasticRod]
         self.joints = []
         self.controllers = []
 
