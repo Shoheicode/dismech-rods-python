@@ -148,13 +148,35 @@ class ElasticJoint:
         
     def setup(self) -> None:
         """Set up the joint's physical properties."""
-        self.set_mass()
-        self.set_reference_length()
-        self.get_ref_twist()
-        self.compute_twist_bar()
-        self.compute_edge_len()
-        self.compute_time_parallel()
-        self.compute_kappa()
-        self.compute_tangent()
-        self.create_reference_directors()
-        self.compute_material_directors()
+    
+    def __set_mass(self):
+        self.mass = 0
+        pass
+
+    def __set_reference_length(self):
+        pass
+    
+    def __get_ref_twist(self):
+        pass
+
+    def __compute_twist_bar(self):
+        pass
+
+    def __compute_edge_len(self):
+        pass
+
+    def __compute_time_parallel(self):
+        pass
+
+    def __compute_kappa(self):
+        pass
+
+    def __compute_tangent(self):
+        pass
+
+    def __create_reference_directors(self):
+        pass
+    
+    def __compute_material_directors(self):
+        pass
+    
