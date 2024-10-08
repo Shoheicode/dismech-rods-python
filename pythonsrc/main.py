@@ -6,15 +6,53 @@ from OpenGL.GLU import *
 
 # pip install PyOpenGL==3.1.0 use command to download it
 
+# Define vertices, edges, and colors for the cube
+vertices = [
+    [1, 1, -1],
+    [1, -1, -1],
+    [-1, -1, -1],
+    [-1, 1, -1],
+    [1, 1, 1],
+    [1, -1, 1],
+    [-1, -1, 1],
+    [-1, 1, 1]
+]
+
+edges = [
+    (0, 1), (1, 2), (2, 3), (3, 0),
+    (4, 5), (5, 6), (6, 7), (7, 4),
+    (0, 4), (1, 5), (2, 6), (3, 7)
+]
+
+surfaces = [
+    (0, 1, 2, 3),
+    (4, 5, 6, 7),
+    (0, 1, 5, 4),
+    (2, 3, 7, 6),
+    (0, 3, 7, 4),
+    (1, 2, 6, 5)
+]
+
+colors = [
+    [1, 0, 0],
+    [0, 1, 0],
+    [0, 0, 1],
+    [1, 1, 0],
+    [1, 0, 1],
+    [0, 1, 1]
+]
+
 #MAKES A SQUARE
 w,h= 500,500
 def square():
-    glBegin(GL_QUADS)
-    glVertex2f(100, 100)
-    glVertex2f(200, 100)
-    glVertex2f(200, 200)
-    glVertex2f(100, 200)
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+    glBegin(GL_TRIANGLES)
+    
+    glVertex3fv([0.0, 100.0, 0.0])
+    glVertex3fv([200.0, 200.0, 0.0])
+    glVertex3fv([100.0, 200.0, 0.0])
     glEnd()
+    glutSwapBuffers()
 
 def iterate():
     glViewport(0, 0, 500, 500)
@@ -33,7 +71,7 @@ def showScreen():
     glutSwapBuffers()
 
 glutInit()
-glutInitDisplayMode(GLUT_RGBA)
+glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH)
 glutInitWindowSize(500, 500)
 glutInitWindowPosition(0, 0)
 wind = glutCreateWindow("OpenGL Coding Practice")
