@@ -1,4 +1,4 @@
-class softRobots():
+class SoftRobots():
     def __init__(self):
         self.limbs = []
         self.joints = []
