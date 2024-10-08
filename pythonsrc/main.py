@@ -1,6 +1,7 @@
 from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
+import numpy as np
 
 # Note THIS ONLY WORKS IN PYOPENGL 3.1.0
 
@@ -8,14 +9,14 @@ from OpenGL.GLU import *
 
 # Define vertices, edges, and colors for the cube
 vertices = [
-    [1, 1, -1],
-    [1, -1, -1],
-    [-1, -1, -1],
-    [-1, 1, -1],
-    [1, 1, 1],
-    [1, -1, 1],
-    [-1, -1, 1],
-    [-1, 1, 1]
+    [100, 100, 200],
+    [100, 200, 200],
+    [200, 200, 200],
+    [200, 100, 200],
+    [100, 100, 100],
+    [100, 200, 100],
+    [200, 200, 100],
+    [200, 100, 100]
 ]
 
 edges = [
@@ -45,14 +46,21 @@ colors = [
 #MAKES A SQUARE
 w,h= 500,500
 def square():
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-    glBegin(GL_TRIANGLES)
-    
-    glVertex3fv([0.0, 100.0, 0.0])
-    glVertex3fv([200.0, 200.0, 0.0])
-    glVertex3fv([100.0, 200.0, 0.0])
+    print(np.zeros(2))
+    glBegin(GL_QUADS)
+    for i, surface in enumerate(surfaces):
+        glColor3fv(colors[i])  # Color the surfaces differently
+        for vertex in surface:
+            glVertex3fv(vertices[vertex])
     glEnd()
-    glutSwapBuffers()
+
+    glBegin(GL_LINES)
+    for edge in edges:
+        glColor3fv([1, 1, 1])  # Color the edges white
+        for vertex in edge:
+            glVertex3fv(vertices[vertex])
+    glEnd()
+    # glutSwapBuffers()
 
 def iterate():
     glViewport(0, 0, 500, 500)
