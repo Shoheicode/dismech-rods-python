@@ -5,13 +5,13 @@ class GravityForce(BaseForce):
     def __init__(self, soft_robots, g_vector):
         super().__init__(soft_robots)
         self.g_vector = g_vector
-        self.setGravity()
+        self.set_gravity()
 
-    def computeForce(self, dt):
+    def compute_force(self, dt):
         limb_idx = 0
         for limb in super().soft_robots:
             mass_gravity = mass_gravity[limb_idx]
 
-    def setGravity(self):
+    def set_gravity(self):
         for limb in super().soft_robots:
             self.mass_gravity = 0

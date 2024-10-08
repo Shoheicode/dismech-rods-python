@@ -5,11 +5,11 @@ class elasticRod():
     def __init__(self, hi):
         pass
 
-    def prepareForIteration():
+    def prepare_for_iteration():
         pass
 
-    def updateNewtonX():
+    def update_newton_X():
         pass
 
-    def updateGuess(weight, dt):
+    def update_guess(weight, dt):
         pass

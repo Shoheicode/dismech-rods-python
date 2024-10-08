@@ -14,34 +14,34 @@ class world:
         self.forces.addForce(None)
         pass
 
-    def updateTimeStep():
+    def update_time_step():
         pass
 
-    def getCoordinate(i, limb_idx):
+    def get_coordinate(i, limb_idx):
         pass
 
-    def getM1(i, limb_idx):
+    def get_M1(i, limb_idx):
         pass
 
-    def getM2(i, limb_idx):
+    def get_M2(i, limb_idx):
         pass
 
-    def getCurrentTime():
+    def get_current_time():
         pass
 
-    def simulationRuning():
+    def simulation_runing():
         pass
 
-    def getTimeStep():
+    def get_time_step():
         pass
 
-    def printSimData():
+    def print_sim_data():
         pass
 
-    def floorExists():
+    def floor_exists():
         pass
 
-    def getFloorZ():
+    def get_floor_Z():
         pass
 
     

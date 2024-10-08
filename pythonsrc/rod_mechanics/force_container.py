@@ -16,19 +16,19 @@ class forceContainer:
         for force in m_forces:
             self.addForce(force)
 
-    def computeForce(self,dt):
+    def compute_force(self,dt):
         for force in self.__forces:
             force.computeForce(dt)
 
-    def computeForcesAndJacobian(self, dt):
+    def compute_forces_and_jacobian(self, dt):
         for force in self.__forces:
-            force.computeForceAndJacobian(dt)
+            force.compute_force_and_jacobian(dt)
 
-    def setupForceStepperAccess(self, stepper):
+    def setup_force_stepper_access(self, stepper):
         for force in self.__forces:
-            force.setTimeStepper(stepper)
+            force.set_time_stepper(stepper)
     
-    def addForce(self,force):
+    def add_force(self,force):
         if self.cf == None:
             cf = force # NEED TO TYPE CAST THIS TO A CONTACT FORCE
         if self.ff == None:
