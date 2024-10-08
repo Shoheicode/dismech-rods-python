@@ -2,6 +2,8 @@
 
 from abc import abstractmethod
 
+from pythonsrc.world import world
+
 
 class derSimulationEnvironment(object):
     def __init__(self, m_world, render_params, logger):
@@ -22,17 +24,16 @@ class derSimulationEnvironment(object):
         self.__class__.cmdlineOutputHelperStatic(self.w_p, self.cmdline_per)
 
     @staticmethod
-    def cmdlineOutputHelperStatic(s_world_p, s_cmdline_per):
+    def cmdlineOutputHelperStatic(s_world_p: world, s_cmdline_per):
         """
         Static helper method for command line output.
         This method is static to be compatible with OpenGL's C-based functions.
         :param s_world_p: The world object.
         :param s_cmdline_per: The command line verbosity frequency.
         """
-        if s_world_p is not None:
-            print(f"World state: {s_world_p.getState()}")
-            # You can replace getState() with your actual method to output the world's state
-            print(f"Command line output at frequency: {s_cmdline_per}")
+        if s_cmdline_per == 0: return
+        if s_world_p.getTimeStep() % s_cmdline_per == 0:
+            s_world_p.printSimData()
     
     def cleanShutdown(self):
         """
