@@ -1,12 +1,13 @@
 from typing import List
 
 from pythonsrc.rod_mechanics.elastic_rod import elasticRod
+from pythonsrc.rod_mechanics.elasticjoint import ElasticJoint
 
 
 class SoftRobots():
     def __init__(self):
         self.limbs = List[elasticRod]
-        self.joints = []
+        self.joints = List[ElasticJoint]
         self.controllers = []
 
     def addLimb(self, start, end, num_nodes, rho, rod_radius, youngs_modulus, poisson_ratio, mu = 0.0):
