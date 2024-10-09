@@ -178,5 +178,13 @@ class ElasticRod:
     def update_map(self):
         pass
 
-    def addJoint(self, node_num: int, attach_to_joint: bool, joint_node: int, joint_limb: int ):
+    def add_joint(self, node_num: int, attach_to_joint: bool, joint_node: int, joint_limb: int ):
         pass
+
+    def set_vertex_boundary_condition(position: np.ndarray, k: int):
+        pass
+
+    def set_theta_boundary_condition(desired_theta: float, k: int):
+        pass
+
+    
