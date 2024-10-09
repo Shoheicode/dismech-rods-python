@@ -34,9 +34,6 @@ class ElasticRod:
         self.setup(nodes)
         
         # Compute material properties
-        self.compute_elastic_stiffness()
-        self.set_mass()
-        self.set_reference_length()
         
         # Initialize state vectors
         self.x0 = np.zeros(self.ndof)  # Previous timestep DOFs
@@ -152,6 +149,13 @@ class ElasticRod:
         pass
     
     def get_theta(k: int):
+        pass
+    
+    def __compute_elastic_stiffness():
+        pass
+    def __set_mass():
+        pass
+    def __set_reference_length():
         pass
 
     def __compute_tangent():
