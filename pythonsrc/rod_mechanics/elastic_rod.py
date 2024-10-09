@@ -4,6 +4,18 @@ from typing import List, Tuple, Optional
 class ElasticRod:
     def __init__(self, 
                  limb_idx: int,
+                 start: np.ndarray,
+                 end: np.ndarray,
+                 num_nodes: int,
+                 rho: float,
+                 rod_radius: float,
+                 youngs_modulus: float,
+                 poisson_ratio: float,
+                 mu: float):
+        pass
+
+    def __init__(self, 
+                 limb_idx: int,
                  nodes: np.ndarray,
                  rho: float,
                  rod_radius: float,
