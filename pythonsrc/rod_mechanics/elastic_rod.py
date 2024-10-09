@@ -151,24 +151,24 @@ class ElasticRod:
     def get_theta(k: int):
         pass
     
-    def __compute_elastic_stiffness():
+    def __compute_elastic_stiffness(self):
         pass
-    def __set_mass():
+    def __set_mass(self):
         pass
-    def __set_reference_length():
+    def __set_reference_length(self):
         pass
 
-    def __compute_tangent():
+    def __compute_tangent(self):
         pass
-    def __compute_time_parallel():
+    def __compute_time_parallel(self):
         pass
-    def __compute_material_director():
+    def __compute_material_director(self):
         pass
-    def __compute_edge_len():
+    def __compute_edge_len(self):
         pass
-    def __get_ref_twist():
+    def __get_ref_twist(self):
         pass
-    def __compute_kappa():
+    def __compute_kappa(self):
         pass
 
     @staticmethod
