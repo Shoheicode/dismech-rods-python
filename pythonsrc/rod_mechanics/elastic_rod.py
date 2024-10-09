@@ -177,3 +177,6 @@ class ElasticRod:
     
     def update_map(self):
         pass
+
+    def addJoint(self, node_num: int, attach_to_joint: bool, joint_node: int, joint_limb: int ):
+        pass
