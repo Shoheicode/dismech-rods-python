@@ -151,6 +151,13 @@ class ElasticJoint:
     
     def __set_mass(self):
         self.mass = 0
+        global limb_idx
+        global curr_limb
+        for i in range(len(self.ne)):
+            limb_idx = self.connected_nodes[i].second
+            curr_limb = self.limbs[limb_idx]
+            self.mass += 0.5*self.ref_len(i) * curr_limb.cross
+
         pass
 
     def __set_reference_length(self):
