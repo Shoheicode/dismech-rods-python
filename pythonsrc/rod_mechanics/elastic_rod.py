@@ -125,6 +125,9 @@ class ElasticRod:
                     max_update = max(max_update, abs(update))
         return max_update
 
+    def updateGuess(self, weight:float, dt:float):
+        pass
+
     @staticmethod
     def parallel_transport(d1_1: np.ndarray, t1: np.ndarray, t2: np.ndarray, 
                          d1_2: np.ndarray):
