@@ -12,6 +12,20 @@ class ElasticRod:
                  youngs_modulus: float,
                  poisson_ratio: float,
                  mu: float):
+        """
+            @brief Constructor for initializing a straight rod as defined by a start and end point.
+
+            @param limb_idx The limb id of the rod. Should be a +1 increment of the previous rod.
+                            Other inputs will lead to undefined behavior.
+            @param start The start point of the rod.
+            @param end The end point of the rod.
+            @param num_nodes The number of nodes the rod will be discretized to.
+            @param rho Density of the rod [kg/m^3].
+            @param rod_radius Radius of the rod [m].
+            @param youngs_modulus Young's modulus of the rod [N/m^2].
+            @param poisson_ratio Poisson's ratio of the rod.
+            @param mu Friction coefficient of the rod.
+        """
         pass
 
     def __init__(self, 
