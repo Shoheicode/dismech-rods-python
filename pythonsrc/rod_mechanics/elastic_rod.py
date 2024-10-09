@@ -123,43 +123,6 @@ class ElasticRod:
     def updateGuess(self, weight:float, dt:float):
         pass
 
-    @staticmethod
-    def parallel_transport(d1_1: np.ndarray, t1: np.ndarray, t2: np.ndarray, 
-                         d1_2: np.ndarray):
-        """
-        Parallel transport reference frame between edges.
-        
-        Args:
-            d1_1: First director of first frame
-            t1: First tangent
-            t2: Second tangent
-            d1_2: Output first director of second frame
-        """
-        b = np.cross(t1, t2)
-        if np.allclose(b, 0):
-            d1_2[:] = d1_1
-            return
-            
-        b = b / np.linalg.norm(b)
-        n1 = np.cross(t1, b)
-        n2 = np.cross(t2, b)
-        
-        d1_2[:] = (np.dot(d1_1, n1) * n2 + np.dot(d1_1, b) * b)
-
-    @staticmethod
-    def rotate_axis_angle(v: np.ndarray, z: np.ndarray, theta: float):
-        """
-        Rotate vector v around axis z by angle theta.
-        
-        Args:
-            v: Vector to rotate
-            z: Rotation axis
-            theta: Rotation angle
-        """
-        c = np.cos(theta)
-        s = np.sin(theta)
-        v[:] = v * c + np.cross(z, v) * s + z * np.dot(z, v) * (1 - c)
-
     def enable_2d_sim(self):
         """Enable 2D simulation in x-z plane."""
         for i in range(self.nv):
@@ -203,3 +166,40 @@ class ElasticRod:
         pass
     def __compute_kappa():
         pass
+
+    @staticmethod
+    def __parallel_transport(self, d1_1: np.ndarray, t1: np.ndarray, t2: np.ndarray, 
+                         d1_2: np.ndarray):
+        """
+        Parallel transport reference frame between edges.
+        
+        Args:
+            d1_1: First director of first frame
+            t1: First tangent
+            t2: Second tangent
+            d1_2: Output first director of second frame
+        """
+        b = np.cross(t1, t2)
+        if np.allclose(b, 0):
+            d1_2[:] = d1_1
+            return
+            
+        b = b / np.linalg.norm(b)
+        n1 = np.cross(t1, b)
+        n2 = np.cross(t2, b)
+        
+        d1_2[:] = (np.dot(d1_1, n1) * n2 + np.dot(d1_1, b) * b)
+
+    @staticmethod
+    def __rotate_axis_angle(self, v: np.ndarray, z: np.ndarray, theta: float):
+        """
+        Rotate vector v around axis z by angle theta.
+        
+        Args:
+            v: Vector to rotate
+            z: Rotation axis
+            theta: Rotation angle
+        """
+        c = np.cos(theta)
+        s = np.sin(theta)
+        v[:] = v * c + np.cross(z, v) * s + z * np.dot(z, v) * (1 - c)
