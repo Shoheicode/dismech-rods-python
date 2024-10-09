@@ -187,4 +187,11 @@ class ElasticRod:
     def set_theta_boundary_condition(desired_theta: float, k: int):
         pass
 
+    def free_vertex_boundary_condition(k: int):
+        pass
+
+    def get_tangent(k: int):
+        pass
     
+    def get_theta(k: int):
+        pass
