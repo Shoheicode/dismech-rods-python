@@ -174,3 +174,6 @@ class ElasticRod:
             if i < self.ne:
                 self.is_constrained[3*self.nv + i] = True
         self.update_map()
+    
+    def update_map(self):
+        pass
