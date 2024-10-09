@@ -97,12 +97,7 @@ class ElasticRod:
 
     def prepare_for_iteration(self):
         """Update discrete values and frames for the next timestep."""
-        self.compute_tangent()
-        self.compute_time_parallel()
-        self.compute_material_director()
-        self.compute_edge_len()
-        self.get_ref_twist()
-        self.compute_kappa()
+        pass
 
     def update_newton_x(self, dx: np.ndarray, offset: int, alpha: float = 1.0) -> float:
         """
@@ -194,4 +189,17 @@ class ElasticRod:
         pass
     
     def get_theta(k: int):
+        pass
+
+    def __compute_tangent():
+        pass
+    def __compute_time_parallel():
+        pass
+    def __compute_material_director():
+        pass
+    def __compute_edge_len():
+        pass
+    def __get_ref_twist():
+        pass
+    def __compute_kappa():
         pass
