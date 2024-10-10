@@ -48,19 +48,14 @@ class WorldLogger(ABC):
         """
         Get a timestamp string in the format YearMonthDay_HourMinuteSecond.
         """
-        return datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        return ""
 
     def get_time_date_folder_path(self) -> str:
         """
         Generate folder path based on the current date and time.
         Example: "2020/2020_05/2020_05_07/2020_05_07_2"
         """
-        now = datetime.datetime.now()
-        year = now.strftime("%Y")
-        month = now.strftime("%Y_%m")
-        day = now.strftime("%Y_%m_%d")
-        hour = str(now.hour)
-        return os.path.join(year, month, f"{day}_{hour}")
+        return ""
 
     @abstractmethod
     def get_log_header(self) -> str:
