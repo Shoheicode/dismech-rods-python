@@ -22,7 +22,7 @@ class ElasticJoint:
         self.limbs = limbs
 
         self.limbs[limb_idx].add_joint(self.joint_node, False, 0,0)
-
+        self.updateConnectedNodes(self.joint_node, self.joint_limb, False)
         
 
         # Position and velocity vectors
@@ -113,7 +113,6 @@ class ElasticJoint:
                 node_and_limb2 = (0, limb_idx)
                 self.replaced_nodes.append(node_and_limb2)
             self.ne+=1
-
 
 
     @staticmethod
