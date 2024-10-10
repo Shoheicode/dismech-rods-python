@@ -5,7 +5,11 @@ from abc import ABC, abstractmethod
 # Abstract class in Python for worldLogger
 class WorldLogger(ABC):
     def __init__(self, file_name_prefix: str, logfile_base: str, data_file, period: int):
+        self.m_data_file = data_file  # file object
+        self.period = period
+        self.num_lines_header = 0
         self.file_name_prefix = file_name_prefix
+        
         if self.file_name_prefix == "":
             raise ValueError("Must specify a prefix for the worldLogger file name!")
         self.logfile_base = logfile_base
@@ -13,10 +17,12 @@ class WorldLogger(ABC):
             raise ValueError("Must specify the folder to be used for logging via logfile-base in options.txt!")
         
         if (self.logfile_base[0] == '~'):
-            pass
-        self.m_data_file = data_file  # file object
-        self.period = period
-        self.num_lines_header = 0
+            home = os.getenv("HOME")
+
+            # Remove the tilde from the beginning of the string
+            logfile_base = logfile_base[1:]
+            # Concatenate the home directory with the remaining part of logfile_base
+            logfile_base = os.path.join(home, logfile_base)
         self.world_ptr = None
         self.m_fileName = ""
     
