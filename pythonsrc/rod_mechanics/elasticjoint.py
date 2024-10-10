@@ -173,6 +173,8 @@ class ElasticJoint:
         for i in range(self.ne):
             n1 = self.connected_nodes[i][0] #Get the first element in the pair
             
+            sgn1 = 1 if self.bending_twist_signs[i] == 1 else -1
+    
 
     
     def __set_mass(self):
