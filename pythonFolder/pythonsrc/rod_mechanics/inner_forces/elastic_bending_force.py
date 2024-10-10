@@ -1,5 +1,6 @@
 from typing import List
 from pythonsrc.rod_mechanics.base_force import BaseForce
+from pythonsrc.rod_mechanics.elastic_rod import ElasticRod
 from pythonsrc.rod_mechanics.soft_robots import SoftRobots
 import numpy as np
 
@@ -73,7 +74,7 @@ class elasticBendingForce(BaseForce):
         | 1, 0, 0 |
         | 0, 1, 0 |
         | 0, 0, 1 |
-        
+
     """
     Id3 = np.eye(3)
     
@@ -103,13 +104,14 @@ class elasticBendingForce(BaseForce):
     d1f_o_kb = np.zeros((3, 3))
     D2kappa2Df2 = np.zeros((3, 3))
     D2kappa2DeDf = np.zeros((3, 3))
-    D2kappa2DfDe = np.zeros((3, 3))
+    D2kappa2DfDe= np.zeros((3, 3))
     
     def __init__(self, soft_robots: SoftRobots):
         super().__init__(soft_robots)
 
         for limb in soft_robots.limbs:
-            EI = limb
+            EI = limb.EI
+            print(EI)
 
 
     def compute_force(self, dt):
