@@ -175,8 +175,15 @@ class ElasticJoint:
             
             sgn1 = 1 if self.bending_twist_signs[i] == 1 else -1
             theta1_i = 4*n1+3 if self.bending_twist_signs[i] == 1 else 4*n1-1
-            
 
+            for j in range(i+1, self.ne):
+                n2 = self.connected_nodes[i][0] #Get the first element in the pair
+            
+                sgn2 = 1 if self.bending_twist_signs[j] == 1 else -1
+                theta2_i = 4*n1+3 if self.bending_twist_signs[j] == 1 else 4*n1-1
+                self.sgns.append(np.array(sgn1, sgn2))
+                self.theta_inds.append(np.array(theta1_i, theta2_i))
+                self.num_bending_combos+=1
     
     def __set_mass(self):
         self.mass = 0
