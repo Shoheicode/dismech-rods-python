@@ -93,6 +93,7 @@ from pythonsrc.robot_description import get_robot_description
 from pythonsrc.rod_mechanics.force_container import ForceContainer
 from pythonsrc.rod_mechanics.soft_robots import SoftRobots
 from pythonsrc.simulation_environment.derSimulationEnvironment import derSimulationEnvironment
+from pythonsrc.simulation_environment.headlessDERSimulationEnvironment import HeadlessDERSimulationEnvironment
 from pythonsrc.world import world
 import sys
 
@@ -116,7 +117,7 @@ def main():
 
     match render_params.renderer:
         case RenderEngine.HEADLESS:
-            return "Option 1 selected"
+            env = HeadlessDERSimulationEnvironment()
         case RenderEngine.OPENGL:
             return "Option 2 selected"
         case _:
