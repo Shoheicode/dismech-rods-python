@@ -171,7 +171,9 @@ class ElasticJoint:
         global sgn1, sgn2
         global theta1_i, theta2_i
         for i in range(self.ne):
-            pass
+            n1 = self.connected_nodes[i][0] #Get the first element in the pair
+            
+
     
     def __set_mass(self):
         self.mass = 0
