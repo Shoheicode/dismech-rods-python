@@ -6,6 +6,9 @@ from abc import ABC, abstractmethod
 class WorldLogger(ABC):
     def __init__(self, file_name_prefix: str, logfile_base: str, data_file, period: int):
         self.file_name_prefix = file_name_prefix
+        if self.file_name_prefix == "":
+            raise ValueError("Must specify a prefix for the worldLogger file name!")
+        
         self.logfile_base = logfile_base
         self.m_data_file = data_file  # file object
         self.period = period
