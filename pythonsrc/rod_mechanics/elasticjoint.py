@@ -101,8 +101,13 @@ class ElasticJoint:
             rod.set_position(node_num, self.x)
             rod.set_velocity(node_num, self.u)
 
-    def updateConnectedNodes(node_num: int, limb_idx: int, remove_dof: bool):
-        pass
+    def updateConnectedNodes(self, node_num: int, limb_idx: int, remove_dof: bool):
+        nv = self.limbs[limb_idx].nv
+
+        if(node_num == 0):
+            pass
+
+        
 
     @staticmethod
     def rotate_axis_angle(v: np.ndarray, z: np.ndarray, theta: float) -> None:
