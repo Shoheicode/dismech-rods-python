@@ -87,3 +87,8 @@
 # glutIdleFunc(showScreen)
 # glutMainLoop()
 
+from pythonsrc.world import world
+import sys
+
+my_world : world = None
+
