@@ -117,6 +117,7 @@ def main():
 
     match render_params.renderer:
         case RenderEngine.HEADLESS:
+            print("HIHIHI")
             env = HeadlessDERSimulationEnvironment()
         case RenderEngine.OPENGL:
             return "Option 2 selected"
@@ -127,4 +128,5 @@ def main():
 
     exit(0)
     
-     
+if __name__ == "__main__":
+    main()

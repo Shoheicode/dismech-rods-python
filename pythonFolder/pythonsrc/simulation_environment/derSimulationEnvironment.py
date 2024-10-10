@@ -16,6 +16,10 @@ class derSimulationEnvironment(object):
         self.w_p = m_world
         if logger != None:
             self.is_logging = True
+        
+        if self.is_logging:
+            self.logger_p.world_ptr = self.w_p
+            self.logger_p.setup()
 
     @abstractmethod
     def runSimulation():
