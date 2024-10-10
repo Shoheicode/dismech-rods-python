@@ -166,6 +166,10 @@ class ElasticJoint:
         
     def setup(self) -> None:
         """Set up the joint's physical properties."""
+        self.num_bending_combos = 0
+        global n1, n2
+        global sgn1, sgn2
+        global theta1_i, theta2_i
     
     def __set_mass(self):
         self.mass = 0
