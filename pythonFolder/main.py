@@ -107,9 +107,9 @@ def main():
 
     logger : WorldLogger = None
 
-    get_robot_description(sys.argv, soft_robots, forces, logger, sim_params, render_params)
+    get_robot_description(None, sys.argv, soft_robots, forces, logger, sim_params, render_params)
 
-    soft_robots.setup()
+    #soft_robots.setup()
 
     my_world = world(soft_robots, forces, sim_params)
 

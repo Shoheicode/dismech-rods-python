@@ -6,7 +6,7 @@ from pythonsrc.rod_mechanics.base_force import BaseForce
 class ForceContainer:
     def __init__(self, m_forces: Optional[List[BaseForce]] = None):
         print("HIHIHI I AM RUNNING")
-        self.forces = m_forces if m_forces is not None else []
+        self.__forces = m_forces if m_forces is not None else []
         self.cf = None
         self.ff = None
 
