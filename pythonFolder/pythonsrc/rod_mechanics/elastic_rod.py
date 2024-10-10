@@ -36,7 +36,22 @@ class ElasticRod:
             self.poisson_ratio = poisson_ratio
             self.mu = mu
 
-            
+            self.rod_length = np.linalg.norm(end - start)
+            dir_vec = (end - start) / (num_nodes - 1)
+            nodes = [start + i * dir_vec for i in range(num_nodes)]
+            self.setup(nodes)
+        else:
+            # Constructor with pre-defined nodes
+            self.nv = len(nodes)
+            self.ne = self.nv - 1
+            self.ndof = len(nodes) * 4 - 1
+            self.rho = rho
+            self.rod_radius = rod_radius
+            self.youngM = youngs_modulus
+            self.poisson_ratio = poisson_ratio
+            self.mu = mu
+
+            self.rod_length = sum(np.linalg.norm(nodes[i] - nodes[i - 1]) for i in range(1, self.nv))
 
         self.limb_idx = limb_idx
         self.rho = rho
