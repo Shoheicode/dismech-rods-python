@@ -5,12 +5,15 @@ class ElasticRod:
     EI: float
     def __init__(self, 
                  limb_idx: int,
-                 nodes: np.ndarray,
-                 rho: float,
-                 rod_radius: float,
-                 youngs_modulus: float,
-                 poisson_ratio: float,
-                 mu: float):
+                 start: np.ndarray = None,
+                 end: np.ndarray = None,
+                 num_nodes=None,
+                 nodes: np.ndarray =None,
+                 rho: float = None,
+                 rod_radius: float = None,
+                 youngs_modulus: float = None,
+                 poisson_ratio: float = None,
+                 mu: float = None):
         """
         Initialize an elastic rod with arbitrary shape defined by nodes.
         
@@ -23,6 +26,18 @@ class ElasticRod:
             poisson_ratio: Poisson's ratio of the rod.
             mu: Friction coefficient of the rod.
         """
+        if nodes == None:
+            self.nv = num_nodes
+            self.ne = num_nodes - 1
+            self.ndof = num_nodes * 4 - 1
+            self.rho = rho
+            self.rod_radius = rod_radius
+            self.youngM = youngs_modulus
+            self.poisson_ratio = poisson_ratio
+            self.mu = mu
+
+            
+
         self.limb_idx = limb_idx
         self.rho = rho
         self.rod_radius = rod_radius
