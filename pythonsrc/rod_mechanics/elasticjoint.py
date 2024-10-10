@@ -170,6 +170,8 @@ class ElasticJoint:
         global n1, n2
         global sgn1, sgn2
         global theta1_i, theta2_i
+        for i in range(self.ne):
+            pass
     
     def __set_mass(self):
         self.mass = 0
