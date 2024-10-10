@@ -51,12 +51,12 @@ class WorldLogger(ABC):
             file_name = f"{file_name}_{repeated_file_num}"
 
         # Append the .csv extension
-        file_name = f"{file_name}.csv"
+        self.file_name = f"{file_name}.csv"
 
         # SOMEONE ELSE must init the log file, since that depends on the derived class!
         # init_log_file(p_world, file_name_prefix)
-        self.world_ptr = None
-        self.m_fileName = ""
+        # self.world_ptr = None
+        # self.m_fileName = ""
     
     def setup(self):
         """
