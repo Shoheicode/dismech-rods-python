@@ -12,6 +12,8 @@ class WorldLogger(ABC):
         if self.logfile_base == "":
             raise ValueError("Must specify the folder to be used for logging via logfile-base in options.txt!")
         
+        if (self.logfile_base[0] == '~'):
+            pass
         self.m_data_file = data_file  # file object
         self.period = period
         self.num_lines_header = 0
