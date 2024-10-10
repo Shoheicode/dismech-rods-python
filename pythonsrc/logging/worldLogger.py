@@ -2,6 +2,8 @@ import os
 import time
 from abc import ABC, abstractmethod
 
+from pythonsrc.world import world
+
 # Abstract class in Python for worldLogger
 class WorldLogger(ABC):
     def __init__(self, file_name_prefix: str, logfile_base: str, data_file, period: int):
@@ -55,7 +57,7 @@ class WorldLogger(ABC):
 
         # SOMEONE ELSE must init the log file, since that depends on the derived class!
         # init_log_file(p_world, file_name_prefix)
-        # self.world_ptr = None
+        self.world_ptr = world()
         # self.m_fileName = ""
     
     def setup(self):
@@ -63,13 +65,14 @@ class WorldLogger(ABC):
         Setup function to initialize tasks that are prevented from taking place before construction.
         Calls a helper that can be overridden in child classes.
         """
-        pass
+        self.setup_helper()
+        self.init_log_file()
 
     def init_log_file(self):
-        """
-        Initializes the log file.
-        """
-        pass
+        """Helper function to create and initialize the log file."""
+        with open(self.file_name, 'w') as f:
+            f.write(self.get_log_header() + "\n")
+        self.num_lines_header = self.count_lines_in_log()
     
     def prune_empty_log(self):
         """
