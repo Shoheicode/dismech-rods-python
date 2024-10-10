@@ -3,7 +3,7 @@ from typing import List, Optional
 from pythonsrc.rod_mechanics.base_force import BaseForce
 
 
-class forceContainer:
+class ForceContainer:
     def __init__(self) -> None:
         self.cf = None
         self.ff = None
