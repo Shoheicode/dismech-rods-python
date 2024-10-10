@@ -6,9 +6,13 @@ from pythonsrc.world import world
 
 
 class derSimulationEnvironment(object):
+    #VARIABLES DECLARATIONS
     w_p : world = None
+    is_logging = False
     def __init__(self, m_world, render_params, logger):
         self.w_p = m_world
+        if logger != None:
+            self.is_logging = True
 
     @abstractmethod
     def runSimulation():
