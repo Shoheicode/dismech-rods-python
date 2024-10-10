@@ -78,32 +78,42 @@ class WorldLogger(ABC):
         """
         Clean shutdown, remove a log file that has no data.
         """
-        pass
+        print(f"Checking if the log file {self.m_file_name} is empty...")
+        min_useful_samples = 50
+        if self.count_lines_in_log() - self.num_lines_header < min_useful_samples:
+            print("Log file is almost empty, removing...")
+            os.remove(self.file_name)
+            print("File removal successful.")
+        else:
+            print("Log file contains data, not removing.")
 
     def count_lines_in_log(self):
         """
         Count the number of lines in the log file.
         """
-        pass
+        with open(self.m_file_name, 'r') as f:
+            return sum(1 for _ in f)
 
     def log_world_data(self):
         """
         Log world data to the file, at a periodic rate.
         """
-        pass
+        if self.world_ptr.get_time_step() % self.period == 0:
+            with open(self.file_name, 'a') as f:
+                f.write(self.get_log_data() + "\n")
 
     def get_timestamp(self) -> str:
         """
         Get a timestamp string in the format YearMonthDay_HourMinuteSecond.
         """
-        return ""
+        return time.strftime("%m_%d_%H_%M_%S")
 
     def get_time_date_folder_path(self) -> str:
         """
         Generate folder path based on the current date and time.
         Example: "2020/2020_05/2020_05_07/2020_05_07_2"
         """
-        return ""
+        return time.strftime("%Y_%m_%d_%H")
 
     @abstractmethod
     def get_log_header(self) -> str:
@@ -111,7 +121,7 @@ class WorldLogger(ABC):
         Abstract method to return the header for this logger.
         Must be implemented by child classes.
         """
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def get_log_data(self) -> str:
@@ -119,7 +129,7 @@ class WorldLogger(ABC):
         Abstract method to return the data to log.
         Must be implemented by child classes.
         """
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def setup_helper(self):
