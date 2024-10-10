@@ -6,8 +6,9 @@ from pythonsrc.world import world
 
 
 class derSimulationEnvironment(object):
+    w_p : world = None
     def __init__(self, m_world, render_params, logger):
-        pass
+        self.w_p = m_world
 
     @abstractmethod
     def runSimulation():

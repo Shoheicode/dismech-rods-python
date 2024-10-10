@@ -9,7 +9,12 @@ class HeadlessDERSimulationEnvironment(derSimulationEnvironment):
         super().__init__(m_world, render_params, logger)
 
     def stepSimulation():
-        pass
+        try:
+            super().w_p.update_time_step()
+        except RuntimeError as e:
+            print("Caught a runtime error when trying to world->updateTimeStep: ", e)
+            print("Attempting clean shutdown")
+
 
     def runSimulation():
         pass
