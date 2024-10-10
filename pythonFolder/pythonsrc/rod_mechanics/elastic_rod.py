@@ -26,6 +26,7 @@ class ElasticRod:
             poisson_ratio: Poisson's ratio of the rod.
             mu: Friction coefficient of the rod.
         """
+        self.limb_idx = limb_idx
         if nodes == None:
             self.nv = num_nodes
             self.ne = num_nodes - 1
@@ -39,7 +40,7 @@ class ElasticRod:
             self.rod_length = np.linalg.norm(end - start)
             dir_vec = (end - start) / (num_nodes - 1)
             nodes = [start + i * dir_vec for i in range(num_nodes)]
-            self.setup(nodes)
+            
         else:
             # Constructor with pre-defined nodes
             self.nv = len(nodes)
@@ -52,19 +53,9 @@ class ElasticRod:
             self.mu = mu
 
             self.rod_length = sum(np.linalg.norm(nodes[i] - nodes[i - 1]) for i in range(1, self.nv))
-
-        self.limb_idx = limb_idx
-        self.rho = rho
-        self.rod_radius = rod_radius
-        self.cross_sectional_area = np.pi * rod_radius ** 2
-        self.mu = mu
-        self.youngM = youngs_modulus
-        self.poisson_ratio = poisson_ratio
         
         # Initialize geometry
         self.setup(nodes)
-        
-        # Compute material properties
         
         # Initialize state vectors
         self.x0 = np.zeros(self.ndof)  # Previous timestep DOFs
@@ -79,9 +70,6 @@ class ElasticRod:
         self.is_node_joint = np.zeros(self.nv, dtype=int)
         self.is_edge_joint = np.zeros(self.ne, dtype=int)
         self.joint_ids: List[Tuple[int, int]] = []
-        
-        # Setup constraint mapping
-        self.setup_map()
 
     def setup(self, nodes: np.ndarray):
         """Setup basic rod geometry and allocate arrays."""
