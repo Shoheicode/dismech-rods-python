@@ -87,6 +87,7 @@
 # glutIdleFunc(showScreen)
 # glutMainLoop()
 
+from pythonsrc.globalDefinitions import RenderParams, SimParams
 from pythonsrc.rod_mechanics.force_container import ForceContainer
 from pythonsrc.rod_mechanics.soft_robots import SoftRobots
 from pythonsrc.world import world
