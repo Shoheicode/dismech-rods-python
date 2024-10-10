@@ -98,6 +98,7 @@ class elasticBendingForce(BaseForce):
     
     def __init__(self, soft_robots: SoftRobots):
         super().__init__(soft_robots)
+
         for limb in soft_robots.limbs:
             EI = limb
 
