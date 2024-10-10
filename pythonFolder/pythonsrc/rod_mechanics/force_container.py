@@ -4,17 +4,11 @@ from pythonsrc.rod_mechanics.base_force import BaseForce
 
 
 class ForceContainer:
-    def __init__(self) -> None:
-        self.cf = None
-        self.ff = None
-        self.__forces = None
-        pass
-    
     def __init__(self, m_forces: Optional[List[BaseForce]] = None):
+        print("HIHIHI I AM RUNNING")
+        self.forces = m_forces if m_forces is not None else []
         self.cf = None
         self.ff = None
-        for force in m_forces:
-            self.addForce(force)
 
     def compute_force(self,dt):
         for force in self.__forces:

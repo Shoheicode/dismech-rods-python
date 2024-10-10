@@ -1,10 +1,10 @@
 from pythonsrc.globalDefinitions import SimParams
-from pythonsrc.rod_mechanics.force_container import forceContainer
-from pythonsrc.rod_mechanics.soft_robots import softRobots
+from pythonsrc.rod_mechanics.force_container import ForceContainer
+from pythonsrc.rod_mechanics.soft_robots import SoftRobots
 
 
 class world:
-    def __init__(self, soft_robots: softRobots, forces: forceContainer, simParams: SimParams) -> None:
+    def __init__(self, soft_robots: SoftRobots, forces: ForceContainer, simParams: SimParams) -> None:
         self.soft_robots = soft_robots
         self.forces = forces
         self.time_step = 0

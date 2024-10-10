@@ -1,4 +1,3 @@
-import globalDefinitions
 from abc import ABC, abstractmethod
 
 class BaseForce(object):
