@@ -103,13 +103,13 @@ def main():
     soft_robots = SoftRobots()
     forces = ForceContainer()
     sim_params = SimParams()
-    render_params = RenderParams()
+    render_params = RenderParams(RenderEngine.HEADLESS)
 
     logger : WorldLogger = None
 
     get_robot_description(None, sys.argv, soft_robots, forces, logger, sim_params, render_params)
 
-    #soft_robots.setup()
+    soft_robots.setup()
 
     my_world = world(soft_robots, forces, sim_params)
 
@@ -118,8 +118,9 @@ def main():
     match render_params.renderer:
         case RenderEngine.HEADLESS:
             print("HIHIHI")
-            env = HeadlessDERSimulationEnvironment()
+            env = HeadlessDERSimulationEnvironment(my_world, render_params, logger)
         case RenderEngine.OPENGL:
+            print("OPTION 2 selected")
             return "Option 2 selected"
         case _:
             raise RuntimeError("Unknown renderer type provided")

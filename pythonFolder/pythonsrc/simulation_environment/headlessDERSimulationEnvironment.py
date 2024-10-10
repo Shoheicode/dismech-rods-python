@@ -14,7 +14,14 @@ class HeadlessDERSimulationEnvironment(derSimulationEnvironment):
         except RuntimeError as e:
             print("Caught a runtime error when trying to world->updateTimeStep: ", e)
             print("Attempting clean shutdown")
+            super().cleanShutdown()
+            return
+        
+        if super().is_logging:
+            super().logger_p.log_world_data()
+        
+        super().cmdlineOutputHelper()
 
-
-    def runSimulation():
-        pass
+    def runSimulation(self):
+        while super().w_p.simulation_runing():
+            super().stepSimulation()

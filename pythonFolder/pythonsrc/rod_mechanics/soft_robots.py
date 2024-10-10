@@ -28,7 +28,7 @@ class SoftRobots():
     def applyInitialVelocities(limb_idx, velocities):
         pass
 
-    def setup():
+    def setup(self):
         pass
 
     # void addController(const shared_ptr<baseController>& controller);
