@@ -21,6 +21,10 @@ class ElasticJoint:
         self.ne = 0  # Total number of edges connected to this joint
         self.limbs = limbs
 
+        self.limbs[limb_idx].add_joint(self.joint_node, False, 0,0)
+
+        
+
         # Position and velocity vectors
         self.x0 = np.zeros(3)  # Previous timestep position
         self.x = np.zeros(3)   # Current timestep position
@@ -96,6 +100,9 @@ class ElasticJoint:
             rod = self.limbs[limb_idx]
             rod.set_position(node_num, self.x)
             rod.set_velocity(node_num, self.u)
+
+    def updateConnectedNodes(node_num: int, limb_idx: int, remove_dof: bool):
+        pass
 
     @staticmethod
     def rotate_axis_angle(v: np.ndarray, z: np.ndarray, theta: float) -> None:
