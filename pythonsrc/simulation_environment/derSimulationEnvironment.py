@@ -2,13 +2,16 @@
 
 from abc import abstractmethod
 
+from pythonsrc.logging.worldLogger import WorldLogger
 from pythonsrc.world import world
 
 
 class derSimulationEnvironment(object):
     #VARIABLES DECLARATIONS
     w_p : world = None
+    logger_p : WorldLogger = None
     is_logging = False
+    cmdline_per: int = 0
     def __init__(self, m_world, render_params, logger):
         self.w_p = m_world
         if logger != None:
