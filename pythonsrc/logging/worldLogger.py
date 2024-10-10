@@ -1,5 +1,5 @@
 import os
-import datetime
+import time
 from abc import ABC, abstractmethod
 
 # Abstract class in Python for worldLogger
@@ -9,7 +9,7 @@ class WorldLogger(ABC):
         self.period = period
         self.num_lines_header = 0
         self.file_name_prefix = file_name_prefix
-        
+
         if self.file_name_prefix == "":
             raise ValueError("Must specify a prefix for the worldLogger file name!")
         self.logfile_base = logfile_base
@@ -23,6 +23,38 @@ class WorldLogger(ABC):
             logfile_base = logfile_base[1:]
             # Concatenate the home directory with the remaining part of logfile_base
             logfile_base = os.path.join(home, logfile_base)
+        
+        # Assuming `logfile_base`, `file_name_prefix`, and `verbosity` are defined
+        logfile_base = logfile_base.rstrip('/') + '/'
+
+        # Expand out the folder path based on a nicely organized year, month, day, hour hierarchy (commented out in C++)
+        # logfile_base = os.path.join(logfile_base, get_time_date_folder_path()) 
+        # if verbosity >= 1:
+        #     print(f"Logging data in the folder {logfile_base}")
+
+        # Create this folder if it does not already exist
+        os.makedirs(logfile_base, exist_ok=True)
+
+        # Save the file name here
+        # Assume that we'll log to a file in the datafiles directory
+        timestamp = time.strftime("%Y%m%d_%H%M%S")  # Equivalent of getTimestamp()
+        file_name = f"{logfile_base}{file_name_prefix}_{timestamp}"
+
+        # Finally, since it's possible that we will run multiple simulations within one second,
+        # check if a previous iteration already created this file and append a 1, 2, 3, etc. on it
+        if os.path.exists(f"{file_name}.csv"):
+            # Find the next biggest counter to add
+            repeated_file_num = 2
+            while os.path.exists(f"{file_name}_{repeated_file_num}.csv"):
+                repeated_file_num += 1
+            # Tack on the counter
+            file_name = f"{file_name}_{repeated_file_num}"
+
+        # Append the .csv extension
+        file_name = f"{file_name}.csv"
+
+        # SOMEONE ELSE must init the log file, since that depends on the derived class!
+        # init_log_file(p_world, file_name_prefix)
         self.world_ptr = None
         self.m_fileName = ""
     
