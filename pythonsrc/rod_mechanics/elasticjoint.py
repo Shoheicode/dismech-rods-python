@@ -108,7 +108,11 @@ class ElasticJoint:
             node_and_limb = (1, limb_idx)
 
             self.connected_nodes.append(node_and_limb)
-            
+            self.bending_twist_signs.append(-1)
+            if(remove_dof):
+                node_and_limb2 = (0, limb_idx)
+                self.replaced_nodes.append(node_and_limb2)
+            self.ne+=1
 
 
 
