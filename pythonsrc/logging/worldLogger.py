@@ -18,15 +18,13 @@ class WorldLogger(ABC):
         Setup function to initialize tasks that are prevented from taking place before construction.
         Calls a helper that can be overridden in child classes.
         """
-        self.init_log_file()
-        self.setup_helper()
+        pass
 
     def init_log_file(self):
         """
         Initializes the log file.
         """
-        timestamp = self.get_timestamp()
-        log_folder = self.get_time_date_folder_path()
+        pass
         
         # Ensure the log folder exists
         os.makedirs(log_folder, exist_ok=True)
