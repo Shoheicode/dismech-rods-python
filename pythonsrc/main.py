@@ -88,6 +88,7 @@
 # glutMainLoop()
 
 from pythonsrc.globalDefinitions import RenderParams, SimParams
+from pythonsrc.robot_description import get_robot_description
 from pythonsrc.rod_mechanics.force_container import ForceContainer
 from pythonsrc.rod_mechanics.soft_robots import SoftRobots
 from pythonsrc.world import world
@@ -100,3 +101,7 @@ def main():
     forces = ForceContainer()
     sim_params = SimParams()
     render_params = RenderParams()
+
+    logger = None
+
+    get_robot_description(sys.argv, soft_robots, forces, logger, sim_params, render_params)
