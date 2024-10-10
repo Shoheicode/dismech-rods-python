@@ -87,10 +87,12 @@
 # glutIdleFunc(showScreen)
 # glutMainLoop()
 
-from pythonsrc.globalDefinitions import RenderParams, SimParams
+from pythonsrc.globalDefinitions import RenderParams, SimParams, RenderEngine
+from pythonsrc.logging.worldLogger import WorldLogger
 from pythonsrc.robot_description import get_robot_description
 from pythonsrc.rod_mechanics.force_container import ForceContainer
 from pythonsrc.rod_mechanics.soft_robots import SoftRobots
+from pythonsrc.simulation_environment.derSimulationEnvironment import derSimulationEnvironment
 from pythonsrc.world import world
 import sys
 
@@ -102,6 +104,26 @@ def main():
     sim_params = SimParams()
     render_params = RenderParams()
 
-    logger = None
+    logger : WorldLogger = None
 
     get_robot_description(sys.argv, soft_robots, forces, logger, sim_params, render_params)
+
+    soft_robots.setup()
+
+    my_world = world(soft_robots, forces, sim_params)
+
+    env : derSimulationEnvironment = None
+
+    match render_params.renderer:
+        case RenderEngine.HEADLESS:
+            return "Option 1 selected"
+        case RenderEngine.OPENGL:
+            return "Option 2 selected"
+        case _:
+            raise RuntimeError("Unknown renderer type provided")
+        
+    env.runSimulation()
+
+    exit(0)
+    
+     
