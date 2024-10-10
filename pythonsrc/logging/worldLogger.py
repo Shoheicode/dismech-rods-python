@@ -8,8 +8,10 @@ class WorldLogger(ABC):
         self.file_name_prefix = file_name_prefix
         if self.file_name_prefix == "":
             raise ValueError("Must specify a prefix for the worldLogger file name!")
-        
         self.logfile_base = logfile_base
+        if self.logfile_base == "":
+            raise ValueError("Must specify the folder to be used for logging via logfile-base in options.txt!")
+        
         self.m_data_file = data_file  # file object
         self.period = period
         self.num_lines_header = 0
