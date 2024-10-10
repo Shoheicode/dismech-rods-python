@@ -78,7 +78,7 @@ class WorldLogger(ABC):
         """
         Clean shutdown, remove a log file that has no data.
         """
-        print(f"Checking if the log file {self.m_file_name} is empty...")
+        print(f"Checking if the log file {self.file_name} is empty...")
         min_useful_samples = 50
         if self.count_lines_in_log() - self.num_lines_header < min_useful_samples:
             print("Log file is almost empty, removing...")
@@ -91,7 +91,7 @@ class WorldLogger(ABC):
         """
         Count the number of lines in the log file.
         """
-        with open(self.m_file_name, 'r') as f:
+        with open(self.file_name, 'r') as f:
             return sum(1 for _ in f)
 
     def log_world_data(self):
