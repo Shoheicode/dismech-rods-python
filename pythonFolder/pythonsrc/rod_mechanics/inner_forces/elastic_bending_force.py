@@ -67,7 +67,16 @@ class elasticBendingForce(BaseForce):
     Jbb = np.zeros((3, 3))
 
     EIMatrices: List[np.ndarray] = []
+
+    """
+        Creates a 3 x 3 matrix
+        | 1, 0, 0 |
+        | 0, 1, 0 |
+        | 0, 0, 1 |
+        
+    """
     Id3 = np.eye(3)
+    
     tt_o_tt = np.zeros((3, 3))
     tilde_d1_3d = np.zeros((3, 3))
     tilde_d2_3d = np.zeros((3, 3))
