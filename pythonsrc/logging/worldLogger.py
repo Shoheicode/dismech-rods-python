@@ -25,22 +25,12 @@ class WorldLogger(ABC):
         Initializes the log file.
         """
         pass
-        
-        # Ensure the log folder exists
-        os.makedirs(log_folder, exist_ok=True)
-        
-        # Set the full file path
-        self.m_fileName = os.path.join(log_folder, f"{self.file_name_prefix}_{timestamp}.log")
-        self.m_data_file = open(self.m_fileName, 'w')  # Open the log file for writing
     
     def prune_empty_log(self):
         """
         Clean shutdown, remove a log file that has no data.
         """
-        if self.count_lines_in_log() <= self.num_lines_header:
-            # Close and remove the empty log file
-            self.m_data_file.close()
-            os.remove(self.m_fileName)
+        pass
 
     def count_lines_in_log(self):
         """
