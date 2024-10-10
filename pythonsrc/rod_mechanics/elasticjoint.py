@@ -105,9 +105,12 @@ class ElasticJoint:
         nv = self.limbs[limb_idx].nv
 
         if(node_num == 0):
-            pass
+            node_and_limb = (1, limb_idx)
 
-        
+            self.connected_nodes.append(node_and_limb)
+            
+
+
 
     @staticmethod
     def rotate_axis_angle(v: np.ndarray, z: np.ndarray, theta: float) -> None:
