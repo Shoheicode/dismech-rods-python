@@ -36,16 +36,13 @@ class WorldLogger(ABC):
         """
         Count the number of lines in the log file.
         """
-        with open(self.m_fileName, 'r') as f:
-            return sum(1 for line in f)
+        pass
 
     def log_world_data(self):
         """
         Log world data to the file, at a periodic rate.
         """
-        if self.world_ptr:  # Assuming world_ptr is set up
-            data = self.get_log_data()
-            self.m_data_file.write(data + "\n")
+        pass
 
     def get_timestamp(self) -> str:
         """
