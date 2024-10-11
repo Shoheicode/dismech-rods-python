@@ -279,7 +279,7 @@ class ElasticRod:
                 voronoi_len[i] = 0.5 * (ref_len[i - 1] + ref_len[i])
 
     def __compute_tangent(self):
-        for i in range(ne):
+        for i in range(self.ne):
             # Extract segments (3 elements) from 'x' to compute the tangent vector.
             self.tangent[i, :] = self.x[4 * (i + 1): 4 * (i + 1) + 3] - self.x[4 * i: 4 * i + 3]
 
