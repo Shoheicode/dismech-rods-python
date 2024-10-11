@@ -130,6 +130,8 @@ class ElasticRod:
         self.kappa = np.zeros((self.nv, 2))
         self.kappa_bar = np.zeros((self.nv, 2))
 
+        self.__get_ref_twist()
+
         self.__compute_kappa()
 
         self.__compute_edge_len()
@@ -347,7 +349,26 @@ class ElasticRod:
     def __compute_edge_len(self):
         pass
     def __get_ref_twist(self):
-        pass
+        # Assuming d1, tangent, ref_twist_old, ref_twist are NumPy arrays and parallelTransport, rotateAxisAngle, and signedAngle are defined elsewhere.
+        for i in range(1, self.ne):
+            # Get the vectors for the current and previous iterations
+            u0 = self.d1[i - 1, :]  # Previous d1 row
+            u1 = self.d1[i, :]      # Current d1 row
+            t0 = self.tangent[i - 1, :]  # Previous tangent
+            t1 = self.tangent[i, :]      # Current tangent
+
+            # Perform parallel transport to get 'ut'
+            ut = self.__parallel_transport(u0, t0, t1)
+
+            # Rotate 'ut' around 't1' to update ref_twist_old
+            self.__rotate_axis_angle(ut, t1, self.ref_twist_old[i])
+
+            # Compute the signed angle between 'ut' and 'u1' around the axis 't1'
+            sgn_angle = self.__signed_angle(ut, u1, t1)
+
+            # Update ref_twist with the new value
+            self.ref_twist[i] = self.ref_twist_old[i] + sgn_angle
+
     def __compute_kappa(self):
         # First loop: Compute kb using the tangent vectors
         for i in range(1, self.ne):
