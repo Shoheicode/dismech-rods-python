@@ -1,5 +1,6 @@
 import numpy as np
 from typing import List, Tuple, Optional
+import math
 
 class ElasticRod:
     EI: float
@@ -97,6 +98,8 @@ class ElasticRod:
 
         self.setup_map()
 
+        self.cross_sectional_area = math.pi * self.rod_radius * self.rod_radius
+
         # Initialize geometry arrays
         self.edge_len = np.zeros(self.ne)
         self.ref_len = np.zeros(self.ne)
@@ -178,6 +181,27 @@ class ElasticRod:
     def get_velocity(self, k):
         pass
 
+    """
+    setup_map function explained:
+    
+    Initialization (c = 0):
+
+    A counter c is initialized to keep track of the position in the unconstrainedMap array.
+    Loop (for i in range(ndof)):
+
+    A loop iterates over all the degrees of freedom (ndof). This loop runs from i = 0 to i = ndof - 1.
+    Condition (if isConstrained[i] == 0 and isDOFJoint[i] != 1):
+
+    Inside the loop, for each i, the condition checks:
+    If isConstrained[i] == 0, meaning that the degree of freedom i is not constrained.
+    If isDOFJoint[i] != 1, meaning that the degree of freedom i is not part of a joint.
+    If both these conditions are satisfied, the degree of freedom i is considered "unconstrained."
+    Mapping (unconstrainedMap[c] = i and fullToUnconsMap[i] = c):
+
+    The unconstrainedMap[c] = i line assigns the index i of the unconstrained degree of freedom to the unconstrainedMap at position c.
+    The fullToUnconsMap[i] = c line creates a reverse mapping from the full degrees of freedom list (i) to the index c in the unconstrainedMap.
+    """
+
     def setup_map(self):
         c = 0
         for i in range(self.ndof):
@@ -212,7 +236,18 @@ class ElasticRod:
     def __set_mass(self):
         pass
     def __set_reference_length(self):
-        pass
+        ref_len = np.zeros(self.ne)
+        for i in range(self.ne):
+            ref_len[i] = np.linalg.norm(self.x[4*(i+1):4*(i+1)+3] - self.x[4*i:4*i+3])
+
+        voronoi_len = np.zeros(self.nv)
+        for i in range(self.nv):
+            if i == 0:
+                voronoi_len[i] = 0.5 * ref_len[i]
+            elif i == self.nv - 1:
+                voronoi_len[i] = 0.5 * ref_len[i - 1]
+            else:
+                voronoi_len[i] = 0.5 * (ref_len[i - 1] + ref_len[i])
 
     def __compute_tangent(self):
         pass
