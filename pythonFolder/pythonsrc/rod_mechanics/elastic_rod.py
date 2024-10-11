@@ -317,11 +317,11 @@ class ElasticRod:
             t1 = np.array([0, 1, 0])  # A vector along the y-axis
             d1_tmp = np.cross(t0, t1)  # Compute the cross product again
 
-        self.d1d1[0, :] = d1_tmp  # Store the result in the first row of d1
-        self.d1d2[0, :] = np.cross(t0, d1_tmp)  # Store the cross product of t0 and d1_tmp in d2
+        self.d1[0, :] = d1_tmp  # Store the result in the first row of d1
+        self.d1[0, :] = np.cross(t0, d1_tmp)  # Store the cross product of t0 and d1_tmp in d2
 
         # Loop over all elements and compute space-parallel transport
-        for i in range(ne - 1):
+        for i in range(self.ne - 1):
             a = self.d1[i, :]
             b = self.tangent[i, :]
             c = self.tangent[i + 1, :]
@@ -332,7 +332,16 @@ class ElasticRod:
             self.d2[i + 1, :] = np.cross(c, d)  # Store the cross product in d2
 
     def __compute_material_director(self):
-        pass
+        global cs,ss
+        global angle
+
+        for i in range(self.ne):
+            angle = self.x[4*i+3]
+            cs = math.cos(angle)
+            ss = math.sin(angle)
+            self.m1[i, :] = cs * self.d1[i, :] + ss * self.d2[i, :]
+            self.m2[i, :] = -ss * self.d1[i, :] + cs * self.d2[i, :]
+
     def __compute_edge_len(self):
         pass
     def __get_ref_twist(self):
