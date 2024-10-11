@@ -58,7 +58,7 @@ class ElasticRod:
         
         # Initialize state vectors
         self.x0 = np.zeros(self.ndof)  # Previous timestep DOFs
-        self.x = np.zeros(self.ndof)   # Current timestep DOFs
+        # self.x = np.zeros(self.ndof)   # Current timestep DOFs
         self.x_ls = np.zeros(self.ndof)  # Line search state
         self.u0 = np.zeros(self.ndof)  # Previous timestep velocities
         self.u = np.zeros(self.ndof)   # Current timestep velocities
@@ -76,6 +76,11 @@ class ElasticRod:
         self.ne = self.nv - 1  # Number of edges
         self.ndof = 3 * self.nv + self.ne  # Total degrees of freedom
         
+        self.x = np.zeros(self.ndof)   # Current timestep DOFs
+
+        for i in range(self.nv):
+            pass
+
         # Initialize geometry arrays
         self.edge_len = np.zeros(self.ne)
         self.ref_len = np.zeros(self.ne)
@@ -147,6 +152,16 @@ class ElasticRod:
             if i < self.ne:
                 self.is_constrained[3*self.nv + i] = True
         self.update_map()
+    
+    def get_vertex(self, k):
+        pass
+
+    def get_pre_vertex(self, k):
+        pass
+
+    def get_velocity(self, k):
+        pass
+
     
     def update_map(self):
         pass
