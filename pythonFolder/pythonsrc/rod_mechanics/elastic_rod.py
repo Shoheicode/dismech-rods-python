@@ -108,12 +108,9 @@ class ElasticRod:
         # Initialize frames
         self.d1 = np.zeros((self.ne, 3))
         self.d2 = np.zeros((self.ne, 3))
-        self.d1_old = np.zeros((self.ne, 3))
-        self.d2_old = np.zeros((self.ne, 3))
         self.m1 = np.zeros((self.ne, 3))
         self.m2 = np.zeros((self.ne, 3))
         self.tangent = np.zeros((self.ne, 3))
-        self.tangent_old = np.zeros((self.ne, 3))
         
         # Initialize twists and curvatures
         self.ref_twist = np.zeros(self.ne)
@@ -128,12 +125,21 @@ class ElasticRod:
 
         self.__compute_material_director()
 
-        self.ref_twist_old = np.zeros(self.ne)
-
         self.kb = np.zeros((self.nv, 3))
         self.twist_bar = np.zeros(self.ne)
         self.kappa = np.zeros((self.nv, 2))
         self.kappa_bar = np.zeros((self.nv, 2))
+
+        self.__compute_kappa()
+
+        self.__compute_edge_len()
+
+        self.compute_elastic_stiffness()
+
+        self.d1_old = self.d1
+        self.d2_old = self.d2
+        self.ref_twist_old = self.ref_twist
+        self.tangent_old = self.tangent
         
         # Compute initial rod length
         self.rod_length = 0
@@ -292,6 +298,9 @@ class ElasticRod:
             # Normalize the tangent vector.
             self.tangent[i, :] = self.tangent[i, :] / np.linalg.norm(self.tangent[i, :])
         return None
+    
+    def __compute_twist_bar(self):
+        pass
 
     def __compute_time_parallel(self):
         pass
