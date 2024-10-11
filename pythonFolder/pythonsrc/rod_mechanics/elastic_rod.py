@@ -124,7 +124,13 @@ class ElasticRod:
 
         self.__compute_tangent()
 
+        self.__compute_space_parallel()
+
+        self.__compute_material_director()
+
         self.ref_twist_old = np.zeros(self.ne)
+
+        self.kb = np.zeros((self.nv, 3))
         self.twist_bar = np.zeros(self.ne)
         self.kappa = np.zeros((self.nv, 2))
         self.kappa_bar = np.zeros((self.nv, 2))
@@ -289,6 +295,10 @@ class ElasticRod:
 
     def __compute_time_parallel(self):
         pass
+
+    def __compute_space_parallel(self):
+        pass
+
     def __compute_material_director(self):
         pass
     def __compute_edge_len(self):
