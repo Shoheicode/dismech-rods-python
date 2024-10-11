@@ -306,7 +306,30 @@ class ElasticRod:
         pass
 
     def __compute_space_parallel(self):
-        pass
+        # This function is only called once
+        t0 = self.tangent[0, :]  # First row of tangent vector
+        t1 = np.array([0, 0, -1])  # Initialize t1 as a vector pointing down the z-axis
+        d1_tmp = np.cross(t0, t1)  # Compute the cross product of t0 and t1
+
+        # Check if the magnitude (norm) of d1_tmp is close to zero
+        if np.linalg.norm(d1_tmp) < 1.0e-6:
+            # If cross product was too small, choose another orthogonal vector t1
+            t1 = np.array([0, 1, 0])  # A vector along the y-axis
+            d1_tmp = np.cross(t0, t1)  # Compute the cross product again
+
+        self.d1d1[0, :] = d1_tmp  # Store the result in the first row of d1
+        self.d1d2[0, :] = np.cross(t0, d1_tmp)  # Store the cross product of t0 and d1_tmp in d2
+
+        # Loop over all elements and compute space-parallel transport
+        for i in range(ne - 1):
+            a = self.d1[i, :]
+            b = self.tangent[i, :]
+            c = self.tangent[i + 1, :]
+            
+            # Call parallelTransport (assuming you have a Python function for it)
+            d = self.__parallel_transport(a, b, c)  # Perform parallel transport
+            self.d1[i + 1, :] = d  # Store result in the next row of d1
+            self.d2[i + 1, :] = np.cross(c, d)  # Store the cross product in d2
 
     def __compute_material_director(self):
         pass
