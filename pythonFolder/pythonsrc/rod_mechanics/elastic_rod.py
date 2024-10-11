@@ -79,7 +79,13 @@ class ElasticRod:
         self.x = np.zeros(self.ndof)   # Current timestep DOFs
 
         for i in range(self.nv):
-            pass
+            self.x[4*i] = nodes[i][0]
+            self.x[4*i+1] = nodes[i][1]
+            self.x[4*i+2] = nodes[i][2]
+            if i < self.nv - 1:
+                self.x[4*i+3] = 0
+
+        self.x0 = self.x
 
         # Initialize geometry arrays
         self.edge_len = np.zeros(self.ne)
