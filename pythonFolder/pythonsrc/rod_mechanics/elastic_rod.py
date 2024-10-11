@@ -92,8 +92,10 @@ class ElasticRod:
         self.x0 = self.x
 
         # Setup the map from free dofs to all dof
-        self.unconstrainedMap = np.zeros(self.uncons) # maps xUncons to x
-        self.fullToUnconsMap = np.zeros(self.ndof)
+        self.unconstrained_map = np.zeros(self.uncons) # maps xUncons to x
+        self.full_to_uncons_map = np.zeros(self.ndof)
+
+        self.setup_map()
 
         # Initialize geometry arrays
         self.edge_len = np.zeros(self.ne)
@@ -176,6 +178,13 @@ class ElasticRod:
     def get_velocity(self, k):
         pass
 
+    def setup_map(self):
+        c = 0
+        for i in range(self.ndof):
+            if self.is_constrained[i] == 0 and self.is_dof_joint[i] != 1:
+                self.unconstrained_map[c] = i
+                self.full_to_uncons_map[i] = c
+                c += 1
     
     def update_map(self):
         pass
