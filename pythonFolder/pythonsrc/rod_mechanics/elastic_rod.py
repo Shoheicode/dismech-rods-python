@@ -56,6 +56,7 @@ class ElasticRod:
         # Things required for setup function
         
         self.ncons = 0
+        self.uncons = self.ndof
         
         ## Initialize constraint maps
         self.is_constrained = np.zeros(self.ndof, dtype=bool)
@@ -89,9 +90,6 @@ class ElasticRod:
                 self.x[4*i+3] = 0
 
         self.x0 = self.x
-        self.uncons = self.ndof
-
-
 
         # Initialize geometry arrays
         self.edge_len = np.zeros(self.ne)
