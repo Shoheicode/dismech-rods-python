@@ -234,7 +234,29 @@ class ElasticRod:
     def __compute_elastic_stiffness(self):
         pass
     def __set_mass(self):
-        pass
+        # Assuming ndof, nv, ref_len, cross_sectional_area, rho, and rod_radius are already defined.
+        self.mass_array = np.zeros(self.ndof)
+
+        for i in range(self.nv):
+            # Compute mass per unit length, dm, based on cross-sectional area and density.
+            dm = 0.5 * self.cross_sectional_area * self.rho
+
+            # Adjust dm based on the reference lengths for the first, last, and middle nodes.
+            if i == 0:
+                dm *= self.ref_len[i]
+            elif i == self.nv - 1:
+                dm *= self.ref_len[i - 1]
+            else:
+                dm *= (self.ref_len[i - 1] + self.ref_len[i])
+
+            # Assign the computed mass to the first three components of the mass_array for each node.
+            for k in range(3):
+                self.mass_array[4 * i + k] = dm
+
+            # For each node except the last, assign an additional mass component.
+            if i < self.nv - 1:
+                self.mass_array[4 * i + 3] = (self.rod_radius ** 2) * dm / 2.0
+
     def __set_reference_length(self):
         ref_len = np.zeros(self.ne)
         for i in range(self.ne):
