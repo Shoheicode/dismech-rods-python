@@ -53,7 +53,15 @@ class ElasticRod:
 
             self.rod_length = sum(np.linalg.norm(nodes[i] - nodes[i - 1]) for i in range(1, self.nv))
         
+        # Things required for setup function
+        
         self.ncons = 0
+        
+        ## Initialize constraint maps
+        self.is_constrained = np.zeros(self.ndof, dtype=bool)
+        self.is_dof_joint = np.zeros(self.ndof, dtype=int)
+        self.is_node_joint = np.zeros(self.nv, dtype=int)
+        self.is_edge_joint = np.zeros(self.ne, dtype=int)
 
         # Initialize geometry
         self.setup(nodes)
@@ -64,12 +72,8 @@ class ElasticRod:
         self.x_ls = np.zeros(self.ndof)  # Line search state
         self.u0 = np.zeros(self.ndof)  # Previous timestep velocities
         self.u = np.zeros(self.ndof)   # Current timestep velocities
-        
-        # Initialize constraint maps
-        self.is_constrained = np.zeros(self.ndof, dtype=bool)
-        self.is_dof_joint = np.zeros(self.ndof, dtype=int)
-        self.is_node_joint = np.zeros(self.nv, dtype=int)
-        self.is_edge_joint = np.zeros(self.ne, dtype=int)
+
+
         self.joint_ids: List[Tuple[int, int]] = []
 
     def setup(self, nodes: np.ndarray):
