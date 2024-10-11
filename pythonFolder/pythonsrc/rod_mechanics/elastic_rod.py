@@ -117,6 +117,11 @@ class ElasticRod:
         
         # Initialize twists and curvatures
         self.ref_twist = np.zeros(self.ne)
+
+        self.__set_reference_length()
+
+        self.__set_mass()
+
         self.ref_twist_old = np.zeros(self.ne)
         self.twist_bar = np.zeros(self.ne)
         self.kappa = np.zeros((self.nv, 2))
