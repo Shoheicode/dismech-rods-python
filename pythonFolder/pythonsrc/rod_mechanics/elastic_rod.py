@@ -7,7 +7,7 @@ class ElasticRod:
                  limb_idx: int,
                  start: np.ndarray = None,
                  end: np.ndarray = None,
-                 num_nodes=None,
+                 num_nodes: int =None,
                  nodes: np.ndarray =None,
                  rho: float = None,
                  rod_radius: float = None,
@@ -39,8 +39,7 @@ class ElasticRod:
 
             self.rod_length = np.linalg.norm(end - start)
             dir_vec = (end - start) / (num_nodes - 1)
-            nodes = [start + i * dir_vec for i in range(num_nodes)]
-            
+            nodes = [start + i * dir_vec for i in range(num_nodes)]       
         else:
             # Constructor with pre-defined nodes
             self.nv = len(nodes)
@@ -136,7 +135,7 @@ class ElasticRod:
                     max_update = max(max_update, abs(update))
         return max_update
 
-    def updateGuess(self, weight:float, dt:float):
+    def update_guess(self, weight:float, dt:float):
         pass
 
     def enable_2d_sim(self):
