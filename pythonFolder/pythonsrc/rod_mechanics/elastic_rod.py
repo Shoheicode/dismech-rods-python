@@ -122,6 +122,8 @@ class ElasticRod:
 
         self.__set_mass()
 
+        self.__compute_tangent()
+
         self.ref_twist_old = np.zeros(self.ne)
         self.twist_bar = np.zeros(self.ne)
         self.kappa = np.zeros((self.nv, 2))
@@ -277,7 +279,14 @@ class ElasticRod:
                 voronoi_len[i] = 0.5 * (ref_len[i - 1] + ref_len[i])
 
     def __compute_tangent(self):
-        pass
+        for i in range(ne):
+            # Extract segments (3 elements) from 'x' to compute the tangent vector.
+            self.tangent[i, :] = self.x[4 * (i + 1): 4 * (i + 1) + 3] - self.x[4 * i: 4 * i + 3]
+
+            # Normalize the tangent vector.
+            self.tangent[i, :] = self.tangent[i, :] / np.linalg.norm(self.tangent[i, :])
+        return None
+
     def __compute_time_parallel(self):
         pass
     def __compute_material_director(self):

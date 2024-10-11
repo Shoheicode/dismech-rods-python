@@ -1,8 +1,9 @@
 import numpy as np
 
 def main():
-    x = np.zeros(10)
-    print()
+    tangent = np.zeros((3, 3))
+
+    print(tangent)
     
 if __name__ == "__main__":
     main()
