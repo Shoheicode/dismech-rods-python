@@ -53,6 +53,8 @@ class ElasticRod:
 
             self.rod_length = sum(np.linalg.norm(nodes[i] - nodes[i - 1]) for i in range(1, self.nv))
         
+        self.ncons = 0
+
         # Initialize geometry
         self.setup(nodes)
         
@@ -72,9 +74,6 @@ class ElasticRod:
 
     def setup(self, nodes: np.ndarray):
         """Setup basic rod geometry and allocate arrays."""
-        self.nv = len(nodes)  # Number of vertices
-        self.ne = self.nv - 1  # Number of edges
-        self.ndof = 3 * self.nv + self.ne  # Total degrees of freedom
         
         self.x = np.zeros(self.ndof)   # Current timestep DOFs
 
@@ -86,12 +85,15 @@ class ElasticRod:
                 self.x[4*i+3] = 0
 
         self.x0 = self.x
+        self.uncons = self.ndof
+
+
 
         # Initialize geometry arrays
         self.edge_len = np.zeros(self.ne)
         self.ref_len = np.zeros(self.ne)
         self.voronoi_len = np.zeros(self.nv)
-        
+    
         # Initialize frames
         self.d1 = np.zeros((self.ne, 3))
         self.d2 = np.zeros((self.ne, 3))
