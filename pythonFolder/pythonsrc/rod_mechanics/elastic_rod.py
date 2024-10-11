@@ -91,6 +91,10 @@ class ElasticRod:
 
         self.x0 = self.x
 
+        # Setup the map from free dofs to all dof
+        unconstrainedMap = np.zeros(self.uncons) # maps xUncons to x
+        fullToUnconsMap = np.zeros(self.ndof)
+
         # Initialize geometry arrays
         self.edge_len = np.zeros(self.ne)
         self.ref_len = np.zeros(self.ne)
