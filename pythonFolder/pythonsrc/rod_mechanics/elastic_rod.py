@@ -436,9 +436,13 @@ class ElasticRod:
             z: Rotation axis
             theta: Rotation angle
         """
-        c = np.cos(theta)
-        s = np.sin(theta)
-        v[:] = v * c + np.cross(z, v) * s + z * np.dot(z, v) * (1 - c)
+        if theta == 0:
+            return v
+        else: 
+            c = np.cos(theta)
+            s = np.sin(theta)
+            v[:] = v * c + np.cross(z, v) * s + z * np.dot(z, v) * (1 - c)
+            return v[:]
 
     @staticmethod
     def __signed_angle(self, u: np.ndarray,v: np.ndarray, n: np.ndarray):
