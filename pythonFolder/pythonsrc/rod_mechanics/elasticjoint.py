@@ -120,12 +120,18 @@ class ElasticJoint:
         """
         Rotate vector v around axis z by angle theta (in-place).
         """
-        c = np.cos(theta)
-        s = np.sin(theta)
-        v_rot = (c * v + 
-                s * np.cross(z, v) + 
-                np.dot(z, v) * (1 - c) * z)
-        v[:] = v_rot
+        if (theta == 0):
+            vNew = v
+
+        else:
+            c = np.cos(theta)
+            s = np.sin(theta)
+            v_rot = (c * v + 
+                    s * np.cross(z, v) + 
+                    np.dot(z, v) * (1 - c) * z)
+            vNew = v_rot
+
+        return vNew
 
     @staticmethod
     def parallel_transport(d1_1: np.ndarray, t1: np.ndarray, t2: np.ndarray, 
