@@ -140,15 +140,22 @@ class ElasticJoint:
         Parallel transport reference director d1_1 from t1 to t2.
         Result is stored in d1_2.
         """
-        b = np.cross(t1, t2)
-        if np.allclose(b, 0):
-            d1_2[:] = d1_1
-            return
-            
-        b = b / np.linalg.norm(b)
-        theta = np.arccos(np.clip(np.dot(t1, t2), -1.0, 1.0))
-        ElasticJoint.rotate_axis_angle(d1_1, b, theta)
-        d1_2[:] = d1_1
+        b = np.cross(t1,t2)
+        if (np.linalg.norm(b) == 0):
+            d1_2 = d1_1
+        else:
+            b = b / np.linalg.norm(b)
+            # The following four lines may seem unnecessary but can sometimes help
+            # with numerical stability
+            b = b - np.dot(b,t1) * t1
+            b = b / np.linalg.norm(b)
+            b = b - np.dot(b,t2) * t2
+            b = b / np.linalg.norm(b)
+            n1 = np.cross(t1,b)
+            n2 = np.cross(t2,b)
+            d1_2 = np.dot(d1_1,t1) * t2 + np.dot(d1_1,n1) * n2 + np.dot(d1_1,b) * b
+
+        return d1_2
 
     @staticmethod
     def signed_angle(u: np.ndarray, v: np.ndarray, n: np.ndarray) -> float:
