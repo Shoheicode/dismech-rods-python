@@ -339,7 +339,7 @@ class ElasticRod:
         global cs,ss
         global angle
 
-        for i in range(self.ne):
+        for i in np.arange(self.ne):
             angle = self.x[4*i+3] # Extract the angle from x
             cs = math.cos(angle) # Compute the cosine of the angle
             ss = math.sin(angle) # Compute the sine of the angle
