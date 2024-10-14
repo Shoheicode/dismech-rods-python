@@ -134,6 +134,8 @@ class ElasticRod:
 
         self.__compute_kappa()
 
+        self.kappa_bar = self.kappa
+
         self.__compute_edge_len()
 
         self.compute_elastic_stiffness()
