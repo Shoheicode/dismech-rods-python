@@ -420,9 +420,7 @@ class ElasticRod:
             n2 = np.cross(t2, b)
 
             # Compute d1_2 based on dot products and projections
-            d1_2 = np.dot(d1_1, t1) * t2 + np.dot(d1_1, n1) * n2 + np.dot(d1_1, b) * b
-            d1_2 = d1_2 - np.dot(d1_2, t2) * t2
-            d1_2 = d1_2 / np.linalg.norm(d1_2)  # Normalize the result
+            d1_2 = np.dot(d1_1,t1) * t2 + np.dot(d1_1,n1) * n2 + np.dot(d1_1,b) * b
         
         return d1_2
 
