@@ -399,16 +399,32 @@ class ElasticRod:
             t2: Second tangent
             d1_2: Output first director of second frame
         """
-        b = np.cross(t1, t2)
-        if np.allclose(b, 0):
-            d1_2[:] = d1_1
-            return
-            
-        b = b / np.linalg.norm(b)
-        n1 = np.cross(t1, b)
-        n2 = np.cross(t2, b)
+        # Assuming t1, t2, and d1_1 are numpy arrays representing 3D vectors.
         
-        d1_2[:] = (np.dot(d1_1, n1) * n2 + np.dot(d1_1, b) * b)
+        # Cross product of t1 and t2
+        b = np.cross(t1, t2)
+
+        # Check if the norm of b is 0
+        if np.linalg.norm(b) == 0:
+            d1_2 = d1_1
+        else:
+            # Normalize b and make it orthogonal to t1 and t2
+            b = b / np.linalg.norm(b)
+            b = b - np.dot(b, t1) * t1
+            b = b / np.linalg.norm(b)
+            b = b - np.dot(b, t2) * t2
+            b = b / np.linalg.norm(b)
+
+            # Compute n1 and n2 as cross products
+            n1 = np.cross(t1, b)
+            n2 = np.cross(t2, b)
+
+            # Compute d1_2 based on dot products and projections
+            d1_2 = np.dot(d1_1, t1) * t2 + np.dot(d1_1, n1) * n2 + np.dot(d1_1, b) * b
+            d1_2 = d1_2 - np.dot(d1_2, t2) * t2
+            d1_2 = d1_2 / np.linalg.norm(d1_2)  # Normalize the result
+        
+        return d1_2
 
     @staticmethod
     def __rotate_axis_angle(self, v: np.ndarray, z: np.ndarray, theta: float):
@@ -425,5 +441,10 @@ class ElasticRod:
         v[:] = v * c + np.cross(z, v) * s + z * np.dot(z, v) * (1 - c)
 
     @staticmethod
-    def __signed_angle(self, u: np.ndarray,v: np.ndarray, z: np.ndarray):
-        pass
+    def __signed_angle(self, u: np.ndarray,v: np.ndarray, n: np.ndarray):
+        w = np.cross(u,v)
+        angle = np.arctan2( np.linalg.norm(w), np.dot(u,v) )
+        if (np.dot(n,w) < 0):
+            angle = - angle
+
+        return angle
