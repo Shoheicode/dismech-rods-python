@@ -1,12 +1,13 @@
 from abc import ABC, abstractmethod
 
 from pythonFolder.pythonsrc.rod_mechanics.soft_robots import SoftRobots
+from pythonFolder.pythonsrc.time_stepper.basetimestepper import BaseTimeStepper
 
 class BaseForce(object):
     def __init__(self, soft_robots: SoftRobots):
         print('none')
         self.soft_robots = soft_robots
-        self.stepper = None
+        self.stepper:BaseTimeStepper = None
     
     @abstractmethod
     def compute_force(self, dt):
@@ -16,5 +17,5 @@ class BaseForce(object):
     def compute_force_and_jacobian(self, dt):
         pass
 
-    def set_time_stepper(self, stepper):
+    def set_time_stepper(self, stepper: BaseTimeStepper):
         self.stepper = stepper

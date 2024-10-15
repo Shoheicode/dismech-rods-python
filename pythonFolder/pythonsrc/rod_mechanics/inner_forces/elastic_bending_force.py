@@ -111,7 +111,21 @@ class elasticBendingForce(BaseForce):
 
         for limb in soft_robots.limbs:
             EI = limb.EI
-            print(EI)
+            # Create a 2x2 matrix EIMat and append to EIMatrices
+            EIMat = np.array([[EI, 0],
+                            [0, EI]])
+            self.EIMatrices.append(EIMat)
+
+            # Assuming limb is an object with an attribute 'nv'
+            nv = limb.nv  # Number of vertices (nv) from the limb object
+
+            # gradKappa1s and gradKappa2s lists to store matrices
+            gradKappa1s = []
+            gradKappa2s = []
+
+            # Append a zero matrix of shape (nv, 11) to both gradKappa1s and gradKappa2s
+            gradKappa1s.append(np.zeros((nv, 11)))
+            gradKappa2s.append(np.zeros((nv, 11)))
 
 
     def compute_force(self, dt):
