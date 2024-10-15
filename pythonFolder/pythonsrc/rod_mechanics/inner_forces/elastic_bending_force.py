@@ -139,31 +139,31 @@ class elasticBendingForce(BaseForce):
                 self.kappa1 = limb.kappa[i, 0]
                 self.kappa2 = limb.kappa[i, 1]
 
-                self.Dkappa1De = (1.0 / norm_e) * (-kappa1 * tilde_t + np.cross(tf, tilde_d2))
-                self.Dkappa1Df = (1.0 / norm_f) * (-kappa1 * tilde_t - np.cross(te, tilde_d2))
-                self.Dkappa2De = (1.0 / norm_e) * (-kappa2 * tilde_t - np.cross(tf, tilde_d1))
-                self.Dkappa2Df = (1.0 / norm_f) * (-kappa2 * tilde_t + np.cross(te, tilde_d1))
+                self.Dkappa1De = (1.0 / self.norm_e) * (-self.kappa1 * self.tilde_t + np.cross(self.tf, self.tilde_d2))
+                self.Dkappa1Df = (1.0 / self.norm_f) * (-self.kappa1 * self.tilde_t - np.cross(self.te, self.tilde_d2))
+                self.Dkappa2De = (1.0 / self.norm_e) * (-self.kappa2 * self.tilde_t - np.cross(self.tf, self.tilde_d1))
+                self.Dkappa2Df = (1.0 / self.norm_f) * (-self.kappa2 * self.tilde_t + np.cross(self.te, self.tilde_d1))
 
-                self.gradKappa1[i, :3] = -Dkappa1De
-                self.gradKappa1[i, 4:7] = Dkappa1De - Dkappa1Df
-                self.gradKappa1[i, 8:11] = Dkappa1Df
+                self.gradKappa1[i, :3] = -self.Dkappa1De
+                self.gradKappa1[i, 4:7] = self.Dkappa1De - self.Dkappa1Df
+                self.gradKappa1[i, 8:11] = self.Dkappa1Df
 
-                self.gradKappa2[i, :3] = -Dkappa2De
-                self.gradKappa2[i, 4:7] = Dkappa2De - Dkappa2Df
-                self.gradKappa2[i, 8:11] = Dkappa2Df
+                self.gradKappa2[i, :3] = -self.Dkappa2De
+                self.gradKappa2[i, 4:7] = self.Dkappa2De - self.Dkappa2Df
+                self.gradKappa2[i, 8:11] = self.Dkappa2Df
 
                 self.kbLocal = limb.kb[i, :]
 
-                self.gradKappa1[i, 3] = -0.5 * np.dot(kbLocal, d1e)
-                self.gradKappa1[i, 7] = -0.5 * np.dot(kbLocal, d1f)
-                self.gradKappa2[i, 3] = -0.5 * np.dot(kbLocal, d2e)
-                self.gradKappa2[i, 7] = -0.5 * np.dot(kbLocal, d2f)
+                self.gradKappa1[i, 3] = -0.5 * np.dot(self.kbLocal, self.d1e)
+                self.gradKappa1[i, 7] = -0.5 * np.dot(self.kbLocal, self.d1f)
+                self.gradKappa2[i, 3] = -0.5 * np.dot(self.kbLocal, self.d2e)
+                self.gradKappa2[i, 7] = -0.5 * np.dot(self.kbLocal, self.d2f)
 
             # Second loop
             for i in range(1, limb.ne):
                 self.relevantPart = np.zeros((11, 2))
-                self.relevantPart[:, 0] = gradKappa1[i, :]
-                self.relevantPart[:, 1] = gradKappa2[i, :]
+                self.relevantPart[:, 0] = self.gradKappa1[i, :]
+                self.relevantPart[:, 1] = self.gradKappa2[i, :]
                 self.kappaL = limb.kappa[i, :] - limb.kappa_bar[i, :]
 
                 self.f = -np.dot(self.relevantPart, np.dot(self.EIMatrices[limb_idx], self.kappaL)) / limb.voronoi_len[i]
@@ -172,20 +172,20 @@ class elasticBendingForce(BaseForce):
                     ci = 4 * i - 4
                     for k in range(11):
                         ind = ci + k
-                        super().stepper.addForce(ind, -f[k], limb_idx)
+                        super().stepper.addForce(ind, -self.f[k], limb_idx)
                 else:
                     n1, l1 = limb.joint_ids[i - 1]
                     n2, l2 = limb.joint_ids[i]
                     n3, l3 = limb.joint_ids[i + 1]
 
                     for k in range(3):
-                        super().stepper.addForce(4 * n1 + k, -f[k], l1)
-                        super().stepper.addForce(4 * n2 + k, -f[k + 4], l2)
-                        super().stepper.addForce(4 * n3 + k, -f[k + 8], l3)
+                        super().stepper.addForce(4 * n1 + k, -self.f[k], l1)
+                        super().stepper.addForce(4 * n2 + k, -self.f[k + 4], l2)
+                        super().stepper.addForce(4 * n3 + k, -self.f[k + 8], l3)
 
                     ci = 4 * i - 4
-                    super().stepper.addForce(ci + 3, -f[3], limb_idx)
-                    super().stepper.addForce(ci + 7, -f[7], limb_idx)
+                    super().stepper.addForce(ci + 3, -self.f[3], limb_idx)
+                    super().stepper.addForce(ci + 7, -self.f[7], limb_idx)
 
             limb_idx += 1
 
