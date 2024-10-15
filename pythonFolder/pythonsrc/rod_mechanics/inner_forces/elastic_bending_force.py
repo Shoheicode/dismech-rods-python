@@ -308,5 +308,115 @@ class elasticBendingForce(BaseForce):
     
     def compute_force_and_jacobian(self, dt):
         self.compute_force(dt)
-        
-        return super().compute_force_and_jacobian(dt)
+
+
+        # Iterate through the limbs of the soft robot
+        limb_idx = 0
+        for limb in super().soft_robots.limbs:
+            self.gradKappa1 = self.gradKappa1s[limb_idx]
+            self.gradKappa2 = self.gradKappa2s[limb_idx]
+            
+            for i in range(1, limb.ne):
+                norm_e = limb.edge_len[i - 1]
+                norm_f = limb.edge_len[i]
+                te = limb.tangent[i - 1]
+                tf = limb.tangent[i]
+                d1e = limb.m1[i - 1]
+                d2e = limb.m2[i - 1]
+                d1f = limb.m1[i]
+                d2f = limb.m2[i]
+
+                norm2_e = norm_e ** 2
+                norm2_f = norm_f ** 2
+
+                chi = 1.0 + np.dot(te, tf)
+                tilde_t = (te + tf) / chi
+                tilde_d1 = (d1e + d1f) / chi
+                tilde_d2 = (d2e + d2f) / chi
+
+                kappa1 = limb.kappa[i, 0]
+                kappa2 = limb.kappa[i, 1]
+
+                kbLocal = limb.kb[i]
+
+                # Compute Jacobians
+                Jbb = jacobian_computation(limb, EIMatrices[limb_idx], gradKappa1, gradKappa2, DDkappa1, DDkappa2, i)
+
+                # Compute kappaL
+                kappaL = limb.kappa[i] - limb.kappa_bar[i]
+                temp = -1.0 / limb.voronoi_len[i] * np.dot(kappaL.T, EIMatrices[limb_idx])
+                Jbb += temp[0] * DDkappa1 + temp[1] * DDkappa2
+
+                # Add Jacobians depending on node joints
+                if not limb.isNodeJoint[i-1] and not limb.isNodeJoint[i] and not limb.isNodeJoint[i+1]:
+                    for j in range(11):
+                        for k in range(11):
+                            ind1 = 4 * i - 4 + j
+                            ind2 = 4 * i - 4 + k
+                            stepper.add_jacobian(ind1, ind2, -Jbb[k, j], limb_idx)
+                else:
+                    add_joint_jacobians(stepper, limb, Jbb, i, limb_idx)
+
+            limb_idx += 1
+
+        # Iterate through the joints
+        joint_idx = 0
+        num_limbs = len(soft_robots.limbs)
+        for joint in soft_robots.joints:
+            curr_iter = 0
+            gradKappa1 = gradKappa1s[num_limbs + joint_idx]
+            gradKappa2 = gradKappa2s[num_limbs + joint_idx]
+            n2 = joint.joint_node
+            l2 = joint.joint_limb
+
+            for i in range(joint.ne):
+                n1 = joint.connected_nodes[i][0]
+                l1 = joint.connected_nodes[i][1]
+                for j in range(i+1, joint.ne):
+                    n3 = joint.connected_nodes[j][0]
+                    l3 = joint.connected_nodes[j][1]
+
+                    sgn1 = joint.sgns[curr_iter][0]
+                    sgn2 = joint.sgns[curr_iter][1]
+                    theta1_i = joint.theta_inds[curr_iter][0]
+                    theta2_i = joint.theta_inds[curr_iter][1]
+
+                    norm_e = joint.edge_len[i]
+                    norm_f = joint.edge_len[j]
+                    te = sgn1 * joint.tangents[i]
+                    tf = sgn2 * joint.tangents[j]
+                    d1e = joint.m1[curr_iter][0]
+                    d2e = joint.m2[curr_iter][0]
+                    d1f = joint.m1[curr_iter][1]
+                    d2f = joint.m2[curr_iter][1]
+
+                    norm2_e = norm_e ** 2
+                    norm2_f = norm_f ** 2
+
+                    chi = 1.0 + np.dot(te, tf)
+                    tilde_t = (te + tf) / chi
+                    tilde_d1 = (d1e + d1f) / chi
+                    tilde_d2 = (d2e + d2f) / chi
+
+                    kappa1 = joint.kappa[curr_iter, 0]
+                    kappa2 = joint.kappa[curr_iter, 1]
+
+                    kbLocal = joint.kb[curr_iter]
+
+                    # Compute Jacobians for joint
+                    Jbb = jacobian_computation(joint, EIMatrices[0], gradKappa1, gradKappa2, DDkappa1, DDkappa2, curr_iter)
+
+                    # Adjust Jbb for joint-related cases
+                    if sgn1 == -1:
+                        Jbb[:, 3] *= -1
+                        Jbb[3, :] *= -1
+                    if sgn2 == -1:
+                        Jbb[:, 7] *= -1
+                        Jbb[7, :] *= -1
+
+                    # Add Jacobians
+                    add_joint_jacobians(stepper, joint, Jbb, curr_iter, joint_idx, theta1_i, theta2_i)
+
+                    curr_iter += 1
+
+            joint_idx += 1
