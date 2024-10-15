@@ -195,7 +195,7 @@ class ElasticTwistingForce(BaseForce):
                         for k in range(11):
                             ind1 = 4 * i - 4 + j
                             ind2 = 4 * i - 4 + k
-                            stepper.addJacobian(ind1, ind2, -Jtt[k, j], limb_idx)
+                            super().stepper.addJacobian(ind1, ind2, -Jtt[k, j], limb_idx)
                 else:
                     n1, l1 = limb.joint_ids[i - 1]
                     n2, l2 = limb.joint_ids[i]
@@ -203,17 +203,17 @@ class ElasticTwistingForce(BaseForce):
 
                     for t in range(3):
                         for k in range(3):
-                            stepper.addJacobian(4 * n1 + t, 4 * n1 + k, -Jtt[k, t], l1)
-                            stepper.addJacobian(4 * n1 + t, 4 * n2 + k, -Jtt[k + 4, t], l1, l2)
-                            stepper.addJacobian(4 * n1 + t, 4 * n3 + k, -Jtt[k + 8, t], l1, l3)
+                            super().stepper.addJacobian(4 * n1 + t, 4 * n1 + k, -Jtt[k, t], l1)
+                            super().stepper.addJacobian(4 * n1 + t, 4 * n2 + k, -Jtt[k + 4, t], l1, l2)
+                            super().stepper.addJacobian(4 * n1 + t, 4 * n3 + k, -Jtt[k + 8, t], l1, l3)
 
-                            stepper.addJacobian(4 * n2 + t, 4 * n1 + k, -Jtt[k, t + 4], l2, l1)
-                            stepper.addJacobian(4 * n2 + t, 4 * n2 + k, -Jtt[k + 4, t + 4], l2)
-                            stepper.addJacobian(4 * n2 + t, 4 * n3 + k, -Jtt[k + 8, t + 4], l2, l3)
+                            super().stepper.addJacobian(4 * n2 + t, 4 * n1 + k, -Jtt[k, t + 4], l2, l1)
+                            super().stepper.addJacobian(4 * n2 + t, 4 * n2 + k, -Jtt[k + 4, t + 4], l2)
+                            super().stepper.addJacobian(4 * n2 + t, 4 * n3 + k, -Jtt[k + 8, t + 4], l2, l3)
 
-                            stepper.addJacobian(4 * n3 + t, 4 * n1 + k, -Jtt[k, t + 8], l3, l1)
-                            stepper.addJacobian(4 * n3 + t, 4 * n2 + k, -Jtt[k + 4, t + 8], l3, l2)
-                            stepper.addJacobian(4 * n3 + t, 4 * n3 + k, -Jtt[k + 8, t + 8], l3)
+                            super().stepper.addJacobian(4 * n3 + t, 4 * n1 + k, -Jtt[k, t + 8], l3, l1)
+                            super().stepper.addJacobian(4 * n3 + t, 4 * n2 + k, -Jtt[k + 4, t + 8], l3, l2)
+                            super().stepper.addJacobian(4 * n3 + t, 4 * n3 + k, -Jtt[k + 8, t + 8], l3)
 
                     ci = 4 * (i - 1)
                     n1_i = 4 * n1
