@@ -199,23 +199,23 @@ class elasticBendingForce(BaseForce):
                 self.f = -np.dot(self.relevantPart, np.dot(self.EIMatrices[limb_idx], self.kappaL)) / limb.voronoi_len[i]
 
                 if not (limb.is_node_joint[i - 1] == 1 or limb.is_node_joint[i] == 1 or limb.is_node_joint[i + 1] == 1):
-                    ci = 4 * i - 4
+                    self.ci = 4 * i - 4
                     for k in range(11):
-                        ind = ci + k
-                        super().stepper.addForce(ind, -self.f[k], limb_idx)
+                        ind = self.ci + k
+                        super().stepper.add_force(ind, -self.f[k], limb_idx)
                 else:
                     n1, l1 = limb.joint_ids[i - 1]
                     n2, l2 = limb.joint_ids[i]
                     n3, l3 = limb.joint_ids[i + 1]
 
                     for k in range(3):
-                        super().stepper.addForce(4 * n1 + k, -self.f[k], l1)
-                        super().stepper.addForce(4 * n2 + k, -self.f[k + 4], l2)
-                        super().stepper.addForce(4 * n3 + k, -self.f[k + 8], l3)
+                        super().stepper.add_force(4 * n1 + k, -self.f[k], l1)
+                        super().stepper.add_force(4 * n2 + k, -self.f[k + 4], l2)
+                        super().stepper.add_force(4 * n3 + k, -self.f[k + 8], l3)
 
                     ci = 4 * i - 4
-                    super().stepper.addForce(ci + 3, -self.f[3], limb_idx)
-                    super().stepper.addForce(ci + 7, -self.f[7], limb_idx)
+                    super().stepper.add_force(ci + 3, -self.f[3], limb_idx)
+                    super().stepper.add_force(ci + 7, -self.f[7], limb_idx)
 
             limb_idx += 1
 
@@ -295,12 +295,12 @@ class elasticBendingForce(BaseForce):
                     self.f = -np.dot(self.relevantPart, np.dot(self.EIMatrices[0], self.kappaL)) / joint.voronoi_len[curr_iter]
 
                     for k in range(3):
-                        super().stepper.addForce(4 * n1 + k, -self.f[k], l1)
-                        super().stepper.addForce(4 * n2 + k, -self.f[k + 4], l2)
-                        super().stepper.addForce(4 * n3 + k, -self.f[k + 8], l3)
+                        super().stepper.add_force(4 * n1 + k, -self.f[k], l1)
+                        super().stepper.add_force(4 * n2 + k, -self.f[k + 4], l2)
+                        super().stepper.add_force(4 * n3 + k, -self.f[k + 8], l3)
 
-                    super().stepper.addForce(theta1_i, -self.f[3] * sgn1, l1)
-                    super().stepper.addForce(theta2_i, -self.f[7] * sgn2, l3)
+                    super().stepper.add_force(theta1_i, -self.f[3] * sgn1, l1)
+                    super().stepper.add_force(theta2_i, -self.f[7] * sgn2, l3)
 
                     curr_iter += 1
 
