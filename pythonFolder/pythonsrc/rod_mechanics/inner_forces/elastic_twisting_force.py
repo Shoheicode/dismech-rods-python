@@ -187,7 +187,7 @@ class ElasticTwistingForce(BaseForce):
                 milen = -1 / limb.voronoi_len[i]
 
                 # Jacobian matrix Jtt calculation
-                Jtt = GJ * milen * ((deltam[i] + limb.ref_twist[i] - limb.twist_bar[i]) * DDtwist +
+                Jtt = GJ * milen * ((deltam[i] + limb.ref_twist[i] - limb.twist_bar[i]) * self.dd_twist +
                                     np.outer(gradTwistLocal, gradTwistLocal))
 
                 if limb.isNodeJoint[i - 1] != 1 and limb.isNodeJoint[i] != 1 and limb.isNodeJoint[i + 1] != 1:
