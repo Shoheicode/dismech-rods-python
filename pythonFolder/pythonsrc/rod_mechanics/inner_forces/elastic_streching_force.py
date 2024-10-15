@@ -72,7 +72,7 @@ class elasticStretchingForce(BaseForce):
 
                 # Calculate lengths
                 self.len = limb.edge_len[i]
-                self.refLength = limb.ref_len[i]
+                self.ref_length = limb.ref_len[i]
                  # Calculate the difference vector (dxx)
                 self.dxx = np.zeros(3)
                 self.dxx[0] = limb.x[4*i+4] - limb.x[4*i+0]
@@ -84,7 +84,7 @@ class elasticStretchingForce(BaseForce):
                 self.v = self.u.reshape(-1, 1)  # Column vector
 
                 # Compute M0 matrix
-                self.M0 = limb.EA * ((1 / refLength - 1 / self.len) * self.Id3 + (1 / self.len) * np.outer(u, u) / (u.dot(u)))
+                self.M0 = limb.EA * ((1 / self.ref_length - 1 / self.len) * self.Id3 + (1 / self.len) * np.outer(u, u) / (u.dot(u)))
 
                 # Update Jss blocks
                 self.JSS[0:3, 0:3] = -M0
@@ -122,7 +122,7 @@ class elasticStretchingForce(BaseForce):
                 v = u.reshape(-1, 1)  # Column vector
 
                 # Compute M0 matrix
-                M0 = curr_limb.EA * ((1 / refLength - 1 / self.len) * self.Id3 + (1 / self.len) * np.outer(u, u) / (u.dot(u)))
+                M0 = curr_limb.EA * ((1 / refLength - 1 / self.len) * self.Id3 + (1 / self.len) * np.outer(self.u, self.u) / (self.u.dot(self.u)))
 
                 # Update Jss blocks
                 self.JSS[0:3, 0:3] = -M0
