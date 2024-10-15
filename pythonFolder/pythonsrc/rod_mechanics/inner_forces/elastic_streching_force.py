@@ -31,15 +31,15 @@ class elasticStretchingForce(BaseForce):
                 if limb.is_edge_joint[i]:
                     continue
                 self.epsX = limb.edge_len[i] / limb.ref_len[i] - 1.0
-                f = limb.EA * limb.tangent[i, :] * self.epsX  # NumPy row access
+                self.f = limb.EA * limb.tangent[i, :] * self.epsX  # NumPy row access
 
                 # Apply forces
                 for k in range(3):
                     ind = 4 * i + k
-                    super().stepper.addForce(ind, -f[k], limb_idx)  # subtracting elastic force
+                    super().stepper.addForce(ind, -self.f[k], limb_idx)  # subtracting elastic force
 
                     ind = 4 * (i + 1) + k
-                    super().stepper.addForce(ind, f[k], limb_idx)  # adding elastic force
+                    super().stepper.addForce(ind, self.f[k], limb_idx)  # adding elastic force
 
             limb_idx += 1
         
@@ -52,15 +52,15 @@ class elasticStretchingForce(BaseForce):
 
                 # Compute epsX and force 'f' for joint
                 epsX = joint.edge_len[i] / joint.ref_len[i] - 1.0
-                f = curr_limb.EA * joint.tangents[i, :] * sgn * epsX  # NumPy row access
+                f = curr_limb.EA * joint.tangents[i, :] * sgn * self.epsX  # NumPy row access
 
                 # Apply forces for the joint
                 for k in range(3):
                     ind = 4 * n1 + k
-                    super().stepper.addForce(ind, -f[k], limb_idx)
+                    super().stepper.addForce(ind, -self.f[k], limb_idx)
 
                     ind = 4 * joint.joint_node + k
-                    super().stepper.addForce(ind, f[k], joint.joint_limb)
+                    super().stepper.addForce(ind, self.f[k], joint.joint_limb)
     
     def compute_force_and_jacobian(self, dt):
         self.compute_force(dt)
