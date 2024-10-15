@@ -27,11 +27,10 @@ class elasticStretchingForce(BaseForce):
     def compute_force(self, dt):
         limb_idx = 0
         for limb in super().soft_robots.limbs:
-            a : ElasticRod = limb
-            for i in range(a.ne):
-                if a.is_edge_joint[i]:
+            for i in range(limb.ne):
+                if limb.is_edge_joint[i]:
                     continue
-                self.epsX = a.edge_len[i] / a.ref_len[i] - 1.0
+                self.epsX = limb.edge_len[i] / limb.ref_len[i] - 1.0
                 f = limb.EA * limb.tangent[i, :] * self.epsX  # NumPy row access
 
                 # Apply forces
