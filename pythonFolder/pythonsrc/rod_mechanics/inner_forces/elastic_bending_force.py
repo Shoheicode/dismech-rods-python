@@ -128,7 +128,7 @@ class elasticBendingForce(BaseForce):
             self.gradKappa1s.append(np.zeros((nb, 11)))
             self.gradKappa2s.append(np.zeros((nb, 11)))
         
-        relevantPart = np.zeros((11, 2))  # Equivalent to MatrixXd::Zero(11, 2)
+        self.relevantPart = np.zeros((11, 2))  # Equivalent to MatrixXd::Zero(11, 2)
         self.DDkappa1 = np.zeros((11, 11)) # Equivalent to MatrixXd::Zero(11, 11)
         self.DDkappa2 = np.zeros((11, 11)) # Equivalent to MatrixXd::Zero(11, 11)
         self.Jbb = np.zeros((11,11)) # Equivalent to MatrixXd::Zero(11, 11)
@@ -182,12 +182,12 @@ class elasticBendingForce(BaseForce):
                 self.gradKappa2[i, 4:7] = self.Dkappa2De - self.Dkappa2Df
                 self.gradKappa2[i, 8:11] = self.Dkappa2Df
 
-                self.kbLocal = limb.kb[i, :]
+                self.kb_local = limb.kb[i, :]
 
-                self.gradKappa1[i, 3] = -0.5 * np.dot(self.kbLocal, self.d1e)
-                self.gradKappa1[i, 7] = -0.5 * np.dot(self.kbLocal, self.d1f)
-                self.gradKappa2[i, 3] = -0.5 * np.dot(self.kbLocal, self.d2e)
-                self.gradKappa2[i, 7] = -0.5 * np.dot(self.kbLocal, self.d2f)
+                self.gradKappa1[i, 3] = -0.5 * np.dot(self.kb_local, self.d1e)
+                self.gradKappa1[i, 7] = -0.5 * np.dot(self.kb_local, self.d1f)
+                self.gradKappa2[i, 3] = -0.5 * np.dot(self.kb_local, self.d2e)
+                self.gradKappa2[i, 7] = -0.5 * np.dot(self.kb_local, self.d2f)
 
             # Second loop
             for i in range(1, limb.ne):
