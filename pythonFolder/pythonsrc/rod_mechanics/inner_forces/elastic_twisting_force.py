@@ -293,11 +293,11 @@ class ElasticTwistingForce(BaseForce):
                     self.dd_twist[4:7, 8:11] = self.d2m_de_df - self.d2m_df2
                     self.dd_twist[8:11, 8:11] = self.d2m_df2
 
-                    gradTwistLocal = gradTwist[curr_iter, :]
-                    milen = -1 / joint.voronoi_len[curr_iter]
+                    self.grad_twist_local = self.grad_twist[curr_iter, :]
+                    self.milen = -1 / joint.voronoi_len[curr_iter]
 
-                    Jtt = GJ * milen * ((deltam[curr_iter] + joint.ref_twist[curr_iter] - joint.twist_bar[curr_iter]) * DDtwist +
-                                        np.outer(gradTwistLocal, gradTwistLocal))
+                    self.Jtt = self.GJ * self.milen * ((self.deltam[curr_iter] + joint.ref_twist[curr_iter] - joint.twist_bar[curr_iter]) * self.dd_twist +
+                                        np.outer(self.grad_twist_local, self.grad_twist_local))
 
                     if sgn1 == -1:
                         Jtt[:, 3] *= -1
