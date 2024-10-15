@@ -296,7 +296,7 @@ class ElasticTwistingForce(BaseForce):
                     self.grad_twist_local = self.grad_twist[curr_iter, :]
                     self.milen = -1 / joint.voronoi_len[curr_iter]
 
-                    self.self.JTT = self.GJ * self.milen * ((self.deltam[curr_iter] + joint.ref_twist[curr_iter] - joint.twist_bar[curr_iter]) * self.dd_twist +
+                    self.JTT = self.GJ * self.milen * ((self.deltam[curr_iter] + joint.ref_twist[curr_iter] - joint.twist_bar[curr_iter]) * self.dd_twist +
                                         np.outer(self.grad_twist_local, self.grad_twist_local))
 
                     if sgn1 == -1:

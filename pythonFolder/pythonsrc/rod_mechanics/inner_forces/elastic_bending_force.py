@@ -128,9 +128,10 @@ class elasticBendingForce(BaseForce):
             self.gradKappa1s.append(np.zeros((nb, 11)))
             self.gradKappa2s.append(np.zeros((nb, 11)))
         
-        self.DDkappa1 = np.zeros((11, 11))
-        self.DDkappa2 = np.zeros((11, 11))
-        self.Jbb = np.zeros((11,11))
+        relevantPart = np.zeros((11, 2))  # Equivalent to MatrixXd::Zero(11, 2)
+        self.DDkappa1 = np.zeros((11, 11)) # Equivalent to MatrixXd::Zero(11, 11)
+        self.DDkappa2 = np.zeros((11, 11)) # Equivalent to MatrixXd::Zero(11, 11)
+        self.Jbb = np.zeros((11,11)) # Equivalent to MatrixXd::Zero(11, 11)
 
         # Initialize 3x3 matrices for D2kappa terms using np.zeros
         self.D2kappa1De2 = np.zeros((3, 3))    # Equivalent to D2kappa1De2.setZero(3, 3)
