@@ -198,7 +198,7 @@ class elasticBendingForce(BaseForce):
 
                 self.f = -np.dot(self.relevantPart, np.dot(self.EIMatrices[limb_idx], self.kappaL)) / limb.voronoi_len[i]
 
-                if not (limb.is_node_joint[i - 1] or limb.is_node_joint[i] or limb.is_node_joint[i + 1]):
+                if not (limb.is_node_joint[i - 1] == 1 or limb.is_node_joint[i] == 1 or limb.is_node_joint[i + 1] == 1):
                     ci = 4 * i - 4
                     for k in range(11):
                         ind = ci + k
