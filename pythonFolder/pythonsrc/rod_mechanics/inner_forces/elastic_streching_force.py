@@ -71,7 +71,7 @@ class elasticStretchingForce(BaseForce):
                     continue
 
                 # Calculate lengths
-                self.len_ = limb.edge_len[i]
+                self.len = limb.edge_len[i]
                 self.refLength = limb.ref_len[i]
                  # Calculate the difference vector (dxx)
                 self.dxx = np.zeros(3)
@@ -84,7 +84,7 @@ class elasticStretchingForce(BaseForce):
                 self.v = self.u.reshape(-1, 1)  # Column vector
 
                 # Compute M0 matrix
-                M0 = limb.EA * ((1 / refLength - 1 / len_) * self.Id3 + (1 / len_) * np.outer(u, u) / (u.dot(u)))
+                self.M0 = limb.EA * ((1 / refLength - 1 / self.len) * self.Id3 + (1 / self.len) * np.outer(u, u) / (u.dot(u)))
 
                 # Update Jss blocks
                 self.JSS[0:3, 0:3] = -M0
@@ -108,7 +108,7 @@ class elasticStretchingForce(BaseForce):
                 curr_limb = super().soft_robots.limbs[limb_idx]
 
                 # Calculate lengths
-                len_ = joint.edge_len[i]
+                self.len = joint.edge_len[i]
                 refLength = joint.ref_len[i]
 
                 # Calculate the difference vector (dxx)
@@ -122,7 +122,7 @@ class elasticStretchingForce(BaseForce):
                 v = u.reshape(-1, 1)  # Column vector
 
                 # Compute M0 matrix
-                M0 = curr_limb.EA * ((1 / refLength - 1 / len_) * self.Id3 + (1 / len_) * np.outer(u, u) / (u.dot(u)))
+                M0 = curr_limb.EA * ((1 / refLength - 1 / self.len) * self.Id3 + (1 / self.len) * np.outer(u, u) / (u.dot(u)))
 
                 # Update Jss blocks
                 self.JSS[0:3, 0:3] = -M0
