@@ -51,8 +51,8 @@ class elasticBendingForce(BaseForce):
     m2f = np.zeros(3)
 
     # Initialize matrices
-    kappa11 = np.zeros((3, 3))
-    kappa22 = np.zeros((3, 3))
+    kappa1 = np.zeros((3, 3))
+    kappa2 = np.zeros((3, 3))
     f = np.zeros(3)
 
     # Lists of matrices (using numpy arrays instead of Eigen::MatrixXd)
@@ -127,7 +127,21 @@ class elasticBendingForce(BaseForce):
             nb = joint.num_bending_combos
             self.gradKappa1s.append(np.zeros((nb, 11)))
             self.gradKappa2s.append(np.zeros((nb, 11)))
+        
+        self.DDkappa1 = np.zeros((11, 11))
+        self.DDkappa2 = np.zeros((11, 11))
+        self.Jbb = np.zeros((11,11))
 
+        # Initialize 3x3 matrices for D2kappa terms using np.zeros
+        self.D2kappa1De2 = np.zeros((3, 3))    # Equivalent to D2kappa1De2.setZero(3, 3)
+        self.D2kappa1Df2 = np.zeros((3, 3))    # Equivalent to D2kappa1Df2.setZero(3, 3)
+        self.D2kappa1DeDf = np.zeros((3, 3))   # Equivalent to D2kappa1DeDf.setZero(3, 3)
+        self.D2kappa2De2 = np.zeros((3, 3))    # Equivalent to D2kappa2De2.setZero(3, 3)
+        self.D2kappa2Df2 = np.zeros((3, 3))    # Equivalent to D2kappa2Df2.setZero(3, 3)
+        self.D2kappa2DeDf = np.zeros((3, 3))   # Equivalent to D2kappa2DeDf.setZero(3, 3)
+
+        # Initialize vector f using np.zeros, equivalent to VectorXd::Zero in Eigen
+        self.f = np.zeros(11)  # Equivalent to VectorXd::Zero(11)
 
     def compute_force(self, dt):
         limb_idx = 0
