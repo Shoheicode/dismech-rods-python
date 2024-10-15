@@ -285,14 +285,14 @@ class ElasticRod:
         for i in range(self.ne):
             ref_len[i] = np.linalg.norm(self.x[4*(i+1):4*(i+1)+3] - self.x[4*i:4*i+3])
 
-        voronoi_len = np.zeros(self.nv)
+        self.voronoi_len = np.zeros(self.nv)
         for i in range(self.nv):
             if i == 0:
-                voronoi_len[i] = 0.5 * ref_len[i]
+                self.voronoi_len[i] = 0.5 * ref_len[i]
             elif i == self.nv - 1:
-                voronoi_len[i] = 0.5 * ref_len[i - 1]
+                self.voronoi_len[i] = 0.5 * ref_len[i - 1]
             else:
-                voronoi_len[i] = 0.5 * (ref_len[i - 1] + ref_len[i])
+                self.voronoi_len[i] = 0.5 * (ref_len[i - 1] + ref_len[i])
 
     def __compute_tangent(self):
         for i in range(self.ne):
