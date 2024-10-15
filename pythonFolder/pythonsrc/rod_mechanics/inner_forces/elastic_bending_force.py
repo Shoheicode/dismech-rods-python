@@ -119,13 +119,11 @@ class elasticBendingForce(BaseForce):
             # Assuming limb is an object with an attribute 'nv'
             nv = limb.nv  # Number of vertices (nv) from the limb object
 
-            # gradKappa1s and gradKappa2s lists to store matrices
-            gradKappa1s = []
-            gradKappa2s = []
-
             # Append a zero matrix of shape (nv, 11) to both gradKappa1s and gradKappa2s
-            gradKappa1s.append(np.zeros((nv, 11)))
-            gradKappa2s.append(np.zeros((nv, 11)))
+            self.gradKappa1s.append(np.zeros((nv, 11)))
+            self.gradKappa2s.append(np.zeros((nv, 11)))
+
+        
 
 
     def compute_force(self, dt):
