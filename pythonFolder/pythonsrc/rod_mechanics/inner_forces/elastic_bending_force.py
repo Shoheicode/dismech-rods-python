@@ -131,10 +131,10 @@ class elasticBendingForce(BaseForce):
                 self.d1f = limb.m1[i, :]
                 self.d2f = limb.m2[i, :]
 
-                self.chi = 1.0 + np.dot(te, tf)
-                self.tilde_t = (te + tf) / chi
-                self.tilde_d1 = (d1e + d1f) / chi
-                self.tilde_d2 = (d2e + d2f) / chi
+                self.chi = 1.0 + np.dot(self.te, self.tf)
+                self.tilde_t = (self.te + self.tf) / self.chi
+                self.tilde_d1 = (self.d1e + self.d1f) / self.chi
+                self.tilde_d2 = (self.d2e + self.d2f) / self.chi
 
                 self.kappa1 = limb.kappa[i, 0]
                 self.kappa2 = limb.kappa[i, 1]
@@ -279,6 +279,6 @@ class elasticBendingForce(BaseForce):
     def compute_force_and_jacobian(self, dt):
         self.compute_force(dt)
 
-        
+
         
         return super().compute_force_and_jacobian(dt)
