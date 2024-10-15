@@ -165,7 +165,7 @@ class ElasticTwistingForce(BaseForce):
                 self.tilde_t = (self.te + self.tf) / self.chi
 
                 # Create cross product matrix for te
-                self.teMatrix = np.cross(np.identity(3), te)
+                self.teMatrix = np.cross(np.identity(3), self.te)
 
                 self.d2m_de2 = -0.25 / self.norm2_e * (np.dot(self.kbLocal, (self.te + self.tilde_t).T) + np.dot((self.te + self.tilde_t), self.kbLocal.T))
                 self.d2m_df2 = -0.25 / self.norm2_f * (np.dot(self.kbLocal, (self.tf + self.tilde_t).T) + np.dot((self.tf + self.tilde_t), self.kbLocal.T))
@@ -187,7 +187,7 @@ class ElasticTwistingForce(BaseForce):
                 self.milen = -1 / limb.voronoi_len[i]
 
                 # Jacobian matrix self.JTT calculation
-                self.JTT = GJ * self.milen * ((self.deltam[i] + limb.ref_twist[i] - limb.twist_bar[i]) * self.dd_twist +
+                self.JTT = self.GJ * self.milen * ((self.deltam[i] + limb.ref_twist[i] - limb.twist_bar[i]) * self.dd_twist +
                                     np.outer(self.grad_twist_local, self.grad_twist_local))
 
                 if limb.isNodeJoint[i - 1] != 1 and limb.isNodeJoint[i] != 1 and limb.isNodeJoint[i + 1] != 1:
@@ -263,24 +263,24 @@ class ElasticTwistingForce(BaseForce):
                     theta1_i = joint.theta_inds[curr_iter][0]
                     theta2_i = joint.theta_inds[curr_iter][1]
 
-                    norm_e = joint.edge_len[i]
-                    norm_f = joint.edge_len[j]
-                    te = joint.tangents[i, :] * sgn1
-                    tf = joint.tangents[j, :] * sgn2
+                    self.norm_e = joint.edge_len[i]
+                    self.norm_f = joint.edge_len[j]
+                    self.te = joint.tangents[i, :] * sgn1
+                    self.tf = joint.tangents[j, :] * sgn2
 
-                    norm2_e = norm_e * norm_e
-                    norm2_f = norm_f * norm_f
+                    self.norm2_e = self.norm_e * self.norm_e
+                    self.norm2_f = self.norm_f * self.norm_f
 
-                    kbLocal = joint.kb[curr_iter, :]
+                    self.kb_local = joint.kb[curr_iter, :]
 
-                    chi = 1.0 + np.dot(te, tf)
-                    tilde_t = (te + tf) / chi
+                    self.chi = 1.0 + np.dot(self.te, self.tf)
+                    self.tilde_t = (self.te + self.tf) / self.chi
 
-                    teMatrix = np.cross(np.identity(3), te)
+                    teMatrix = np.cross(np.identity(3), self.te)
 
-                    self.d2m_de2 = -0.25 / norm2_e * (np.dot(kbLocal, (te + tilde_t).T) + np.dot((te + tilde_t), kbLocal.T))
-                    self.d2m_df2 = -0.25 / norm2_f * (np.dot(kbLocal, (tf + tilde_t).T) + np.dot((tf + tilde_t), kbLocal.T))
-                    self.d2m_de_df = 0.5 / (norm_e * norm_f) * (2.0 / chi * teMatrix - np.dot(kbLocal, tilde_t.T))
+                    self.d2m_de2 = -0.25 / self.norm2_e * (np.dot(self.kb_local, (self.te + self.tilde_t).T) + np.dot((self.te + self.tilde_t), self.kb_local.T))
+                    self.d2m_df2 = -0.25 / self.norm2_f * (np.dot(self.kb_local, (self.tf + self.tilde_t).T) + np.dot((self.tf + self.tilde_t), self.kb_local.T))
+                    self.d2m_de_df = 0.5 / (self.norm_e * self.norm_f) * (2.0 / self.chi * teMatrix - np.dot(self.kbLocal, self.tilde_t.T))
                     self.d2m_df_de = self.d2m_de_df.T
 
                     self.dd_twist[0:3, 0:3] = self.d2m_de2
@@ -308,41 +308,41 @@ class ElasticTwistingForce(BaseForce):
 
                     for t in range(3):
                         for k in range(3):
-                            stepper.addJacobian(4 * n1 + t, 4 * n1 + k, -self.JTT[k, t], l1)
-                            stepper.addJacobian(4 * n1 + t, 4 * n2 + k, -self.JTT[k + 4, t], l1, l2)
-                            stepper.addJacobian(4 * n1 + t, 4 * n3 + k, -self.JTT[k + 8, t], l1, l3)
+                            super().stepper.addJacobian(4 * n1 + t, 4 * n1 + k, -self.JTT[k, t], l1)
+                            super().stepper.addJacobian(4 * n1 + t, 4 * n2 + k, -self.JTT[k + 4, t], l1, l2)
+                            super().stepper.addJacobian(4 * n1 + t, 4 * n3 + k, -self.JTT[k + 8, t], l1, l3)
 
-                            stepper.addJacobian(4 * n2 + t, 4 * n1 + k, -self.JTT[k, t + 4], l2, l1)
-                            stepper.addJacobian(4 * n2 + t, 4 * n2 + k, -self.JTT[k + 4, t + 4], l2)
-                            stepper.addJacobian(4 * n2 + t, 4 * n3 + k, -self.JTT[k + 8, t + 4], l2, l3)
+                            super().stepper.addJacobian(4 * n2 + t, 4 * n1 + k, -self.JTT[k, t + 4], l2, l1)
+                            super().stepper.addJacobian(4 * n2 + t, 4 * n2 + k, -self.JTT[k + 4, t + 4], l2)
+                            super().stepper.addJacobian(4 * n2 + t, 4 * n3 + k, -self.JTT[k + 8, t + 4], l2, l3)
 
-                            stepper.addJacobian(4 * n3 + t, 4 * n1 + k, -self.JTT[k, t + 8], l3, l1)
-                            stepper.addJacobian(4 * n3 + t, 4 * n2 + k, -self.JTT[k + 4, t + 8], l3, l2)
-                            stepper.addJacobian(4 * n3 + t, 4 * n3 + k, -self.JTT[k + 8, t + 8], l3)
+                            super().stepper.addJacobian(4 * n3 + t, 4 * n1 + k, -self.JTT[k, t + 8], l3, l1)
+                            super().stepper.addJacobian(4 * n3 + t, 4 * n2 + k, -self.JTT[k + 4, t + 8], l3, l2)
+                            super().stepper.addJacobian(4 * n3 + t, 4 * n3 + k, -self.JTT[k + 8, t + 8], l3)
 
                     for k in range(3):
-                        stepper.addJacobian(theta1_i, 4 * n1 + k, -self.JTT[k, 3], l1)
-                        stepper.addJacobian(4 * n1 + k, theta1_i, -self.JTT[3, k], l1)
+                        super().stepper.addJacobian(theta1_i, 4 * n1 + k, -self.JTT[k, 3], l1)
+                        super().stepper.addJacobian(4 * n1 + k, theta1_i, -self.JTT[3, k], l1)
 
-                        stepper.addJacobian(theta1_i, 4 * n2 + k, -self.JTT[k + 4, 3], l1, l2)
-                        stepper.addJacobian(4 * n2 + k, theta1_i, -self.JTT[3, k + 4], l2, l1)
+                        super().stepper.addJacobian(theta1_i, 4 * n2 + k, -self.JTT[k + 4, 3], l1, l2)
+                        super().stepper.addJacobian(4 * n2 + k, theta1_i, -self.JTT[3, k + 4], l2, l1)
 
-                        stepper.addJacobian(theta1_i, 4 * n3 + k, -self.JTT[k + 8, 3], l1, l3)
-                        stepper.addJacobian(4 * n3 + k, theta1_i, -self.JTT[3, k + 8], l3, l1)
+                        super().stepper.addJacobian(theta1_i, 4 * n3 + k, -self.JTT[k + 8, 3], l1, l3)
+                        super().stepper.addJacobian(4 * n3 + k, theta1_i, -self.JTT[3, k + 8], l3, l1)
 
-                        stepper.addJacobian(theta2_i, 4 * n1 + k, -self.JTT[k, 7], l3, l1)
-                        stepper.addJacobian(4 * n1 + k, theta2_i, -self.JTT[7, k], l1, l3)
+                        super().stepper.addJacobian(theta2_i, 4 * n1 + k, -self.JTT[k, 7], l3, l1)
+                        super().stepper.addJacobian(4 * n1 + k, theta2_i, -self.JTT[7, k], l1, l3)
 
-                        stepper.addJacobian(theta2_i, 4 * n2 + k, -self.JTT[k + 4, 7], l3, l2)
-                        stepper.addJacobian(4 * n2 + k, theta2_i, -self.JTT[7, k + 4], l2, l3)
+                        super().stepper.addJacobian(theta2_i, 4 * n2 + k, -self.JTT[k + 4, 7], l3, l2)
+                        super().stepper.addJacobian(4 * n2 + k, theta2_i, -self.JTT[7, k + 4], l2, l3)
 
-                        stepper.addJacobian(theta2_i, 4 * n3 + k, -self.JTT[k + 8, 7], l3)
-                        stepper.addJacobian(4 * n3 + k, theta2_i, -self.JTT[7, k + 8], l3)
+                        super().stepper.addJacobian(theta2_i, 4 * n3 + k, -self.JTT[k + 8, 7], l3)
+                        super().stepper.addJacobian(4 * n3 + k, theta2_i, -self.JTT[7, k + 8], l3)
 
-                    stepper.addJacobian(theta1_i, theta1_i, -self.JTT[3, 3], l1)
-                    stepper.addJacobian(theta1_i, theta2_i, -self.JTT[7, 3], l1, l3)
-                    stepper.addJacobian(theta2_i, theta1_i, -self.JTT[3, 7], l3, l1)
-                    stepper.addJacobian(theta2_i, theta2_i, -self.JTT[7, 7], l3)
+                    super().stepper.addJacobian(theta1_i, theta1_i, -self.JTT[3, 3], l1)
+                    super().stepper.addJacobian(theta1_i, theta2_i, -self.JTT[7, 3], l1, l3)
+                    super().stepper.addJacobian(theta2_i, theta1_i, -self.JTT[3, 7], l3, l1)
+                    super().stepper.addJacobian(theta2_i, theta2_i, -self.JTT[7, 7], l3)
 
                     curr_iter += 1
 
