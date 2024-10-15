@@ -31,11 +31,11 @@ class ElasticTwistingForce(BaseForce):
         self.dd_twist = np.zeros((11, 11))
         self.jtt = np.zeros((11, 11))
         self.grad_twist: List[np.ndarray] = None
-        self.gj = 0.0
+        self.GJ = 0.0
 
     def compute_force(self, dt: float):
         for limb_idx, limb in enumerate(self.soft_robots.limbs):
-            self.gj = limb.GJ
+            self.GJ = limb.GJ
             self.grad_twist = self.grad_twists[limb_idx]
             self.deltam = self.deltams[limb_idx]
             self.theta_f = self.theta_fs[limb_idx]
@@ -45,9 +45,9 @@ class ElasticTwistingForce(BaseForce):
                 self.theta_f[i] = limb.x[4*i + 3]
 
             for i in range(limb.ne):
-                self.theta_e[i] = 0 if i == 0 else theta_f[i-1]
+                self.theta_e[i] = 0 if i == 0 else self.theta_f[i-1]
 
-            deltam[:] = theta_f - theta_e
+            self.deltam[:] = self.theta_f - self.theta_e
 
             for i in range(1, limb.ne):
                 self.norm_e = limb.edge_len[i-1]
@@ -59,7 +59,7 @@ class ElasticTwistingForce(BaseForce):
                 self.grad_twist[i, 7] = 1
 
             for i in range(1, limb.ne):
-                self.value = self.gj / limb.voronoi_len[i] * (self.deltam[i] + limb.ref_twist[i] - limb.twist_bar[i])
+                self.value = self.GJ / limb.voronoi_len[i] * (self.deltam[i] + limb.ref_twist[i] - limb.twist_bar[i])
                 self.f = -self.value * self.grad_twist[i]
 
                 if limb.is_node_joint[i-1] != 1 and limb.is_node_joint[i] != 1 and limb.is_node_joint[i+1] != 1:
@@ -83,7 +83,7 @@ class ElasticTwistingForce(BaseForce):
 
         # Joint force computation
         for joint_idx, joint in enumerate(self.soft_robots.joints):
-            self.gj = self.soft_robots.limbs[0].GJ  # NOTE: Change this later
+            self.GJ = self.soft_robots.limbs[0].GJ  # NOTE: Change this later
             self.grad_twist = self.grad_twists[len(self.soft_robots.limbs) + joint_idx]
             self.deltam = self.deltams[len(self.soft_robots.limbs) + joint_idx]
             self.theta_f = self.theta_fs[len(self.soft_robots.limbs) + joint_idx]
@@ -127,7 +127,7 @@ class ElasticTwistingForce(BaseForce):
                     sgn1, sgn2 = joint.sgns[curr_iter]
                     theta1_i, theta2_i = joint.theta_inds[curr_iter]
 
-                    self.value = self.gj / joint.voronoi_len[curr_iter] * (self.deltam[curr_iter] + 
+                    self.value = self.GJ / joint.voronoi_len[curr_iter] * (self.deltam[curr_iter] + 
                             joint.ref_twist[curr_iter] - joint.twist_bar[curr_iter])
                     f = -self.value * self.grad_twist[curr_iter]
 
@@ -146,7 +146,7 @@ class ElasticTwistingForce(BaseForce):
 
         limb_idx = 0
         for limb in super().soft_robots.limbs:
-            self.gj = limb.GJ
+            self.GJ = limb.GJ
             self.grad_twist = self.grad_twists[limb_idx]
             self.deltam = self.deltams[limb_idx]
 
