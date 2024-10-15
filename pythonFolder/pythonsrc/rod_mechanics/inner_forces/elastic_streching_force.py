@@ -122,13 +122,13 @@ class elasticStretchingForce(BaseForce):
                 self.v = self.u.reshape(-1, 1)  # Column vector
 
                 # Compute M0 matrix
-                M0 = curr_limb.EA * ((1 / refLength - 1 / self.len) * self.Id3 + (1 / self.len) * np.outer(self.u, self.u) / (self.u.dot(self.u)))
+                self.M0 = curr_limb.EA * ((1 / refLength - 1 / self.len) * self.Id3 + (1 / self.len) * np.outer(self.u, self.u) / (self.u.dot(self.u)))
 
                 # Update Jss blocks
-                self.JSS[0:3, 0:3] = -M0
-                self.JSS[4:7, 4:7] = -M0
-                self.JSS[4:7, 0:3] = M0
-                self.JSS[0:3, 4:7] = M0
+                self.JSS[0:3, 0:3] = -self.M0
+                self.JSS[4:7, 4:7] = -self.M0
+                self.JSS[0:3, 4:7] = self.M0
+                self.JSS[4:7, 0:3] = self.M0
 
                 # Apply the Jacobian using n1 and joint node
                 l1 = limb_idx
