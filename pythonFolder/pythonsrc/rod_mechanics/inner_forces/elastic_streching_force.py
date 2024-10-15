@@ -43,8 +43,102 @@ class elasticStretchingForce(BaseForce):
                     super().stepper.addForce(ind, f[k], limb_idx)  # adding elastic force
 
             limb_idx += 1
+        
+        for joint in super().soft_robots.joints:
+            for i in range(joint.ne):
+                sgn = 1 if joint.bending_twist_signs[i] == 1 else -1
+                n1 = joint.connected_nodes[i][0]
+                limb_idx = joint.connected_nodes[i][1]
+                curr_limb = super().soft_robots.limbs[limb_idx]
 
-                
+                # Compute epsX and force 'f' for joint
+                epsX = joint.edge_len[i] / joint.ref_len[i] - 1.0
+                f = curr_limb.EA * joint.tangents[i, :] * sgn * epsX  # NumPy row access
+
+                # Apply forces for the joint
+                for k in range(3):
+                    ind = 4 * n1 + k
+                    super().stepper.addForce(ind, -f[k], limb_idx)
+
+                    ind = 4 * joint.joint_node + k
+                    super().stepper.addForce(ind, f[k], joint.joint_limb)
     
     def compute_force_and_jacobian(self, dt):
-        return super().compute_force_and_jacobian(dt)
+        self.compute_force(dt)
+        limb_idx = 0
+        for limb in super().soft_robots.limbs:
+            for i in range(limb.ne):
+                if limb.isEdgeJoint[i]:
+                    continue
+
+                # Calculate lengths
+                len_ = limb.edge_len[i]
+                refLength = limb.ref_len[i]
+                 # Calculate the difference vector (dxx)
+                dxx = np.zeros(3)
+                dxx[0] = limb.x[4*i+4] - limb.x[4*i+0]
+                dxx[1] = limb.x[4*i+5] - limb.x[4*i+1]
+                dxx[2] = limb.x[4*i+6] - limb.x[4*i+2]
+
+                # Define u and v
+                u = dxx
+                v = u.reshape(-1, 1)  # Column vector
+
+                # Compute M0 matrix
+                M0 = limb.EA * ((1 / refLength - 1 / len_) * self.Id3 + (1 / len_) * np.outer(u, u) / (u.dot(u)))
+
+                # Update Jss blocks
+                self.JSS[0:3, 0:3] = -M0
+                self.JSS[4:7, 4:7] = -M0
+                self.JSS[4:7, 0:3] = M0
+                self.JSS[0:3, 4:7] = M0
+
+                # Add to the Jacobian matrix
+                for j in range(7):
+                    for k in range(7):
+                        ind1 = 4*i + j
+                        ind2 = 4*i + k
+                        super().stepper.addJacobian(ind1, ind2, -self.JSS[k, j], limb_idx)
+
+            limb_idx += 1
+        # Process joints
+        for joint in super().soft_robots.joints:
+            for i in range(joint.ne):
+                n1 = joint.connected_nodes[i][0]
+                limb_idx = joint.connected_nodes[i][1]
+                curr_limb = super().soft_robots.limbs[limb_idx]
+
+                # Calculate lengths
+                len_ = joint.edge_len[i]
+                refLength = joint.ref_len[i]
+
+                # Calculate the difference vector (dxx)
+                dxx = np.zeros(3)
+                dxx[0] = joint.x[0] - curr_limb.x[4*n1]
+                dxx[1] = joint.x[1] - curr_limb.x[4*n1+1]
+                dxx[2] = joint.x[2] - curr_limb.x[4*n1+2]
+
+                # Define u and v
+                u = dxx
+                v = u.reshape(-1, 1)  # Column vector
+
+                # Compute M0 matrix
+                M0 = curr_limb.EA * ((1 / refLength - 1 / len_) * self.Id3 + (1 / len_) * np.outer(u, u) / (u.dot(u)))
+
+                # Update Jss blocks
+                self.JSS[0:3, 0:3] = -M0
+                self.JSS[4:7, 4:7] = -M0
+                self.JSS[4:7, 0:3] = M0
+                self.JSS[0:3, 4:7] = M0
+
+                # Apply the Jacobian using n1 and joint node
+                l1 = limb_idx
+                l2 = joint.joint_limb
+                n2 = joint.joint_node
+
+                for j in range(3):
+                    for k in range(3):
+                        super().stepper.addJacobian(4*n1 + j, 4*n1 + k, -self.JSS[k, j], l1)
+                        super().stepper.addJacobian(4*n1 + j, 4*n2 + k, -self.JSS[k + 4, j], l1, l2)
+                        super().stepper.addJacobian(4*n2 + j, 4*n1 + k, -self.JSS[k, j + 4], l2, l1)
+                        super().stepper.addJacobian(4*n2 + j, 4*n2 + k, -self.JSS[k + 4, j + 4], l2)
