@@ -67,21 +67,21 @@ class elasticStretchingForce(BaseForce):
         limb_idx = 0
         for limb in super().soft_robots.limbs:
             for i in range(limb.ne):
-                if limb.isEdgeJoint[i]:
+                if limb.is_edge_joint[i]:
                     continue
 
                 # Calculate lengths
-                len_ = limb.edge_len[i]
-                refLength = limb.ref_len[i]
+                self.len_ = limb.edge_len[i]
+                self.refLength = limb.ref_len[i]
                  # Calculate the difference vector (dxx)
-                dxx = np.zeros(3)
-                dxx[0] = limb.x[4*i+4] - limb.x[4*i+0]
-                dxx[1] = limb.x[4*i+5] - limb.x[4*i+1]
-                dxx[2] = limb.x[4*i+6] - limb.x[4*i+2]
+                self.dxx = np.zeros(3)
+                self.dxx[0] = limb.x[4*i+4] - limb.x[4*i+0]
+                self.dxx[1] = limb.x[4*i+5] - limb.x[4*i+1]
+                self.dxx[2] = limb.x[4*i+6] - limb.x[4*i+2]
 
                 # Define u and v
-                u = dxx
-                v = u.reshape(-1, 1)  # Column vector
+                self.u = self.dxx
+                self.v = self.u.reshape(-1, 1)  # Column vector
 
                 # Compute M0 matrix
                 M0 = limb.EA * ((1 / refLength - 1 / len_) * self.Id3 + (1 / len_) * np.outer(u, u) / (u.dot(u)))
