@@ -115,7 +115,166 @@ class elasticBendingForce(BaseForce):
 
 
     def compute_force(self, dt):
-        return super().compute_force(dt)
+        limb_idx = 0
+
+        for limb in super().soft_robots.limbs:
+            self.gradKappa1 = self.gradKappa1s[limb_idx]
+            self.gradKappa2 = self.gradKappa2s[limb_idx]
+
+            for i in range(1, limb.ne):
+                self.norm_e = limb.edge_len[i - 1]
+                self.norm_f = limb.edge_len[i]
+                self.te = limb.tangent[i - 1, :]
+                self.tf = limb.tangent[i, :]
+                self.d1e = limb.m1[i - 1, :]
+                self.d2e = limb.m2[i - 1, :]
+                self.d1f = limb.m1[i, :]
+                self.d2f = limb.m2[i, :]
+
+                self.chi = 1.0 + np.dot(te, tf)
+                self.tilde_t = (te + tf) / chi
+                self.tilde_d1 = (d1e + d1f) / chi
+                self.tilde_d2 = (d2e + d2f) / chi
+
+                self.kappa1 = limb.kappa[i, 0]
+                self.kappa2 = limb.kappa[i, 1]
+
+                self.Dkappa1De = (1.0 / norm_e) * (-kappa1 * tilde_t + np.cross(tf, tilde_d2))
+                self.Dkappa1Df = (1.0 / norm_f) * (-kappa1 * tilde_t - np.cross(te, tilde_d2))
+                self.Dkappa2De = (1.0 / norm_e) * (-kappa2 * tilde_t - np.cross(tf, tilde_d1))
+                self.Dkappa2Df = (1.0 / norm_f) * (-kappa2 * tilde_t + np.cross(te, tilde_d1))
+
+                self.gradKappa1[i, :3] = -Dkappa1De
+                self.gradKappa1[i, 4:7] = Dkappa1De - Dkappa1Df
+                self.gradKappa1[i, 8:11] = Dkappa1Df
+
+                self.gradKappa2[i, :3] = -Dkappa2De
+                self.gradKappa2[i, 4:7] = Dkappa2De - Dkappa2Df
+                self.gradKappa2[i, 8:11] = Dkappa2Df
+
+                self.kbLocal = limb.kb[i, :]
+
+                self.gradKappa1[i, 3] = -0.5 * np.dot(kbLocal, d1e)
+                self.gradKappa1[i, 7] = -0.5 * np.dot(kbLocal, d1f)
+                self.gradKappa2[i, 3] = -0.5 * np.dot(kbLocal, d2e)
+                self.gradKappa2[i, 7] = -0.5 * np.dot(kbLocal, d2f)
+
+            # Second loop
+            for i in range(1, limb.ne):
+                self.relevantPart = np.zeros((11, 2))
+                self.relevantPart[:, 0] = gradKappa1[i, :]
+                self.relevantPart[:, 1] = gradKappa2[i, :]
+                self.kappaL = limb.kappa[i, :] - limb.kappa_bar[i, :]
+
+                self.f = -np.dot(self.relevantPart, np.dot(self.EIMatrices[limb_idx], self.kappaL)) / limb.voronoi_len[i]
+
+                if not (limb.isNodeJoint[i - 1] or limb.isNodeJoint[i] or limb.isNodeJoint[i + 1]):
+                    ci = 4 * i - 4
+                    for k in range(11):
+                        ind = ci + k
+                        super().stepper.addForce(ind, -f[k], limb_idx)
+                else:
+                    n1, l1 = limb.joint_ids[i - 1]
+                    n2, l2 = limb.joint_ids[i]
+                    n3, l3 = limb.joint_ids[i + 1]
+
+                    for k in range(3):
+                        super().stepper.addForce(4 * n1 + k, -f[k], l1)
+                        super().stepper.addForce(4 * n2 + k, -f[k + 4], l2)
+                        super().stepper.addForce(4 * n3 + k, -f[k + 8], l3)
+
+                    ci = 4 * i - 4
+                    super().stepper.addForce(ci + 3, -f[3], limb_idx)
+                    super().stepper.addForce(ci + 7, -f[7], limb_idx)
+
+            limb_idx += 1
+
+        joint_idx = 0
+        num_limbs = len(super().soft_robots.limbs)
+
+        for joint in super().soft_robots.joints:
+            curr_iter = 0
+            gradKappa1 = gradKappa1s[num_limbs + joint_idx]
+            gradKappa2 = gradKappa2s[num_limbs + joint_idx]
+
+            for i in range(joint.ne):
+                sgn1 = 1 if joint.bending_twist_signs[i] == 1 else -1
+                for j in range(i + 1, joint.ne):
+                    sgn2 = -1 if joint.bending_twist_signs[j] == 1 else 1
+                    norm_e = joint.edge_len[i]
+                    norm_f = joint.edge_len[j]
+                    te = sgn1 * joint.tangents[i, :]
+                    tf = sgn2 * joint.tangents[j, :]
+                    d1e = joint.m1[curr_iter, 0, :]
+                    d2e = joint.m2[curr_iter, 0, :]
+                    d1f = joint.m1[curr_iter, 1, :]
+                    d2f = joint.m2[curr_iter, 1, :]
+
+                    chi = 1.0 + np.dot(te, tf)
+                    tilde_t = (te + tf) / chi
+                    tilde_d1 = (d1e + d1f) / chi
+                    tilde_d2 = (d2e + d2f) / chi
+
+                    kappa1 = joint.kappa[curr_iter, 0]
+                    kappa2 = joint.kappa[curr_iter, 1]
+
+                    Dkappa1De = (1.0 / norm_e) * (-kappa1 * tilde_t + np.cross(tf, tilde_d2))
+                    Dkappa1Df = (1.0 / norm_f) * (-kappa1 * tilde_t - np.cross(te, tilde_d2))
+                    Dkappa2De = (1.0 / norm_e) * (-kappa2 * tilde_t - np.cross(tf, tilde_d1))
+                    Dkappa2Df = (1.0 / norm_f) * (-kappa2 * tilde_t + np.cross(te, tilde_d1))
+
+                    gradKappa1[curr_iter, :3] = -Dkappa1De
+                    gradKappa1[curr_iter, 4:7] = Dkappa1De - Dkappa1Df
+                    gradKappa1[curr_iter, 8:11] = Dkappa1Df
+
+                    gradKappa2[curr_iter, :3] = -Dkappa2De
+                    gradKappa2[curr_iter, 4:7] = Dkappa2De - Dkappa2Df
+                    gradKappa2[curr_iter, 8:11] = Dkappa2Df
+
+                    kbLocal = joint.kb[curr_iter, :]
+
+                    gradKappa1[curr_iter, 3] = -0.5 * np.dot(kbLocal, d1e)
+                    gradKappa1[curr_iter, 7] = -0.5 * np.dot(kbLocal, d1f)
+                    gradKappa2[curr_iter, 3] = -0.5 * np.dot(kbLocal, d2e)
+                    gradKappa2[curr_iter, 7] = -0.5 * np.dot(kbLocal, d2f)
+
+                    curr_iter += 1
+
+            curr_iter = 0
+            n2 = joint.joint_node
+            l2 = joint.joint_limb
+
+            for i in range(joint.ne):
+                n1 = joint.connected_nodes[i][0]
+                l1 = joint.connected_nodes[i][1]
+
+                for j in range(i + 1, joint.ne):
+                    n3 = joint.connected_nodes[j][0]
+                    l3 = joint.connected_nodes[j][1]
+
+                    sgn1 = joint.sgns[curr_iter][0]
+                    sgn2 = joint.sgns[curr_iter][1]
+                    theta1_i = joint.theta_inds[curr_iter][0]
+                    theta2_i = joint.theta_inds[curr_iter][1]
+
+                    relevantPart = np.zeros((11, 2))
+                    relevantPart[:, 0] = gradKappa1[curr_iter, :]
+                    relevantPart[:, 1] = gradKappa2[curr_iter, :]
+                    kappaL = joint.kappa[curr_iter, :] - joint.kappa_bar[curr_iter, :]
+
+                    f = -np.dot(relevantPart, np.dot(EIMatrices[0], kappaL)) / joint.voronoi_len[curr_iter]
+
+                    for k in range(3):
+                        stepper.addForce(4 * n1 + k, -f[k], l1)
+                        stepper.addForce(4 * n2 + k, -f[k + 4], l2)
+                        stepper.addForce(4 * n3 + k, -f[k + 8], l3)
+
+                    stepper.addForce(theta1_i, -f[3] * sgn1, l1)
+                    stepper.addForce(theta2_i, -f[7] * sgn2, l3)
+
+                    curr_iter += 1
+
+            joint_idx += 1
     
     def compute_force_and_jacobian(self, dt):
         return super().compute_force_and_jacobian(dt)
