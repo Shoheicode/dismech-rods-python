@@ -142,7 +142,9 @@ class ElasticTwistingForce(BaseForce):
                     curr_iter += 1
 
     def compute_force_and_jacobian(self, dt: float):
-        pass
+        self.compute_force(dt)
+
+        
 
     @staticmethod
     def cross_mat(a: np.ndarray, b: np.ndarray):

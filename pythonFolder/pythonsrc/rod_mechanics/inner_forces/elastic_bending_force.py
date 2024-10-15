@@ -277,4 +277,8 @@ class elasticBendingForce(BaseForce):
             joint_idx += 1
     
     def compute_force_and_jacobian(self, dt):
+        self.compute_force(dt)
+
+        
+        
         return super().compute_force_and_jacobian(dt)
