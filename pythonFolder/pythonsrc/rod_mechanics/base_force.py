@@ -1,7 +1,9 @@
 from abc import ABC, abstractmethod
 
+from pythonFolder.pythonsrc.rod_mechanics.soft_robots import SoftRobots
+
 class BaseForce(object):
-    def __init__(self, soft_robots):
+    def __init__(self, soft_robots: SoftRobots):
         print('none')
         self.soft_robots = soft_robots
         self.stepper = None
