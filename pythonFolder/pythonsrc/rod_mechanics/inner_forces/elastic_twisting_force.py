@@ -147,8 +147,8 @@ class ElasticTwistingForce(BaseForce):
         limb_idx = 0
         for limb in super().soft_robots.limbs:
             self.gj = limb.GJ
-            gradTwist = gradTwists[limb_idx]
-            deltam = deltams[limb_idx]
+            self.grad_twist = self.grad_twists[limb_idx]
+            self.deltam = self.deltams[limb_idx]
 
             for i in range(1, limb.ne):
                 norm_e = limb.edge_len[i - 1]
@@ -173,15 +173,15 @@ class ElasticTwistingForce(BaseForce):
                 D2mDfDe = D2mDeDf.T
 
                 # Assigning values to DDtwist block matrix
-                DDtwist[0:3, 0:3] = D2mDe2
-                DDtwist[0:3, 4:7] = -D2mDe2 + D2mDeDf
-                DDtwist[4:7, 0:3] = -D2mDe2 + D2mDfDe
-                DDtwist[4:7, 4:7] = D2mDe2 - (D2mDeDf + D2mDfDe) + D2mDf2
-                DDtwist[0:3, 8:11] = -D2mDeDf
-                DDtwist[8:11, 0:3] = -D2mDfDe
-                DDtwist[8:11, 4:7] = D2mDfDe - D2mDf2
-                DDtwist[4:7, 8:11] = D2mDeDf - D2mDf2
-                DDtwist[8:11, 8:11] = D2mDf2
+                self.dd_twist[0:3, 0:3] = D2mDe2
+                self.dd_twist[0:3, 4:7] = -D2mDe2 + D2mDeDf
+                self.dd_twist[4:7, 0:3] = -D2mDe2 + D2mDfDe
+                self.dd_twist[4:7, 4:7] = D2mDe2 - (D2mDeDf + D2mDfDe) + D2mDf2
+                self.dd_twist[0:3, 8:11] = -D2mDeDf
+                self.dd_twist[8:11, 0:3] = -D2mDfDe
+                self.dd_twist[8:11, 4:7] = D2mDfDe - D2mDf2
+                self.dd_twist[4:7, 8:11] = D2mDeDf - D2mDf2
+                self.dd_twist[8:11, 8:11] = D2mDf2
 
                 gradTwistLocal = gradTwist[i, :]
                 milen = -1 / limb.voronoi_len[i]
