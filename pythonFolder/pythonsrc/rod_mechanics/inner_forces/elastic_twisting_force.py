@@ -151,26 +151,26 @@ class ElasticTwistingForce(BaseForce):
             self.deltam = self.deltams[limb_idx]
 
             for i in range(1, limb.ne):
-                norm_e = limb.edge_len[i - 1]
-                norm_f = limb.edge_len[i]
-                te = limb.tangent[i - 1, :]
-                tf = limb.tangent[i, :]
+                self.norm_e = limb.edge_len[i - 1]
+                self.norm_f = limb.edge_len[i]
+                self.te = limb.tangent[i - 1, :]
+                self.tf = limb.tangent[i, :]
 
-                norm2_e = norm_e * norm_e
-                norm2_f = norm_f * norm_f
+                self.norm2_e = self.norm_e * self.norm_e
+                self.norm2_f = self.norm_f * self.norm_f
 
-                kbLocal = limb.kb[i, :]
+                self.kbLocal = limb.kb[i, :]
 
-                chi = 1.0 + np.dot(te, tf)
-                tilde_t = (te + tf) / chi
+                self.chi = 1.0 + np.dot(self.te, self.tf)
+                self.tilde_t = (self.te + self.tf) / self.chi
 
                 # Create cross product matrix for te
-                teMatrix = np.cross(np.identity(3), te)
+                self.teMatrix = np.cross(np.identity(3), te)
 
-                D2mDe2 = -0.25 / norm2_e * (np.dot(kbLocal, (te + tilde_t).T) + np.dot((te + tilde_t), kbLocal.T))
-                D2mDf2 = -0.25 / norm2_f * (np.dot(kbLocal, (tf + tilde_t).T) + np.dot((tf + tilde_t), kbLocal.T))
-                D2mDeDf = 0.5 / (norm_e * norm_f) * (2.0 / chi * teMatrix - np.dot(kbLocal, tilde_t.T))
-                D2mDfDe = D2mDeDf.T
+                self.D2mDe2 = -0.25 / norm2_e * (np.dot(kbLocal, (te + tilde_t).T) + np.dot((te + tilde_t), kbLocal.T))
+                self.D2mDf2 = -0.25 / norm2_f * (np.dot(kbLocal, (tf + tilde_t).T) + np.dot((tf + tilde_t), kbLocal.T))
+                self.D2mDeDf = 0.5 / (norm_e * norm_f) * (2.0 / chi * teMatrix - np.dot(kbLocal, tilde_t.T))
+                self.D2mDfDe = D2mDeDf.T
 
                 # Assigning values to DDtwist block matrix
                 self.dd_twist[0:3, 0:3] = D2mDe2
