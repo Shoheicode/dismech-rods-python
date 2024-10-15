@@ -112,14 +112,14 @@ class elasticStretchingForce(BaseForce):
                 refLength = joint.ref_len[i]
 
                 # Calculate the difference vector (dxx)
-                dxx = np.zeros(3)
-                dxx[0] = joint.x[0] - curr_limb.x[4*n1]
-                dxx[1] = joint.x[1] - curr_limb.x[4*n1+1]
-                dxx[2] = joint.x[2] - curr_limb.x[4*n1+2]
+                self.dxx = np.zeros(3)
+                self.dxx[0] = joint.x[0] - curr_limb.x[4*n1]
+                self.dxx[1] = joint.x[1] - curr_limb.x[4*n1+1]
+                self.dxx[2] = joint.x[2] - curr_limb.x[4*n1+2]
 
                 # Define u and v
-                u = dxx
-                v = u.reshape(-1, 1)  # Column vector
+                self.u = self.dxx
+                self.v = self.u.reshape(-1, 1)  # Column vector
 
                 # Compute M0 matrix
                 M0 = curr_limb.EA * ((1 / refLength - 1 / self.len) * self.Id3 + (1 / self.len) * np.outer(self.u, self.u) / (self.u.dot(self.u)))
