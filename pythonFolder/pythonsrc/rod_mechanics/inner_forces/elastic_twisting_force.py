@@ -167,21 +167,21 @@ class ElasticTwistingForce(BaseForce):
                 # Create cross product matrix for te
                 self.teMatrix = np.cross(np.identity(3), te)
 
-                self.D2mDe2 = -0.25 / self.norm2_e * (np.dot(self.kbLocal, (self.te + self.tilde_t).T) + np.dot((self.te + self.tilde_t), self.kbLocal.T))
-                self.D2mDf2 = -0.25 / self.norm2_f * (np.dot(self.kbLocal, (self.tf + self.tilde_t).T) + np.dot((self.tf + self.tilde_t), self.kbLocal.T))
-                self.D2mDeDf = 0.5 / (self.norm_e * self.norm_f) * (2.0 / self.chi * self.teMatrix - np.dot(self.kbLocal, self.tilde_t.T))
-                self.D2mDfDe = self.D2mDeDf.T
+                self.d2m_de2 = -0.25 / self.norm2_e * (np.dot(self.kbLocal, (self.te + self.tilde_t).T) + np.dot((self.te + self.tilde_t), self.kbLocal.T))
+                self.d2m_df2 = -0.25 / self.norm2_f * (np.dot(self.kbLocal, (self.tf + self.tilde_t).T) + np.dot((self.tf + self.tilde_t), self.kbLocal.T))
+                self.d2m_de_df = 0.5 / (self.norm_e * self.norm_f) * (2.0 / self.chi * self.teMatrix - np.dot(self.kbLocal, self.tilde_t.T))
+                self.d2m_df_de = self.d2m_de_df.T
 
                 # Assigning values to DDtwist block matrix
-                self.dd_twist[0:3, 0:3] = D2mDe2
-                self.dd_twist[0:3, 4:7] = -D2mDe2 + D2mDeDf
-                self.dd_twist[4:7, 0:3] = -D2mDe2 + D2mDfDe
-                self.dd_twist[4:7, 4:7] = D2mDe2 - (D2mDeDf + D2mDfDe) + D2mDf2
-                self.dd_twist[0:3, 8:11] = -D2mDeDf
-                self.dd_twist[8:11, 0:3] = -D2mDfDe
-                self.dd_twist[8:11, 4:7] = D2mDfDe - D2mDf2
-                self.dd_twist[4:7, 8:11] = D2mDeDf - D2mDf2
-                self.dd_twist[8:11, 8:11] = D2mDf2
+                self.dd_twist[0:3, 0:3] = self.d2m_de2
+                self.dd_twist[0:3, 4:7] = -self.d2m_de2 + self.d2m_de_df
+                self.dd_twist[4:7, 0:3] = -self.d2m_de2 + self.d2m_df_de
+                self.dd_twist[4:7, 4:7] = self.d2m_de2 - (self.d2m_de_df + self.d2m_df_de) + self.d2m_df2
+                self.dd_twist[0:3, 8:11] = -self.d2m_de_df
+                self.dd_twist[8:11, 0:3] = -self.d2m_df_de
+                self.dd_twist[8:11, 4:7] = self.d2m_df_de - self.d2m_df2
+                self.dd_twist[4:7, 8:11] = self.d2m_de_df - self.d2m_df2
+                self.dd_twist[8:11, 8:11] = self.d2m_df2
 
                 gradTwistLocal = gradTwist[i, :]
                 milen = -1 / limb.voronoi_len[i]
@@ -278,20 +278,20 @@ class ElasticTwistingForce(BaseForce):
 
                     teMatrix = np.cross(np.identity(3), te)
 
-                    D2mDe2 = -0.25 / norm2_e * (np.dot(kbLocal, (te + tilde_t).T) + np.dot((te + tilde_t), kbLocal.T))
-                    D2mDf2 = -0.25 / norm2_f * (np.dot(kbLocal, (tf + tilde_t).T) + np.dot((tf + tilde_t), kbLocal.T))
-                    D2mDeDf = 0.5 / (norm_e * norm_f) * (2.0 / chi * teMatrix - np.dot(kbLocal, tilde_t.T))
-                    D2mDfDe = D2mDeDf.T
+                    self.d2m_de2 = -0.25 / norm2_e * (np.dot(kbLocal, (te + tilde_t).T) + np.dot((te + tilde_t), kbLocal.T))
+                    self.d2m_df2 = -0.25 / norm2_f * (np.dot(kbLocal, (tf + tilde_t).T) + np.dot((tf + tilde_t), kbLocal.T))
+                    self.d2m_de_df = 0.5 / (norm_e * norm_f) * (2.0 / chi * teMatrix - np.dot(kbLocal, tilde_t.T))
+                    self.d2m_df_de = self.d2m_de_df.T
 
-                    DDtwist[0:3, 0:3] = D2mDe2
-                    DDtwist[0:3, 4:7] = -D2mDe2 + D2mDeDf
-                    DDtwist[4:7, 0:3] = -D2mDe2 + D2mDfDe
-                    DDtwist[4:7, 4:7] = D2mDe2 - (D2mDeDf + D2mDfDe) + D2mDf2
-                    DDtwist[0:3, 8:11] = -D2mDeDf
-                    DDtwist[8:11, 0:3] = -D2mDfDe
-                    DDtwist[8:11, 4:7] = D2mDfDe - D2mDf2
-                    DDtwist[4:7, 8:11] = D2mDeDf - D2mDf2
-                    DDtwist[8:11, 8:11] = D2mDf2
+                    self.dd_twist[0:3, 0:3] = self.d2m_de2
+                    self.dd_twist[0:3, 4:7] = -self.d2m_de2 + self.d2m_de_df
+                    self.dd_twist[4:7, 0:3] = -self.d2m_de2 + self.d2m_df_de
+                    self.dd_twist[4:7, 4:7] = self.d2m_de2 - (self.d2m_de_df + self.d2m_df_de) + self.d2m_df2
+                    self.dd_twist[0:3, 8:11] = -self.d2m_de_df
+                    self.dd_twist[8:11, 0:3] = -self.d2m_df_de
+                    self.dd_twist[8:11, 4:7] = self.d2m_df_de - self.d2m_df2
+                    self.dd_twist[4:7, 8:11] = self.d2m_de_df - self.d2m_df2
+                    self.dd_twist[8:11, 8:11] = self.d2m_df2
 
                     gradTwistLocal = gradTwist[curr_iter, :]
                     milen = -1 / joint.voronoi_len[curr_iter]

@@ -1,7 +1,7 @@
 import numpy as np
 
 def main():
-    tangent = np.zeros((3, 3))
+    tangent = np.eye(3)
 
     print(tangent)
     
