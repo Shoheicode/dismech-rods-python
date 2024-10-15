@@ -167,10 +167,10 @@ class ElasticTwistingForce(BaseForce):
                 # Create cross product matrix for te
                 self.teMatrix = np.cross(np.identity(3), te)
 
-                self.D2mDe2 = -0.25 / norm2_e * (np.dot(kbLocal, (te + tilde_t).T) + np.dot((te + tilde_t), kbLocal.T))
-                self.D2mDf2 = -0.25 / norm2_f * (np.dot(kbLocal, (tf + tilde_t).T) + np.dot((tf + tilde_t), kbLocal.T))
-                self.D2mDeDf = 0.5 / (norm_e * norm_f) * (2.0 / chi * teMatrix - np.dot(kbLocal, tilde_t.T))
-                self.D2mDfDe = D2mDeDf.T
+                self.D2mDe2 = -0.25 / self.norm2_e * (np.dot(self.kbLocal, (self.te + self.tilde_t).T) + np.dot((self.te + self.tilde_t), self.kbLocal.T))
+                self.D2mDf2 = -0.25 / self.norm2_f * (np.dot(self.kbLocal, (self.tf + self.tilde_t).T) + np.dot((self.tf + self.tilde_t), self.kbLocal.T))
+                self.D2mDeDf = 0.5 / (self.norm_e * self.norm_f) * (2.0 / self.chi * self.teMatrix - np.dot(self.kbLocal, self.tilde_t.T))
+                self.D2mDfDe = self.D2mDeDf.T
 
                 # Assigning values to DDtwist block matrix
                 self.dd_twist[0:3, 0:3] = D2mDe2
