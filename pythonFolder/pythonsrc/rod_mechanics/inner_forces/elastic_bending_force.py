@@ -475,77 +475,77 @@ class elasticBendingForce(BaseForce):
         self.kb_o_d1f = np.outer(self.kb_local, self.d1f.T)
         self.d1f_o_kb = self.kb_o_d1f.T
 
-        self.D2kappa2Df2 = (1.0 / norm2_f * (2 * kappa2 * tt_o_tt - te_c_d1t_o_tt - tt_o_te_c_d1t)
-                    - kappa2 / (chi * norm2_f) * (Id3 - np.outer(tf, tf))
-                    - 1.0 / (4.0 * norm2_f) * (kb_o_d1f + d1f_o_kb))
+        self.D2kappa2Df2 = (1.0 / self.norm2_f * (2 * self.kappa2 * self.tt_o_tt - self.te_c_d1t_o_tt - self.tt_o_te_c_d1t)
+                    - self.kappa2 / (self.chi * self.norm2_f) * (self.Id3 - np.outer(self.tf, self.tf))
+                    - 1.0 / (4.0 * self.norm2_f) * (self.kb_o_d1f + self.d1f_o_kb))
 
-        self.D2kappa2DeDf = (-kappa2 / (chi * norm_e * norm_f) * (Id3 + np.outer(te, tf))
-                        + 1.0 / (norm_e * norm_f) * (2 * kappa2 * tt_o_tt + tf_c_d1t_o_tt
-                                                    - tt_o_te_c_d1t + tilde_d1_3d))
-        self.D2kappa2DfDe = D2kappa2DeDf.T
+        self.D2kappa2DeDf = (-self.kappa2 / (self.chi * self.norm_e * self.norm_f) * (self.Id3 + np.outer(self.te, self.tf))
+                        + 1.0 / (self.norm_e * self.norm_f) * (2 * self.kappa2 * self.tt_o_tt + self.tf_c_d1t_o_tt
+                                                    - self.tt_o_te_c_d1t + self.tilde_d1_3d))
+        self.D2kappa2DfDe = self.D2kappa2DeDf.T
 
-        self.D2kappa1Dthetae2 = -0.5 * kbLocal.dot(d2e)
-        self.D2kappa1Dthetaf2 = -0.5 * kbLocal.dot(d2f)
-        self.D2kappa2Dthetae2 = 0.5 * kbLocal.dot(d1e)
-        self.D2kappa2Dthetaf2 = 0.5 * kbLocal.dot(d1f)
+        self.D2kappa1Dthetae2 = -0.5 * self.kb_local.dot(self.d2e)
+        self.D2kappa1Dthetaf2 = -0.5 * self.kb_local.dot(self.d2f)
+        self.D2kappa2Dthetae2 = 0.5 * self.kb_local.dot(self.d1e)
+        self.D2kappa2Dthetaf2 = 0.5 * self.kb_local.dot(self.d1f)
 
-        self.D2kappa1DeDthetae = (1.0 / norm_e * ((0.5 * kbLocal.dot(d1e)) * tilde_t
-                                            - 1.0 / chi * np.cross(tf, d1e)))
-        self.D2kappa1DeDthetaf = (1.0 / norm_e * ((0.5 * kbLocal.dot(d1f)) * tilde_t
-                                            - 1.0 / chi * np.cross(tf, d1f)))
-        self.D2kappa1DfDthetae = (1.0 / norm_f * ((0.5 * kbLocal.dot(d1e)) * tilde_t
-                                            + 1.0 / chi * np.cross(te, d1e)))
-        self.D2kappa1DfDthetaf = (1.0 / norm_f * ((0.5 * kbLocal.dot(d1f)) * tilde_t
-                                            + 1.0 / chi * np.cross(te, d1f)))
-        self.D2kappa2DeDthetae = (1.0 / norm_e * ((0.5 * kbLocal.dot(d2e)) * tilde_t
-                                            - 1.0 / chi * np.cross(tf, d2e)))
-        self.D2kappa2DeDthetaf = (1.0 / norm_e * ((0.5 * kbLocal.dot(d2f)) * tilde_t
-                                            - 1.0 / chi * np.cross(tf, d2f)))
-        self.D2kappa2DfDthetae = (1.0 / norm_f * ((0.5 * kbLocal.dot(d2e)) * tilde_t
-                                            + 1.0 / chi * np.cross(te, d2e)))
-        self.D2kappa2DfDthetaf = (1.0 / norm_f * ((0.5 * kbLocal.dot(d2f)) * tilde_t
-                                            + 1.0 / chi * np.cross(te, d2f)))
+        self.D2kappa1DeDthetae = (1.0 / self.norm_e * ((0.5 * self.kb_local.dot(self.d1e)) * self.tilde_t
+                                            - 1.0 / self.chi * np.cross(self.tf, self.d1e)))
+        self.D2kappa1DeDthetaf = (1.0 / self.norm_e * ((0.5 * self.kb_local.dot(self.d1f)) * self.tilde_t
+                                            - 1.0 / self.chi * np.cross(self.tf, self.d1f)))
+        self.D2kappa1DfDthetae = (1.0 / self.norm_f * ((0.5 * self.kb_local.dot(self.d1e)) * self.tilde_t
+                                            + 1.0 / self.chi * np.cross(self.te, self.d1e)))
+        self.D2kappa1DfDthetaf = (1.0 / self.norm_f * ((0.5 * self.kb_local.dot(self.d1f)) * self.tilde_t
+                                            + 1.0 / self.chi * np.cross(self.te, self.d1f)))
+        self.D2kappa2DeDthetae = (1.0 / self.norm_e * ((0.5 * self.kb_local.dot(self.d2e)) * self.tilde_t
+                                            - 1.0 / self.chi * np.cross(self.tf, self.d2e)))
+        self.D2kappa2DeDthetaf = (1.0 / self.norm_e * ((0.5 * self.kb_local.dot(self.d2f)) * self.tilde_t
+                                            - 1.0 / self.chi * np.cross(self.tf, self.d2f)))
+        self.D2kappa2DfDthetae = (1.0 / self.norm_f * ((0.5 * self.kb_local.dot(self.d2e)) * self.tilde_t
+                                            + 1.0 / self.chi * np.cross(self.te, self.d2e)))
+        self.D2kappa2DfDthetaf = (1.0 / self.norm_f * ((0.5 * self.kb_local.dot(self.d2f)) * self.tilde_t
+                                            + 1.0 / self.chi * np.cross(self.te, self.d2f)))
 
         self.DDkappa1 = np.zeros((9, 9))
-        self.DDkappa1[0:3, 0:3] = D2kappa1De2
-        self.DDkappa1[0:3, 4:7] = -D2kappa1De2 + D2kappa1DeDf
-        self.DDkappa1[0:3, 8:11] = -D2kappa1DeDf
-        self.DDkappa1[4:7, 0:3] = -D2kappa1De2 + D2kappa1DfDe
-        self.DDkappa1[4:7, 4:7] = D2kappa1De2 - D2kappa1DeDf - D2kappa1DfDe + D2kappa1Df2
-        self.DDkappa1[4:7, 8:11] = D2kappa1DeDf - D2kappa1Df2
-        self.DDkappa1[8:11, 0:3] = -D2kappa1DfDe
-        self.DDkappa1[8:11, 4:7] = D2kappa1DfDe - D2kappa1Df2
-        self.DDkappa1[8:11, 8:11] = D2kappa1Df2
+        self.DDkappa1[0:3, 0:3] = self.D2kappa1De2
+        self.DDkappa1[0:3, 4:7] = -self.D2kappa1De2 + self.D2kappa1DeDf
+        self.DDkappa1[0:3, 8:11] = -self.D2kappa1DeDf
+        self.DDkappa1[4:7, 0:3] = -self.D2kappa1De2 + self.D2kappa1DfDe
+        self.DDkappa1[4:7, 4:7] = self.D2kappa1De2 - self.D2kappa1DeDf - self.D2kappa1DfDe + D2kappa1Df2
+        self.DDkappa1[4:7, 8:11] = self.D2kappa1DeDf - self.D2kappa1Df2
+        self.DDkappa1[8:11, 0:3] = -self.D2kappa1DfDe
+        self.DDkappa1[8:11, 4:7] = self.D2kappa1DfDe - self.D2kappa1Df2
+        self.DDkappa1[8:11, 8:11] = self.D2kappa1Df2
 
-        self.DDkappa1[3, 3] = D2kappa1Dthetae2
-        self.DDkappa1[7, 7] = D2kappa1Dthetaf2
+        self.DDkappa1[3, 3] = self.D2kappa1Dthetae2
+        self.DDkappa1[7, 7] = self.D2kappa1Dthetaf2
 
-        self.DDkappa1[0:3, 3] = -D2kappa1DeDthetae
-        self.DDkappa1[4:7, 3] = D2kappa1DeDthetae - D2kappa1DfDthetae
-        self.DDkappa1[8:11, 3] = D2kappa1DfDthetae
+        self.DDkappa1[0:3, 3] = -self.D2kappa1DeDthetae
+        self.DDkappa1[4:7, 3] = self.D2kappa1DeDthetae - self.D2kappa1DfDthetae
+        self.DDkappa1[8:11, 3] = self.D2kappa1DfDthetae
 
-        self.DDkappa1[0:3, 7] = -D2kappa1DeDthetaf
-        self.DDkappa1[4:7, 7] = D2kappa1DeDthetaf - D2kappa1DfDthetaf
-        self.DDkappa1[8:11, 7] = D2kappa1DfDthetaf
+        self.DDkappa1[0:3, 7] = -self.D2kappa1DeDthetaf
+        self.DDkappa1[4:7, 7] = self.D2kappa1DeDthetaf - self.D2kappa1DfDthetaf
+        self.DDkappa1[8:11, 7] = self.D2kappa1DfDthetaf
 
         self.DDkappa2 = np.zeros((9, 9))
-        self.DDkappa2[0:3, 0:3] = D2kappa2De2
-        self.DDkappa2[0:3, 4:7] = -D2kappa2De2 + D2kappa2DeDf
-        self.DDkappa2[0:3, 8:11] = -D2kappa2DeDf
-        self.DDkappa2[4:7, 0:3] = -D2kappa2De2 + D2kappa2DfDe
-        self.DDkappa2[4:7, 4:7] = D2kappa2De2 - D2kappa2DeDf - D2kappa2DfDe + D2kappa2Df2
-        self.DDkappa2[4:7, 8:11] = D2kappa2DeDf - D2kappa2Df2
-        self.DDkappa2[8:11, 0:3] = -D2kappa2DfDe
-        self.DDkappa2[8:11, 4:7] = D2kappa2DfDe - D2kappa2Df2
-        self.DDkappa2[8:11, 8:11] = D2kappa2Df2
+        self.DDkappa2[0:3, 0:3] = self.D2kappa2De2
+        self.DDkappa2[0:3, 4:7] = -self.D2kappa2De2 + self.D2kappa2DeDf
+        self.DDkappa2[0:3, 8:11] = -self.D2kappa2DeDf
+        self.DDkappa2[4:7, 0:3] = -self.D2kappa2De2 + self.D2kappa2DfDe
+        self.DDkappa2[4:7, 4:7] = self.D2kappa2De2 - self.D2kappa2DeDf - self.D2kappa2DfDe + D2kappa2Df2
+        self.DDkappa2[4:7, 8:11] = self.D2kappa2DeDf - self.D2kappa2Df2
+        self.DDkappa2[8:11, 0:3] = -self.D2kappa2DfDe
+        self.DDkappa2[8:11, 4:7] = self.D2kappa2DfDe - self.D2kappa2Df2
+        self.DDkappa2[8:11, 8:11] = self.D2kappa2Df2
 
-        self.DDkappa2[3, 3] = D2kappa2Dthetae2
-        self.DDkappa2[7, 7] = D2kappa2Dthetaf2
+        self.DDkappa2[3, 3] = self.D2kappa2Dthetae2
+        self.DDkappa2[7, 7] = self.D2kappa2Dthetaf2
 
-        self.DDkappa2[0:3, 3] = -D2kappa2DeDthetae
-        self.DDkappa2[4:7, 3] = D2kappa2DeDthetae - D2kappa2DfDthetae
-        self.DDkappa2[8:11, 3] = D2kappa2DfDthetae
+        self.DDkappa2[0:3, 3] = -self.D2kappa2DeDthetae
+        self.DDkappa2[4:7, 3] = self.D2kappa2DeDthetae - self.D2kappa2DfDthetae
+        self.DDkappa2[8:11, 3] = self.D2kappa2DfDthetae
 
-        self.DDkappa2[0:3, 7] = -D2kappa2DeDthetaf
-        self.DDkappa2[4:7, 7] = D2kappa2DeDthetaf - D2kappa2DfDthetaf
-        self.DDkappa2[8:11, 7] = D2kappa2DfDthetaf
+        self.DDkappa2[0:3, 7] = -self.D2kappa2DeDthetaf
+        self.DDkappa2[4:7, 7] = self.D2kappa2DeDthetaf - self.D2kappa2DfDthetaf
+        self.DDkappa2[8:11, 7] = self.D2kappa2DfDthetaf
