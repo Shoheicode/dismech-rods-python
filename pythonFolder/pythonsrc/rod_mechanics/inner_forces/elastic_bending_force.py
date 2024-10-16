@@ -528,24 +528,24 @@ class elasticBendingForce(BaseForce):
         self.DDkappa1[4:7, 7] = D2kappa1DeDthetaf - D2kappa1DfDthetaf
         self.DDkappa1[8:11, 7] = D2kappa1DfDthetaf
 
-        DDkappa2 = np.zeros((9, 9))
-        DDkappa2[0:3, 0:3] = D2kappa2De2
-        DDkappa2[0:3, 4:7] = -D2kappa2De2 + D2kappa2DeDf
-        DDkappa2[0:3, 8:11] = -D2kappa2DeDf
-        DDkappa2[4:7, 0:3] = -D2kappa2De2 + D2kappa2DfDe
-        DDkappa2[4:7, 4:7] = D2kappa2De2 - D2kappa2DeDf - D2kappa2DfDe + D2kappa2Df2
-        DDkappa2[4:7, 8:11] = D2kappa2DeDf - D2kappa2Df2
-        DDkappa2[8:11, 0:3] = -D2kappa2DfDe
-        DDkappa2[8:11, 4:7] = D2kappa2DfDe - D2kappa2Df2
-        DDkappa2[8:11, 8:11] = D2kappa2Df2
+        self.DDkappa2 = np.zeros((9, 9))
+        self.DDkappa2[0:3, 0:3] = D2kappa2De2
+        self.DDkappa2[0:3, 4:7] = -D2kappa2De2 + D2kappa2DeDf
+        self.DDkappa2[0:3, 8:11] = -D2kappa2DeDf
+        self.DDkappa2[4:7, 0:3] = -D2kappa2De2 + D2kappa2DfDe
+        self.DDkappa2[4:7, 4:7] = D2kappa2De2 - D2kappa2DeDf - D2kappa2DfDe + D2kappa2Df2
+        self.DDkappa2[4:7, 8:11] = D2kappa2DeDf - D2kappa2Df2
+        self.DDkappa2[8:11, 0:3] = -D2kappa2DfDe
+        self.DDkappa2[8:11, 4:7] = D2kappa2DfDe - D2kappa2Df2
+        self.DDkappa2[8:11, 8:11] = D2kappa2Df2
 
-        DDkappa2[3, 3] = D2kappa2Dthetae2
-        DDkappa2[7, 7] = D2kappa2Dthetaf2
+        self.DDkappa2[3, 3] = D2kappa2Dthetae2
+        self.DDkappa2[7, 7] = D2kappa2Dthetaf2
 
-        DDkappa2[0:3, 3] = -D2kappa2DeDthetae
-        DDkappa2[4:7, 3] = D2kappa2DeDthetae - D2kappa2DfDthetae
-        DDkappa2[8:11, 3] = D2kappa2DfDthetae
+        self.DDkappa2[0:3, 3] = -D2kappa2DeDthetae
+        self.DDkappa2[4:7, 3] = D2kappa2DeDthetae - D2kappa2DfDthetae
+        self.DDkappa2[8:11, 3] = D2kappa2DfDthetae
 
-        DDkappa2[0:3, 7] = -D2kappa2DeDthetaf
-        DDkappa2[4:7, 7] = D2kappa2DeDthetaf - D2kappa2DfDthetaf
-        DDkappa2[8:11, 7] = D2kappa2DfDthetaf
+        self.DDkappa2[0:3, 7] = -D2kappa2DeDthetaf
+        self.DDkappa2[4:7, 7] = D2kappa2DeDthetaf - D2kappa2DfDthetaf
+        self.DDkappa2[8:11, 7] = D2kappa2DfDthetaf
