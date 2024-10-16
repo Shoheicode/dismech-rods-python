@@ -337,11 +337,11 @@ class elasticBendingForce(BaseForce):
                 self.kbLocal = limb.kb[i]
 
                 # Compute Jacobians
-                Jbb = self.jacobian_computation(limb, EIMatrices[limb_idx], gradKappa1, gradKappa2, DDkappa1, DDkappa2, i)
+                Jbb = self.jacobian_computation(limb, self.EIMatrices[limb_idx], self.gradKappa1, self.gradKappa2, self.DDkappa1, self.DDkappa2, i)
 
                 # Compute kappaL
                 kappaL = limb.kappa[i] - limb.kappa_bar[i]
-                temp = -1.0 / limb.voronoi_len[i] * np.dot(kappaL.T, EIMatrices[limb_idx])
+                temp = -1.0 / limb.voronoi_len[i] * np.dot(kappaL.T, self.EIMatrices[limb_idx])
                 Jbb += temp[0] * DDkappa1 + temp[1] * DDkappa2
 
                 # Add Jacobians depending on node joints
