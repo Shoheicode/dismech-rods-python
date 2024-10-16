@@ -262,10 +262,10 @@ class elasticBendingForce(BaseForce):
 
                     self.kbLocal = joint.kb[curr_iter, :]
 
-                    self.gradKappa1[curr_iter, 3] = -0.5 * np.dot(self.kbLocal, self.d1e)
-                    self.gradKappa1[curr_iter, 7] = -0.5 * np.dot(self.kbLocal, self.d1f)
-                    self.gradKappa2[curr_iter, 3] = -0.5 * np.dot(self.kbLocal, self.d2e)
-                    self.gradKappa2[curr_iter, 7] = -0.5 * np.dot(self.kbLocal, self.d2f)
+                    self.gradKappa1[curr_iter, 3] = -0.5 * np.dot(self.kb_local, self.d1e)
+                    self.gradKappa1[curr_iter, 7] = -0.5 * np.dot(self.kb_local, self.d1f)
+                    self.gradKappa2[curr_iter, 3] = -0.5 * np.dot(self.kb_local, self.d2e)
+                    self.gradKappa2[curr_iter, 7] = -0.5 * np.dot(self.kb_local, self.d2f)
 
                     curr_iter += 1
 
