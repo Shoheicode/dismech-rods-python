@@ -454,16 +454,16 @@ class elasticBendingForce(BaseForce):
                     - self.kappa1 / (self.chi * self.norm2_f) * (self.Id3 - np.outer(self.tf, self.tf))
                     + 1.0 / (4.0 * self.norm2_f) * (self.kb_o_d2f + self.d2f_o_kb))
 
-        self.D2kappa1DeDf = (-kappa1 / (chi * norm_e * norm_f) * (Id3 + np.outer(te, tf))
-                        + 1.0 / (norm_e * norm_f) * (2 * kappa1 * tt_o_tt - tf_c_d2t_o_tt 
-                                                    + tt_o_te_c_d2t - tilde_d2_3d))
+        self.D2kappa1DeDf = (-self.kappa1 / (self.chi * self.norm_e * self.norm_f) * (self.Id3 + np.outer(self.te, self.tf))
+                        + 1.0 / (self.norm_e * self.norm_f) * (2 * self.kappa1 * self.tt_o_tt - self.tf_c_d2t_o_tt 
+                                                    + self.tt_o_te_c_d2t - self.tilde_d2_3d))
         self.D2kappa1DfDe = self.D2kappa1DeDf.T
 
-        tmp = np.cross(tf, tilde_d1)
-        self.tf_c_d1t_o_tt = np.outer(tmp, tilde_t)
-        self.tt_o_tf_c_d1t = tf_c_d1t_o_tt.T
-        self.kb_o_d1e = np.outer(kbLocal, d1e.T)
-        self.d1e_o_kb = kb_o_d1e.T
+        tmp = np.cross(self.tf, self.tilde_d1)
+        self.tf_c_d1t_o_tt = np.outer(tmp, self.tilde_t)
+        self.tt_o_tf_c_d1t = self.tf_c_d1t_o_tt.T
+        self.kb_o_d1e = np.outer(self.kbLocal, self.d1e.T)
+        self.d1e_o_kb = self.kb_o_d1e.T
 
         self.D2kappa2De2 = (1.0 / norm2_e * (2 * kappa2 * tt_o_tt + tf_c_d1t_o_tt + tt_o_tf_c_d1t)
                     - kappa2 / (chi * norm2_e) * (Id3 - np.outer(te, te))
