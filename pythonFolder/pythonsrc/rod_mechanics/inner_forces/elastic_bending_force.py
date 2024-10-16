@@ -460,7 +460,28 @@ class elasticBendingForce(BaseForce):
                         self.Jbb[:, 7] *= -1
                         self.Jbb[7, :] *= -1
 
-                    
+                    # NEED TO ADD THE NODAL FORCE CODE
+                    for t in range(3):
+                        for k in range(3):
+                            super().stepper.add_jacobian(4*n1+t, 4*n1+k, -self.Jbb[k, t], l1)
+                            super().stepper.add_jacobian(4*n1+t, 4*n2+k, -self.Jbb[k+4, t], l1, l2)
+                            super().stepper.add_jacobian(4*n1+t, 4*n3+k, -self.Jbb[k+8, t], l1, l3)
+
+                            super().stepper.add_jacobian(4*n2+t, 4*n1+k, -self.Jbb[k, t+4], l2, l1)
+                            super().stepper.add_jacobian(4*n2+t, 4*n2+k, -self.Jbb[k+4, t+4], l2)
+                            super().stepper.add_jacobian(4*n2+t, 4*n3+k, -self.Jbb[k+8, t+4], l2, l3)
+
+                            super().stepper.add_jacobian(4*n3+t, 4*n1+k, -self.Jbb[k, t+8], l3, l1)
+                            super().stepper.add_jacobian(4*n3+t, 4*n2+k, -self.Jbb[k+4, t+8], l3, l2)
+                            super().stepper.add_jacobian(4*n3+t, 4*n3+k, -self.Jbb[k+8, t+8], l3)
+
+                    if theta1_i is not None and theta2_i is not None:
+                        # Add thetheta jacobians
+                        for k in range(3):
+                            super().stepper.add_jacobian(theta1_i, 4*n1+k, -self.Jbb[k, 3], l1)
+                            super().stepper.add_jacobian(4*n1+k, theta1_i, -self.Jbb[3, k], l1)
+                            super().stepper.add_jacobian(theta2_i, 4*n3+k, -self.Jbb[k+8, 7], l3)
+                            super().stepper.add_jacobian(4*n3+k, theta2_i, -self.Jbb[7, k+8], l3)
 
                     curr_iter += 1
 
