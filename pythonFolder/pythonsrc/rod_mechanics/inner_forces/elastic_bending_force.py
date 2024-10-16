@@ -431,10 +431,10 @@ class elasticBendingForce(BaseForce):
     def jacobian_computation(self):
         self.tt_o_tt = np.outer(self.tilde_t, self.tilde_t)
 
-        tilde_d1_3d = self.cross_mat(tilde_d1)
-        tilde_d2_3d = self.cross_mat(tilde_d2)
+        self.tilde_d1_3d = self.cross_mat(self.tilde_d1)
+        self.tilde_d2_3d = self.cross_mat(self.tilde_d2)
 
-        tmp = np.cross(tf, tilde_d2)
+        tmp = np.cross(self.tf, self.tilde_d2)
         tf_c_d2t_o_tt = np.outer(tmp, tilde_t)
         tt_o_tf_c_d2t = tf_c_d2t_o_tt.T
         kb_o_d2e = np.outer(kbLocal, d2e.T)
