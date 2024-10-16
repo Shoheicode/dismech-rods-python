@@ -358,7 +358,50 @@ class elasticBendingForce(BaseForce):
                             ind2 = 4 * i - 4 + k
                             self.stepper.add_jacobian(ind1, ind2, -Jbb[k, j], limb_idx)
                 else:
-                    add_joint_jacobians(stepper, limb, Jbb, i, limb_idx)
+                    n1 = limb.joint_ids[i - 1][0]
+                    l1 = limb.joint_ids[i - 1][1]
+                    n2 = limb.joint_ids[i][0]
+                    l2 = limb.joint_ids[i][1]
+                    n3 = limb.joint_ids[i + 1][0]
+                    l3 = limb.joint_ids[i + 1][1]
+
+                    for t in range(3):
+                        for k in range(3):
+                            super().stepper.addJacobian(4 * n1 + t, 4 * n1 + k, -Jbb[k, t], l1)
+                            super().stepper.addJacobian(4 * n1 + t, 4 * n2 + k, -Jbb[k + 4, t], l1, l2)
+                            super().stepper.addJacobian(4 * n1 + t, 4 * n3 + k, -Jbb[k + 8, t], l1, l3)
+
+                            super().stepper.addJacobian(4 * n2 + t, 4 * n1 + k, -Jbb[k, t + 4], l2, l1)
+                            super().stepper.addJacobian(4 * n2 + t, 4 * n2 + k, -Jbb[k + 4, t + 4], l2)
+                            super().stepper.addJacobian(4 * n2 + t, 4 * n3 + k, -Jbb[k + 8, t + 4], l2, l3)
+
+                            super().stepper.addJacobian(4 * n3 + t, 4 * n1 + k, -Jbb[k, t + 8], l3, l1)
+                            super().stepper.addJacobian(4 * n3 + t, 4 * n2 + k, -Jbb[k + 4, t + 8], l3, l2)
+                            super().stepper.addJacobian(4 * n3 + t, 4 * n3 + k, -Jbb[k + 8, t + 8], l3)
+
+                    ci = 4 * (i - 1)
+                    n1_i = 4 * n1
+                    n2_i = 4 * n2
+                    n3_i = 4 * n3
+
+                    for k in range(3):
+                        super().stepper.addJacobian(ci + 3, n1_i + k, -Jbb[k, 3], limb_idx, l1)
+                        super().stepper.addJacobian(n1_i + k, ci + 3, -Jbb[3, k], l1, limb_idx)
+                        super().stepper.addJacobian(ci + 3, n2_i + k, -Jbb[k + 4, 3], limb_idx, l2)
+                        super().stepper.addJacobian(n2_i + k, ci + 3, -Jbb[3, k + 4], l2, limb_idx)
+                        super().stepper.addJacobian(ci + 3, n3_i + k, -Jbb[k + 8, 3], limb_idx, l3)
+                        super().stepper.addJacobian(n3_i + k, ci + 3, -Jbb[3, k + 8], l3, limb_idx)
+                        super().stepper.addJacobian(ci + 7, n1_i + k, -Jbb[k, 7], limb_idx, l1)
+                        super().stepper.addJacobian(n1_i + k, ci + 7, -Jbb[7, k], l1, limb_idx)
+                        super().stepper.addJacobian(ci + 7, n2_i + k, -Jbb[k + 4, 7], limb_idx, l2)
+                        super().stepper.addJacobian(n2_i + k, ci + 7, -Jbb[7, k + 4], l2, limb_idx)
+                        super().stepper.addJacobian(ci + 7, n3_i + k, -Jbb[k + 8, 3], limb_idx, l3)
+                        super().stepper.addJacobian(n3_i + k, ci + 7, -Jbb[7, k + 8], l3, limb_idx)
+
+                    super().stepper.addJacobian(ci + 3, ci + 3, -Jbb[3, 3], limb_idx)
+                    super().stepper.addJacobian(ci + 3, ci + 7, -Jbb[7, 3], limb_idx)
+                    super().stepper.addJacobian(ci + 7, ci + 3, -Jbb[3, 7], limb_idx)
+                    super().stepper.addJacobian(ci + 7, ci + 7, -Jbb[7, 7], limb_idx)
 
             limb_idx += 1
 
