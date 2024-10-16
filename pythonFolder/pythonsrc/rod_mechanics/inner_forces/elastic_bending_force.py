@@ -345,11 +345,13 @@ class elasticBendingForce(BaseForce):
 
                 # Compute kappaL
                 self.kappaL = limb.kappa[i] - limb.kappa_bar[i]
+
                 temp = -1.0 / limb.voronoi_len[i] * np.dot(self.kappaL.T, self.EIMatrices[limb_idx])
+                
                 self.Jbb += temp[0] * self.DDkappa1 + temp[1] * self.DDkappa2
 
                 # Add Jacobians depending on node joints
-                if not limb.isNodeJoint[i-1] and not limb.isNodeJoint[i] and not limb.isNodeJoint[i+1]:
+                if limb.is_node_joint[i-1] != 1 and limb.is_node_joint[i] != 1 and limb.is_node_joint[i+1] != 1:
                     for j in range(11):
                         for k in range(11):
                             ind1 = 4 * i - 4 + j
