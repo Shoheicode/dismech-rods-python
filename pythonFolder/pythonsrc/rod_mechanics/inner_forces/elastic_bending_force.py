@@ -337,7 +337,11 @@ class elasticBendingForce(BaseForce):
                 self.kbLocal = limb.kb[i]
 
                 # Compute Jacobians
-                self.Jbb = self.jacobian_computation()
+                self.jacobian_computation()
+
+                self.len = limb.voronoi_len[i]
+                self.relevantPart[:,0] = self.gradKappa1[i,:]
+                self.relevantPart[:,1] = self.gradKappa2[i,:]
 
                 # Compute kappaL
                 self.kappaL = limb.kappa[i] - limb.kappa_bar[i]
@@ -350,7 +354,7 @@ class elasticBendingForce(BaseForce):
                         for k in range(11):
                             ind1 = 4 * i - 4 + j
                             ind2 = 4 * i - 4 + k
-                            stepper.add_jacobian(ind1, ind2, -Jbb[k, j], limb_idx)
+                            self.stepper.add_jacobian(ind1, ind2, -Jbb[k, j], limb_idx)
                 else:
                     add_joint_jacobians(stepper, limb, Jbb, i, limb_idx)
 
