@@ -191,14 +191,13 @@ class elasticBendingForce(BaseForce):
 
             # Second loop
             for i in range(1, limb.ne):
-                self.relevantPart = np.zeros((11, 2))
                 self.relevantPart[:, 0] = self.gradKappa1[i, :]
                 self.relevantPart[:, 1] = self.gradKappa2[i, :]
                 self.kappaL = limb.kappa[i, :] - limb.kappa_bar[i, :]
 
                 self.f = -np.dot(self.relevantPart, np.dot(self.EIMatrices[limb_idx], self.kappaL)) / limb.voronoi_len[i]
 
-                if not (limb.is_node_joint[i - 1] == 1 or limb.is_node_joint[i] == 1 or limb.is_node_joint[i + 1] == 1):
+                if limb.is_node_joint[i - 1] != 1 and limb.is_node_joint[i] != 1 and limb.is_node_joint[i + 1] != 1:
                     self.ci = 4 * i - 4
                     for k in range(11):
                         ind = self.ci + k
@@ -287,7 +286,6 @@ class elasticBendingForce(BaseForce):
                     theta1_i = joint.theta_inds[curr_iter][0]
                     theta2_i = joint.theta_inds[curr_iter][1]
 
-                    self.relevantPart = np.zeros((11, 2))
                     self.relevantPart[:, 0] = self.gradKappa1[curr_iter, :]
                     self.relevantPart[:, 1] = self.gradKappa2[curr_iter, :]
                     self.kappaL = joint.kappa[curr_iter, :] - joint.kappa_bar[curr_iter, :]
@@ -317,22 +315,22 @@ class elasticBendingForce(BaseForce):
             self.gradKappa2 = self.gradKappa2s[limb_idx]
             
             for i in range(1, limb.ne):
-                norm_e = limb.edge_len[i - 1]
-                norm_f = limb.edge_len[i]
-                te = limb.tangent[i - 1]
-                tf = limb.tangent[i]
-                d1e = limb.m1[i - 1]
-                d2e = limb.m2[i - 1]
-                d1f = limb.m1[i]
-                d2f = limb.m2[i]
+                self.norm_e = limb.edge_len[i - 1]
+                self.norm_f = limb.edge_len[i]
+                self.te = limb.tangent[i - 1]
+                self.tf = limb.tangent[i]
+                self.d1e = limb.m1[i - 1]
+                self.d2e = limb.m2[i - 1]
+                self.d1f = limb.m1[i]
+                self.d2f = limb.m2[i]
 
-                norm2_e = norm_e ** 2
-                norm2_f = norm_f ** 2
+                self.norm2_e = norm_e ** 2
+                self.norm2_f = norm_f ** 2
 
-                chi = 1.0 + np.dot(te, tf)
-                tilde_t = (te + tf) / chi
-                tilde_d1 = (d1e + d1f) / chi
-                tilde_d2 = (d2e + d2f) / chi
+                self.chi = 1.0 + np.dot(self.te, self.tf)
+                self.tilde_t = (te + tf) / chi
+                self.tilde_d1 = (d1e + d1f) / chi
+                self.tilde_d2 = (d2e + d2f) / chi
 
                 kappa1 = limb.kappa[i, 0]
                 kappa2 = limb.kappa[i, 1]
