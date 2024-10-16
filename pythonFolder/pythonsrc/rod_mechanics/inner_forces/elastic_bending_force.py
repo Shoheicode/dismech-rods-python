@@ -418,11 +418,21 @@ class elasticBendingForce(BaseForce):
 
             joint_idx += 1
             
-    def jacobian_computation():
+    def crossMat(a):
+        b = np.zeros((3, 3))
+        b[0, 1] = -a[2]
+        b[0, 2] = a[1]
+        b[1, 0] = a[2]
+        b[1, 2] = -a[0]
+        b[2, 0] = -a[1]
+        b[2, 1] = a[0]
+        return b
+
+    def jacobian_computation(self):
         tt_o_tt = np.outer(tilde_t, tilde_t)
 
-        tilde_d1_3d = crossMat(tilde_d1)
-        tilde_d2_3d = crossMat(tilde_d2)
+        tilde_d1_3d = self.cross_mat(tilde_d1)
+        tilde_d2_3d = self.cross_mat(tilde_d2)
 
         tmp = np.cross(tf, tilde_d2)
         tf_c_d2t_o_tt = np.outer(tmp, tilde_t)
