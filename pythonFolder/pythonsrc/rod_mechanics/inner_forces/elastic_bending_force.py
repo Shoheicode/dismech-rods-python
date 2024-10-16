@@ -331,13 +331,13 @@ class elasticBendingForce(BaseForce):
                 self.tilde_d1 = (d1e + d1f) / chi
                 self.tilde_d2 = (d2e + d2f) / chi
 
-                kappa1 = limb.kappa[i, 0]
-                kappa2 = limb.kappa[i, 1]
+                self.kappa1 = limb.kappa[i, 0]
+                self.kappa2 = limb.kappa[i, 1]
 
-                kbLocal = limb.kb[i]
+                self.kbLocal = limb.kb[i]
 
                 # Compute Jacobians
-                Jbb = jacobian_computation(limb, EIMatrices[limb_idx], gradKappa1, gradKappa2, DDkappa1, DDkappa2, i)
+                Jbb = self.jacobian_computation(limb, EIMatrices[limb_idx], gradKappa1, gradKappa2, DDkappa1, DDkappa2, i)
 
                 # Compute kappaL
                 kappaL = limb.kappa[i] - limb.kappa_bar[i]
@@ -417,3 +417,5 @@ class elasticBendingForce(BaseForce):
                     curr_iter += 1
 
             joint_idx += 1
+    def jacobian_computation():
+        return 1
