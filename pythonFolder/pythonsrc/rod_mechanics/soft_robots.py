@@ -6,8 +6,8 @@ from pythonsrc.rod_mechanics.elasticjoint import ElasticJoint
 
 class SoftRobots():
     def __init__(self):
-        self.limbs = List[ElasticRod]
-        self.joints = List[ElasticJoint]
+        self.limbs :List[ElasticRod] = List[ElasticRod]
+        self.joints :List[ElasticRod] = List[ElasticJoint]
         self.controllers = []
 
     def addLimb(self, start, end, num_nodes, rho, rod_radius, youngs_modulus, poisson_ratio, mu = 0.0):
