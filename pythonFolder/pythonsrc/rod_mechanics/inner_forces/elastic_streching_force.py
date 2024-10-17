@@ -12,8 +12,8 @@ class elasticStretchingForce(BaseForce):
         self.ref_length :float = 0
         self.epsX: float = 0 # Strain in the material
         self.u = np.zeros(3) # Displacement vector
-        self.dxx = np.zeros(3)
-        self.f = np.zeros(3)
+        self.dxx = np.zeros(3) # Vector for calculating displacement
+        self.f = np.zeros(3) # Force vector
         self.Id3 = np.eye(3)
         self.M0 = np.zeros((3, 3))
         self.v = np.zeros((1, 3))
