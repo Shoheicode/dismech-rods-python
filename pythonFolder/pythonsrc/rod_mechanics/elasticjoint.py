@@ -179,7 +179,7 @@ class ElasticJoint:
         """Prepare joint for next iteration."""
         self.x0 = self.x.copy()
         self.u0 = self.u.copy()
-        self.compute_time_parallel()
+        self.__compute_time_parallel()
         
     def setup(self) -> None:
         self.num_bending_combos = 0
@@ -286,10 +286,31 @@ class ElasticJoint:
                 self.twist_bar[i] = theta_f - theta_i + self.ref_twist[i]
 
     def __compute_edge_len(self):
-        pass
+        for i in range(self.ne):
+            num_node = self.connected_nodes[i][0]
+            limb_idx = self.connected_nodes[i][1]
+            curr_limb = self.limbs[limb_idx]
+            self.edge_len[i] = np.linalg.norm(self.x[0:3] - curr_limb.x[4 * num_node:4 * num_node + 3])
 
     def __compute_time_parallel(self):
-        pass
+        for i in range(self.ne):
+            for j in range(i + 1, self.ne):
+                sgn1 = self.sgns[i][0]
+                sgn2 = self.sgns[i][1]
+                t0_0 = self.tangents_old[i] * sgn1
+                t1_0 = self.tangents[i] * sgn1
+                t0_1 = self.tangents_old[j] * sgn2
+                t1_1 = self.tangents[j] * sgn2
+
+                d1_0 = np.zeros(3)
+                d1_1 = np.zeros(3)
+                self.parallel_transport(self.d1_old[i][0], t0_0, t1_0, d1_0)
+                self.parallel_transport(self.d1_old[i][1], t0_1, t1_1, d1_1)
+
+                self.d1[i][0] = d1_0
+                self.d2[i][0] = np.cross(t1_0, d1_0)
+                self.d1[i][1] = d1_1
+                self.d2[i][1] = np.cross(t1_1, d1_1)
 
     def __compute_kappa(self):
         for i in range(self.ne):
