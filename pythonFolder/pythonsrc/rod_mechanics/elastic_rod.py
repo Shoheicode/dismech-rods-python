@@ -415,7 +415,7 @@ class ElasticRod:
 
     def __get_ref_twist(self):
         # nv = len(refTwist)
-        self.ne = self.nv - 1
+        # self.ne = self.nv - 1
         for c in np.arange(1,self.ne):
             u0 = self.d1[c-1,0:3]
             u1 = self.d1[c,  0:3]
