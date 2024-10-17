@@ -282,7 +282,13 @@ class ElasticJoint:
         pass
 
     def __compute_kappa(self):
-        pass
+        for i in range(self.ne):
+            for j in range(i + 1, self.ne):
+                sgn1 = self.sgns[i][0]
+                sgn2 = self.sgns[i][1]
+                t0 = self.tangents[i] * sgn1
+                t1 = self.tangents[j] * sgn2
+                self.kb[i] = 2.0 * np.cross(t0, t1) / (1.0 + np.dot(t0, t1))
 
     def __compute_tangent(self):
         for i in range(self.ne):
