@@ -202,13 +202,9 @@ class ElasticRod:
 
     def enable_2d_sim(self):
         """Enable 2D simulation in x-z plane."""
-        for i in range(self.nv):
-            # Constrain y position
-            self.is_constrained[3*i + 1] = True
-            # Constrain theta
-            if i < self.ne:
-                self.is_constrained[3*self.nv + i] = True
-        self.update_map()
+        for i in range(self.ne):
+            self.is_constrained[4 * i + 1] = 1  # Constrain y-axis
+            self.is_constrained[4 * i + 3] = 1  #
     
     def get_vertex(self, k):
         """Return the position of the vertex at node k."""
