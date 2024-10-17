@@ -425,7 +425,7 @@ class ElasticRod:
             ut = self.__parallel_transport(u0,t0,t, ut)
             ut = self.__rotate_axis_angle(ut,t,self.ref_twist[i])
             sgnAngle = self.__signed_angle(ut,u1,t)
-            self.ref_twist[i] = self.ref_twist[i] + sgnAngle
+            self.ref_twist[i] = self.ref_twist_old[i] + sgnAngle
 
         return self.ref_twist
 
