@@ -103,16 +103,26 @@ class ElasticJoint:
 
     def update_connected_nodes(self, node_num: int, limb_idx: int, remove_dof: bool):
         nv = self.limbs[limb_idx].nv
-
-        if(node_num == 0):
-            node_and_limb = (1, limb_idx)
-
-            self.connected_nodes.append(node_and_limb)
+        if node_num == 0:
+            self.connected_nodes.append((1, limb_idx))
             self.bending_twist_signs.append(-1)
-            if(remove_dof):
-                node_and_limb2 = (0, limb_idx)
-                self.replaced_nodes.append(node_and_limb2)
-            self.ne+=1
+            if remove_dof:
+                self.replaced_nodes.append((0, limb_idx))
+            self.ne += 1
+        elif node_num == nv - 1:
+            self.connected_nodes.append((nv - 2, limb_idx))
+            self.bending_twist_signs.append(1)
+            if remove_dof:
+                self.replaced_nodes.append((nv - 1, limb_idx))
+            self.ne += 1
+        else:
+            self.connected_nodes.append((node_num - 1, limb_idx))
+            self.bending_twist_signs.append(1)
+            self.connected_nodes.append((node_num + 1, limb_idx))
+            self.bending_twist_signs.append(-1)
+            if remove_dof:
+                self.replaced_nodes.append((node_num, limb_idx))
+            self.ne += 2
 
 
     @staticmethod
