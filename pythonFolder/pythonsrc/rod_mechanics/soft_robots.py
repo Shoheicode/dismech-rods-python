@@ -11,27 +11,32 @@ class SoftRobots():
         self.controllers = []
         self.num_limbs = 0  # Counter to track the number of limbs
 
+    # Method to add a limb using start and end points with other parameters
     def add_limb(self, start, end, num_nodes, rho, rod_radius, youngs_modulus, poisson_ratio, mu = 0.0):
         limb = ElasticRod(self.num_limbs, start, end, num_nodes, rho, rod_radius, youngs_modulus, poisson_ratio, mu)
         self.limbs.append(limb)  # Add new limb to the list
         self.num_limbs += 1  # Increment limb counter
 
+    # Method to add a limb using a list of nodes
     def add_limb_with_nodes(self, nodes, rho, rod_radius, youngs_modulus, poisson_ratio, mu = 0.0):
         limb = ElasticRod(self.num_limbs, nodes, rho, rod_radius, youngs_modulus, poisson_ratio, mu)
         self.limbs.append(limb)  # Add limb to the list
         self.num_limbs += 1  # Increment limb counter
 
+    # Method to create a joint between limbs
     def create_joint(self, limb_idx, m_node_idx):
         # Default to the last node if m_node_idx is -1
         node_idx = m_node_idx if m_node_idx != -1 else self.limbs[limb_idx].nv - 1
         joint = ElasticJoint(node_idx, limb_idx, self.limbs)
         self.joints.append(joint)  # Add joint to the list
 
+    # Method to add a limb to an existing joint
     def add_to_joint(self,joint_idx, limb_idx, m_node_idx):
         # Default to the last node if m_node_idx is -1
         node_idx = m_node_idx if m_node_idx != -1 else self.limbs[limb_idx].nv - 1
         self.joints[joint_idx].add_to_joint(node_idx, limb_idx)  # Add limb to the existing joint
 
+    # Method to lock an edge of a limb (by setting boundary conditions)
     def lockEdge(self, limb_idx, edge_idx):
         limb : ElasticRod = self.limbs[limb_idx]
         # Set boundary conditions on the two vertices of the edge
@@ -40,6 +45,7 @@ class SoftRobots():
         # Set boundary condition for twist angle (theta)
         limb.set_theta_boundary_condition(0.0, edge_idx)
 
+    # Method to apply initial velocities to the limb's nodes
     def applyInitialVelocities(self, limb_idx, velocities):
         limb : ElasticRod = self.limbs[limb_idx]
         if limb.nv != len(velocities):
@@ -48,11 +54,12 @@ class SoftRobots():
             # Set initial velocities for the limb's nodes
             limb.u[4*i:4*i+3] = limb.u0[4*i:4*i+3] = velocities[i]
 
+    # Method to set up joints and their configurations
     def setup(self):
         for joint in self.joints:
             joint.setup()  # Call setup for each joint
 
-    # void addController(const shared_ptr<baseController>& controller);
+    # Method to add a controller to the robot
     def add_controller(self,controller):
         self.controllers.append(controller)  # Add controller to the list
 
