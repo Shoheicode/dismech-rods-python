@@ -423,8 +423,8 @@ class ElasticRod:
             t =  self.tangent[c,  0:3]
             ut = np.zeros(3)
             ut = self.__parallel_transport(u0,t0,t, ut)
-            ut = self.rotateAxisAngle(ut,t,self.ref_twist[c])
-            sgnAngle = self.signedAngle(ut,u1,t)
+            ut = self.__rotate_axis_angle(ut,t,self.ref_twist[c])
+            sgnAngle = self.__signed_angle(ut,u1,t)
             self.ref_twist[c] = self.ref_twist[c] + sgnAngle
 
         return self.ref_twist
