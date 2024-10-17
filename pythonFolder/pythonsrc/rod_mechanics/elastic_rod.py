@@ -81,7 +81,7 @@ class ElasticRod:
     def setup(self, nodes: np.ndarray):
         """Setup basic rod geometry and allocate arrays."""
         
-        self.x = np.zeros(self.ndof)   # Current timestep DOFs
+        self.x: np.ndarray = np.zeros(self.ndof)   # Current timestep DOFs
 
         for i in range(self.nv):
             self.x[4*i] = nodes[i][0]
