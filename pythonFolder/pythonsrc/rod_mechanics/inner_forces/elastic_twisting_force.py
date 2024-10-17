@@ -6,7 +6,31 @@ from soft_robots import SoftRobots
 class ElasticTwistingForce(BaseForce):
     def __init__(self, m_soft_robots: List[SoftRobots]):
         super().__init__(m_soft_robots)
-        self.ci = 0
+
+        self.grad_twists: List[List[np.ndarray]] = []
+        self.deltams: List[List[np.ndarray]] = []
+        self.theta_fs: List[List[np.ndarray]] = []
+        self.theta_es: List[List[np.ndarray]] = []
+
+        for limb in super().soft_robots.limbs:
+            self.grad_twists.append(np.zeros((limb.nv, 11)))  # GradTwists for the vertices of the limb
+            self.deltams.append(np.zeros(limb.ne))  # Delta m values for edges
+            self.theta_fs.append(np.zeros(limb.ne))  # Final twist angles for edges
+            self.theta_es.append(np.zeros(limb.ne))  # Elastic twist angles for edges
+
+        for joint in super().soft_robots.joints:
+            nb = joint.num_bending_combos  # Number of bending combos
+            self.grad_twists.append(np.zeros((nb, 11)))  # GradTwists for the joint
+            self.deltams.append(np.zeros(nb))  # Delta m values for the joint
+            self.theta_fs.append(np.zeros(nb))  # Final twist angles for the joint
+            self.theta_es.append(np.zeros(nb))  # Elastic twist angles for the joint
+
+        self.dd_twist = np.zeros((11, 11))
+        self.JTT = np.zeros((11, 11))
+        self.grad_twist_local = np.zeros(11)
+        self.f = np.zeros(11)
+
+        self.ci : int= 0
         self.ind = self.ind1 = self.ind2 = 0
         self.norm_e = self.norm_f = 0.0
         self.norm2_e = self.norm2_f = 0.0
@@ -18,20 +42,14 @@ class ElasticTwistingForce(BaseForce):
         self.theta_f: List[np.ndarray] = None
         self.theta_e: List[np.ndarray] = None
         self.deltam: List[np.ndarray] = None
-        self.grad_twist_local = np.zeros(0)
         self.get_undeformed_twist = np.zeros(0)
-        self.f = np.zeros(0)
-        self.grad_twists: List[List[np.ndarray]] = []
-        self.deltams: List[List[np.ndarray]] = []
-        self.theta_fs: List[List[np.ndarray]] = []
-        self.theta_es: List[List[np.ndarray]] = []
         self.d2m_de2 = self.d2m_df2 = self.d2m_de_df = self.d2m_df_de = np.zeros((3, 3))
         self.te_matrix = np.zeros((3, 3))
         self.j = np.zeros((11, 11))
-        self.dd_twist = np.zeros((11, 11))
-        self.JTT = np.zeros((11, 11))
         self.grad_twist: List[np.ndarray] = None
         self.GJ = 0.0
+
+
 
     def compute_force(self, dt: float):
         for limb_idx, limb in enumerate(self.soft_robots.limbs):
