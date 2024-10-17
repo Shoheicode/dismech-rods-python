@@ -162,7 +162,12 @@ class ElasticRod:
 
     def prepare_for_iteration(self):
         """Update discrete values and frames for the next timestep."""
-        pass
+        self.__compute_tangent()
+        self.__compute_time_parallel()
+        self.__get_ref_twist()
+        self.__compute_material_director()
+        self.__compute_edge_len()
+        self.__compute_kappa()
 
     def update_newton_x(self, dx: np.ndarray, offset: int, alpha: float = 1.0) -> float:
         """
@@ -352,13 +357,18 @@ class ElasticRod:
 
             # Normalize the tangent vector.
             self.tangent[i, :] = self.tangent[i, :] / np.linalg.norm(self.tangent[i, :])
-        return None
     
     def __compute_twist_bar(self):
         pass
 
     def __compute_time_parallel(self):
-        pass
+        for i in range(self.ne):
+            t0 = self.tangent_old[i]
+            t1 = self.tangent[i]
+            d1_vector = np.zeros(3)
+            self.parallel_transport(self.d1_old[i], t0, t1, d1_vector)
+            self.d1[i] = d1_vector
+            self.d2[i] = np.cross(t1, d1_vector)
 
     def __compute_space_parallel(self):
         # This function is only called once
