@@ -116,6 +116,8 @@ class ElasticRod:
         # Initialize frames
         self.d1 = np.zeros((self.ne, 3))
         self.d2 = np.zeros((self.ne, 3))
+        self.d1_old = np.zeros((self.ne,3))
+        self.d2_old = np.zeros((self.ne,3))
         self.m1 = np.zeros((self.ne, 3))
         self.m2 = np.zeros((self.ne, 3))
         self.tangent = np.zeros((self.ne, 3))
