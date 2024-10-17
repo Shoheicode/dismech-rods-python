@@ -199,13 +199,16 @@ class ElasticRod:
         self.update_map()
     
     def get_vertex(self, k):
-        pass
+        """Return the position of the vertex at node k."""
+        return self.x[4 * k: 4 * k + 3]
 
     def get_pre_vertex(self, k):
-        pass
+        """Return the initial position of the vertex at node k (before any update)."""
+        return self.x0[4 * k: 4 * k + 3]
 
     def get_velocity(self, k):
-        pass
+        """Return the velocity of the vertex at node k."""
+        return self.u[4 * k: 4 * k + 3]
 
     """
     setup_map function explained:
