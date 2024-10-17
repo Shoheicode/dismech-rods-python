@@ -263,7 +263,20 @@ class ElasticJoint:
                 curr_index += 1
     
     def __get_ref_twist(self):
-        pass
+        for i in range(self.ne):
+            for j in range(i + 1, self.ne):
+                sgn1 = self.sgns[i][0]
+                sgn2 = self.sgns[i][1]
+                u0 = self.d1[i][0]
+                u1 = self.d1[i][1]
+                t0 = self.tangents[i] * sgn1
+                t1 = self.tangents[j] * sgn2
+                ut = np.zeros(3)
+                self.parallel_transport(u0, t0, t1, ut)
+                self.rotate_axis_angle(ut, t1, self.ref_twist_old[i])
+
+                sgn_angle = self.signed_angle(ut, u1, t1)
+                self.ref_twist[i] = self.ref_twist_old[i] + sgn_angle
 
     def __compute_twist_bar(self):
         pass
