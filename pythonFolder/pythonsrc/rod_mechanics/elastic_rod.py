@@ -427,7 +427,7 @@ class ElasticRod:
             sgnAngle = self.__signed_angle(ut,u1,t)
             self.ref_twist[i] = self.ref_twist_old[i] + sgnAngle
 
-        return self.ref_twist
+        # return self.ref_twist
 
     def __compute_kappa(self):
         # First loop: Compute kb using the tangent vectors
