@@ -7,10 +7,11 @@ import numpy as np
 class elasticStretchingForce(BaseForce):
     
     def __init__(self, soft_robots: SoftRobots):
+        # Initialize class attributes related to forces and Jacobians
         self.len : float = 0
         self.ref_length :float = 0
-        self.epsX: float = 0
-        self.u = np.zeros(3)
+        self.epsX: float = 0 # Strain in the material
+        self.u = np.zeros(3) # Displacement vector
         self.dxx = np.zeros(3)
         self.f = np.zeros(3)
         self.Id3 = np.eye(3)
