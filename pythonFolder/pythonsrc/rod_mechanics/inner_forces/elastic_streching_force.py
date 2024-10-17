@@ -47,8 +47,8 @@ class elasticStretchingForce(BaseForce):
                 curr_limb = super().soft_robots.limbs[limb_idx]
 
                 # Compute epsX and force 'f' for joint
-                epsX = joint.edge_len[i] / joint.ref_len[i] - 1.0
-                f = curr_limb.EA * joint.tangents[i, :] * sgn * self.epsX  # NumPy row access
+                self.epsX = joint.edge_len[i] / joint.ref_len[i] - 1.0
+                self.f = curr_limb.EA * joint.tangents[i, :] * sgn * self.epsX  # NumPy row access
 
                 # Apply forces for the joint
                 for k in range(3):
