@@ -195,7 +195,10 @@ class ElasticRod:
         return max_dx
 
     def update_guess(self, weight:float, dt:float):
-        pass
+        """Update the guess for the next time step using a weighted combination of velocities and displacements."""
+        for c in range(self.uncons):
+            ind = self.unconstrainedMap[c]
+            self.x[ind] = self.x0[ind] + weight * self.u[ind] * dt
 
     def enable_2d_sim(self):
         """Enable 2D simulation in x-z plane."""
