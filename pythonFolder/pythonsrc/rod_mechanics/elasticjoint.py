@@ -279,7 +279,11 @@ class ElasticJoint:
                 self.ref_twist[i] = self.ref_twist_old[i] + sgn_angle
 
     def __compute_twist_bar(self):
-        pass
+        for i in range(self.ne):
+            for j in range(i + 1, self.ne):
+                theta_i = self.limbs[self.connected_nodes[i][1]].x[self.theta_inds[i][0]] * self.sgns[i][0]
+                theta_f = self.limbs[self.connected_nodes[j][1]].x[self.theta_inds[j][1]] * self.sgns[i][1]
+                self.twist_bar[i] = theta_f - theta_i + self.ref_twist[i]
 
     def __compute_edge_len(self):
         pass
