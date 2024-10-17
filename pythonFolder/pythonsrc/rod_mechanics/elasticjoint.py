@@ -22,7 +22,7 @@ class ElasticJoint:
         self.limbs = limbs
 
         self.limbs[limb_idx].add_joint(self.joint_node, False, 0,0)
-        self.updateConnectedNodes(self.joint_node, self.joint_limb, False)
+        self.update_connected_nodes(self.joint_node, self.joint_limb, False)
         
 
         # Position and velocity vectors
@@ -101,7 +101,7 @@ class ElasticJoint:
             rod.set_position(node_num, self.x)
             rod.set_velocity(node_num, self.u)
 
-    def updateConnectedNodes(self, node_num: int, limb_idx: int, remove_dof: bool):
+    def update_connected_nodes(self, node_num: int, limb_idx: int, remove_dof: bool):
         nv = self.limbs[limb_idx].nv
 
         if(node_num == 0):
