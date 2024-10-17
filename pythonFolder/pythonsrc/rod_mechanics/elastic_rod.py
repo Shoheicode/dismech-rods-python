@@ -152,13 +152,13 @@ class ElasticRod:
 
         self.d1_old = self.d1
         self.d2_old = self.d2
-        self.ref_twist_old = self.ref_twist
-        self.tangent_old = self.tangent
+        self.ref_twist_old = self.ref_twist.copy()
+        self.tangent_old = self.tangent.copy()
         
-        # Compute initial rod length
-        self.rod_length = 0
-        for i in range(self.ne):
-            self.rod_length += np.linalg.norm(nodes[i+1] - nodes[i])
+        # # Compute initial rod length
+        # self.rod_length = 0
+        # for i in range(self.ne):
+        #     self.rod_length += np.linalg.norm(nodes[i+1] - nodes[i])
 
     def compute_elastic_stiffness(self):
         """Compute elastic stiffness parameters."""
@@ -247,7 +247,38 @@ class ElasticRod:
         pass
 
     def add_joint(self, node_num: int, attach_to_joint: bool, joint_node: int, joint_limb: int ):
-        pass
+        if attach_to_joint:
+            """
+                Same as this code:
+                isDOFJoint[4 * node_num] = 1;
+                isDOFJoint[4 * node_num + 1] = 1;
+                isDOFJoint[4 * node_num + 2] = 1;
+            """
+            self.is_dof_joint[4 * node_num: 4 * node_num + 3] = 1
+
+            if node_num == 0:
+                self.is_node_joint[0] = 1
+                self.is_edge_joint[0] = 1
+                self.joint_ids[0] = (joint_node, joint_limb)
+            elif node_num == self.nv - 1:
+                self.is_node_joint[self.nv - 1] = 1
+                self.is_edge_joint[self.ne - 1] = 1
+                self.joint_ids[self.nv - 1] = (joint_node, joint_limb)
+            else:
+                raise ValueError("Tried removing DOFs at the midpoint of an edge.")
+        else:
+            self.isDOFJoint[4 * node_num: 4 * node_num + 3] = 2
+
+            if node_num == 0:
+                self.is_node_joint[0] = 2
+                self.is_edge_joint[0] = 2
+            elif node_num == self.nv - 1:
+                self.is_node_joint[self.nv - 1] = 2
+                self.is_edge_joint[self.ne - 1] = 2
+            else:
+                self.is_node_joint[node_num] = 2
+                self.is_edge_joint[node_num - 1] = 2
+                self.is_edge_joint[node_num] = 2
 
     def set_vertex_boundary_condition(position: np.ndarray, k: int):
         pass
