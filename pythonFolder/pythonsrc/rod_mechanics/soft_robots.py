@@ -1,5 +1,5 @@
 from typing import List
-
+import numpy as np
 from pythonsrc.rod_mechanics.elastic_rod import ElasticRod
 from pythonsrc.rod_mechanics.elasticjoint import ElasticJoint
 
@@ -12,14 +12,15 @@ class SoftRobots():
         self.num_limbs = 0  # Counter to track the number of limbs
 
     # Method to add a limb using start and end points with other parameters
-    def add_limb(self, start, end, num_nodes, rho, rod_radius, youngs_modulus, poisson_ratio, mu = 0.0):
-        limb = ElasticRod(self.num_limbs, start, end, num_nodes, rho, rod_radius, youngs_modulus, poisson_ratio, mu)
+    def add_limb(self, start: np.ndarray, end: np.ndarray, num_nodes: int, rho: float, rod_radius: float, 
+                 youngs_modulus: float, poisson_ratio: float, mu: float):
+        limb = ElasticRod(self.num_limbs, start, end, num_nodes, None, rho, rod_radius, youngs_modulus, poisson_ratio, mu)
         self.limbs.append(limb)  # Add new limb to the list
         self.num_limbs += 1  # Increment limb counter
 
     # Method to add a limb using a list of nodes
     def add_limb_with_nodes(self, nodes, rho, rod_radius, youngs_modulus, poisson_ratio, mu = 0.0):
-        limb = ElasticRod(self.num_limbs, nodes, rho, rod_radius, youngs_modulus, poisson_ratio, mu)
+        limb = ElasticRod(self.num_limbs,None, None, len(nodes), nodes, rho, rod_radius, youngs_modulus, poisson_ratio, mu)
         self.limbs.append(limb)  # Add limb to the list
         self.num_limbs += 1  # Increment limb counter
 
