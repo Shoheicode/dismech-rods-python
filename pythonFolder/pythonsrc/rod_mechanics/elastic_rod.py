@@ -183,14 +183,16 @@ class ElasticRod:
         Returns:
             Maximum non-theta update magnitude
         """
-        max_update = 0.0
-        for i in range(self.ndof):
-            if not self.is_constrained[i]:
-                update = alpha * dx[offset + self.full_to_uncons_map[i]]
-                self.x[i] += update
-                if i < 3 * self.nv:  # Non-theta DOF
-                    max_update = max(max_update, abs(update))
-        return max_update
+        max_dx = 0.0
+        for c in range(self.uncons):
+            ind = self.unconstrainedMap[c]
+            self.x[ind] -= alpha * dx[offset + c]
+
+            if (ind - 3) % 4 != 0:  # Non-theta degree of freedom
+                curr_dx = abs(dx[offset + c])
+                if curr_dx > max_dx:
+                    max_dx = curr_dx
+        return max_dx
 
     def update_guess(self, weight:float, dt:float):
         pass
