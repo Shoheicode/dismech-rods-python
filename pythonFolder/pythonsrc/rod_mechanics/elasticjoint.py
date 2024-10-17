@@ -75,8 +75,8 @@ class ElasticJoint:
             node_num: The id of the node being replaced by the joint node
             limb_idx: The limb id of the replaced node
         """
+        self.limbs[limb_idx].add_joint(node_num, True, self.joint_node, self.joint_limb)
         self.update_connected_nodes(node_num, limb_idx, True)
-        self.setup()
 
     def update_joint(self) -> None:
         """
