@@ -148,7 +148,7 @@ class ElasticRod:
 
         self.__compute_edge_len()
 
-        self.compute_elastic_stiffness()
+        self.__compute_elastic_stiffness()
 
         self.d1_old = self.d1
         self.d2_old = self.d2
@@ -159,13 +159,6 @@ class ElasticRod:
         # self.rod_length = 0
         # for i in range(self.ne):
         #     self.rod_length += np.linalg.norm(nodes[i+1] - nodes[i])
-
-    def compute_elastic_stiffness(self):
-        """Compute elastic stiffness parameters."""
-        self.shearM = self.youngM / (2 * (1 + self.poisson_ratio))
-        self.EA = self.youngM * self.cross_sectional_area
-        self.EI = self.youngM * np.pi * self.rod_radius**4 / 4
-        self.GJ = self.shearM * np.pi * self.rod_radius**4 / 2
 
     def prepare_for_iteration(self):
         """Update discrete values and frames for the next timestep."""
@@ -303,7 +296,12 @@ class ElasticRod:
         pass
     
     def __compute_elastic_stiffness(self):
-        pass
+        """Compute elastic stiffness parameters."""
+        self.shearM = self.youngM / (2 * (1 + self.poisson_ratio))
+        self.EA = self.youngM * self.cross_sectional_area
+        self.EI = self.youngM * np.pi * self.rod_radius**4 / 4
+        self.GJ = self.shearM * np.pi * self.rod_radius**4 / 2
+
     def __set_mass(self):
         # Assuming ndof, nv, ref_len, cross_sectional_area, rho, and rod_radius are already defined.
         self.mass_array = np.zeros(self.ndof)
