@@ -71,12 +71,9 @@ class ElasticRod:
         # Initialize state vectors
         self.x0 = np.zeros(self.ndof)  # Previous timestep DOFs
         # self.x = np.zeros(self.ndof)   # Current timestep DOFs
-        self.x_ls = np.zeros(self.ndof)  # Line search state
-        self.u0 = np.zeros(self.ndof)  # Previous timestep velocities
-        self.u = np.zeros(self.ndof)   # Current timestep velocities
-
-
-        self.joint_ids: List[Tuple[int, int]] = []
+        # self.x_ls = np.zeros(self.ndof)  # Line search state
+        # self.u0 = np.zeros(self.ndof)  # Previous timestep velocities
+        # self.u = np.zeros(self.ndof)   # Current timestep velocities
 
     def setup(self, nodes: np.ndarray):
         """Setup basic rod geometry and allocate arrays."""
@@ -91,10 +88,21 @@ class ElasticRod:
                 self.x[4*i+3] = 0
 
         self.x0 = self.x
+        self.u = np.zeros(self.ndof)
+        self.u0 = self.u.copy()
+
+        # Unconstrained and constrained DOFs
+        self.ncons = 0
+        self.uncons = self.ndof
+        self.is_constrained = np.zeros(self.ndof, dtype=bool)
+        self.is_dof_joint = np.zeros(self.ndof, dtype=int)
+        self.is_node_joint = np.zeros(self.nv, dtype=int)
+        self.is_edge_joint = np.zeros(self.ne, dtype=int)
+        self.joint_ids = [(i, self.limb_idx) for i in range(self.nv)]
 
         # Setup the map from free dofs to all dof
-        self.unconstrained_map = np.zeros(self.uncons) # maps xUncons to x
-        self.full_to_uncons_map = np.zeros(self.ndof)
+        self.unconstrained_map = np.zeros(self.uncons, dtype=int) # maps xUncons to x
+        self.full_to_uncons_map = np.zeros(self.ndof, dtype=int)
 
         self.setup_map()
 
