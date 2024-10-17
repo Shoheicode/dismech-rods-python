@@ -320,7 +320,7 @@ class ElasticJoint:
                 self.d1[i][0] = tmp2
                 self.d2[i][0] = np.cross(t0, tmp2)
 
-                self.parallel_transport(tmp2, t0, t1, tmp1)
+                tmp1 = self.parallel_transport(tmp2, t0, t1, tmp1)
                 self.d1[i][1] = tmp1
                 self.d2[i][1] = np.cross(t1, tmp1)
     
