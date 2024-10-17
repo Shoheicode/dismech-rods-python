@@ -416,16 +416,16 @@ class ElasticRod:
     def __get_ref_twist(self):
         # nv = len(refTwist)
         # self.ne = self.nv - 1
-        for c in np.arange(1,self.ne):
-            u0 = self.d1[c-1,0:3]
-            u1 = self.d1[c,  0:3]
-            t0 = self.tangent[c-1,0:3]
-            t =  self.tangent[c,  0:3]
+        for i in np.arange(1,self.ne):
+            u0 = self.d1[i-1]
+            u1 = self.d1[i]
+            t0 = self.tangent[i-1]
+            t =  self.tangent[i]
             ut = np.zeros(3)
             ut = self.__parallel_transport(u0,t0,t, ut)
-            ut = self.__rotate_axis_angle(ut,t,self.ref_twist[c])
+            ut = self.__rotate_axis_angle(ut,t,self.ref_twist[i])
             sgnAngle = self.__signed_angle(ut,u1,t)
-            self.ref_twist[c] = self.ref_twist[c] + sgnAngle
+            self.ref_twist[i] = self.ref_twist[i] + sgnAngle
 
         return self.ref_twist
 
