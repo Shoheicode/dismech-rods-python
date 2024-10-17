@@ -177,9 +177,12 @@ class ElasticJoint:
         
     def prepare_for_iteration(self) -> None:
         """Prepare joint for next iteration."""
-        self.x0 = self.x.copy()
-        self.u0 = self.u.copy()
+        self.__compute_tangent()
         self.__compute_time_parallel()
+        self.__compute_material_directors()
+        self.__get_ref_twist()
+        self.__compute_edge_len()
+        self.__compute_kappa()
         
     def setup(self) -> None:
         self.num_bending_combos = 0
