@@ -366,7 +366,7 @@ class ElasticRod:
             t0 = self.tangent_old[i]
             t1 = self.tangent[i]
             d1_vector = np.zeros(3)
-            self.__parallel_transport(self.d1_old[i], t0, t1, d1_vector)
+            d1_vector = self.__parallel_transport(self.d1_old[i], t0, t1, d1_vector)
             self.d1[i] = d1_vector
             self.d2[i] = np.cross(t1, d1_vector)
 
@@ -390,9 +390,10 @@ class ElasticRod:
             a = self.d1[i, :]
             b = self.tangent[i, :]
             c = self.tangent[i + 1, :]
+            d = np.zeros(3)
             
             # Call parallelTransport (assuming you have a Python function for it)
-            d = self.__parallel_transport(a, b, c)  # Perform parallel transport
+            d = self.__parallel_transport(a, b, c, d)  # Perform parallel transport
             self.d1[i + 1, :] = d  # Store result in the next row of d1
             self.d2[i + 1, :] = np.cross(c, d)  # Store the cross product in d2
 
@@ -419,7 +420,8 @@ class ElasticRod:
             u1 = self.d1[c,  0:3]
             t0 = self.tangent[c-1,0:3]
             t =  self.tangent[c,  0:3]
-            ut = self.__parallel_transport(u0,t0,t)
+            ut = np.zeros(3)
+            ut = self.__parallel_transport(u0,t0,t, ut)
             ut = self.rotateAxisAngle(ut,t,self.ref_twist[c])
             sgnAngle = self.signedAngle(ut,u1,t)
             self.ref_twist[c] = self.ref_twist[c] + sgnAngle
@@ -479,7 +481,7 @@ class ElasticRod:
             # Compute d1_2 based on dot products and projections
             d1_2 = np.dot(d1_1,t1) * t2 + np.dot(d1_1,n1) * n2 + np.dot(d1_1,b) * b
         
-        return [t2,d1_2]
+        return d1_2
 
     @staticmethod
     def __rotate_axis_angle(self, v: np.ndarray, z: np.ndarray, theta: float):
