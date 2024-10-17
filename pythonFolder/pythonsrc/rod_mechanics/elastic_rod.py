@@ -292,11 +292,13 @@ class ElasticRod:
     def free_vertex_boundary_condition(self, k: int):
         self.is_constrained[4 * k: 4 * k + 3] = 0
 
-    def get_tangent(k: int):
-        pass
+    def get_tangent(self, k: int):
+        """Return the tangent vector at edge k."""
+        return self.tangent[k]
     
-    def get_theta(k: int):
-        pass
+    def get_theta(self, k: int):
+        """Return the twist angle (theta) at node k."""
+        return self.x[4 * k + 3]
     
     def __compute_elastic_stiffness(self):
         """Compute elastic stiffness parameters."""
