@@ -297,7 +297,26 @@ class ElasticJoint:
             self.tangents[i] /= np.linalg.norm(self.tangents[i])
 
     def __create_reference_directors(self):
-        pass
+        for i in range(self.ne):
+            for j in range(i + 1, self.ne):
+                sgn1 = self.sgns[i][0]
+                sgn2 = self.sgns[i][1]
+                t0 = self.tangents[i] * sgn1
+                t1 = self.tangents[j] * sgn2
+                tmp1 = np.array([0, 0, -1])
+                tmp2 = np.cross(t0, tmp1)
+
+                if np.linalg.norm(tmp2) < 1.0e-6:
+                    tmp1 = np.array([0, 1, 0])
+                    tmp2 = np.cross(t0, tmp1)
+
+                tmp2 /= np.linalg.norm(tmp2)
+                self.d1[i][0] = tmp2
+                self.d2[i][0] = np.cross(t0, tmp2)
+
+                self.parallel_transport(tmp2, t0, t1, tmp1)
+                self.d1[i][1] = tmp1
+                self.d2[i][1] = np.cross(t1, tmp1)
     
     def __compute_material_directors(self):
         pass
