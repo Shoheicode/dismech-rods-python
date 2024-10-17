@@ -142,6 +142,8 @@ class ElasticRod:
 
         self.__get_ref_twist()
 
+        self.__compute_twist_bar()
+
         self.__compute_kappa()
 
         self.kappa_bar = self.kappa
