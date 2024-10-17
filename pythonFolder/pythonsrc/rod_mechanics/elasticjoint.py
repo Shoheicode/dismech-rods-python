@@ -83,12 +83,16 @@ class ElasticJoint:
         Update the positions and velocities of the joint node.
         All positions and velocities are computed within ElasticRod.
         """
-        if self.joint_limb >= len(self.limbs):
-            return
-            
-        rod = self.limbs[self.joint_limb]
-        self.x = rod.get_position(self.joint_node)
-        self.u = rod.get_velocity(self.joint_node)
+        self.x = np.zeros(3)
+        self.u = np.zeros(3)
+        self.x0 = np.zeros(3)
+        self.u0 = np.zeros(3)
+
+        self.x[0:3] = self.limbs[self.joint_limb].x[4 * self.joint_node:4 * self.joint_node + 3]
+        self.x0[0:3] = self.limbs[self.joint_limb].x0[4 * self.joint_node:4 * self.joint_node + 3]
+        self.u[0:3] = self.limbs[self.joint_limb].u[4 * self.joint_node:4 * self.joint_node + 3]
+        self.u0[0:3] = self.limbs[self.joint_limb].u0[4 * self.joint_node:4 * self.joint_node + 3]
+
 
     def update_rods(self) -> None:
         """
