@@ -359,7 +359,11 @@ class ElasticRod:
             self.tangent[i, :] = self.tangent[i, :] / np.linalg.norm(self.tangent[i, :])
     
     def __compute_twist_bar(self):
-        pass
+        """Compute the twist deformation."""
+        for i in range(1, self.ne):
+            theta_i = self.x[4 * (i - 1) + 3]
+            theta_f = self.x[4 * i + 3]
+            self.twist_bar[i] = theta_f - theta_i + self.ref_twist[i]
 
     def __compute_time_parallel(self):
         for i in range(self.ne):
