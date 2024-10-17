@@ -49,10 +49,11 @@ class SoftRobots():
             limb.u[4*i:4*i+3] = limb.u0[4*i:4*i+3] = velocities[i]
 
     def setup(self):
-        pass
+        for joint in self.joints:
+            joint.setup()  # Call setup for each joint
 
     # void addController(const shared_ptr<baseController>& controller);
-    def addController(controller):
-        pass
+    def add_controller(self,controller):
+        self.controllers.append(controller)  # Add controller to the list
 
 
