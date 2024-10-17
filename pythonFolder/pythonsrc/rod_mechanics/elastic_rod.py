@@ -412,6 +412,7 @@ class ElasticRod:
 
     def __compute_edge_len(self):
         pass
+
     def __get_ref_twist(self):
         # nv = len(refTwist)
         self.ne = self.nv - 1
