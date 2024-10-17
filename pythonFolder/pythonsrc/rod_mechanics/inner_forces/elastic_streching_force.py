@@ -20,10 +20,6 @@ class elasticStretchingForce(BaseForce):
 
         super().__init__(soft_robots)
 
-        for limb in soft_robots.limbs:
-            EI = limb.EI
-            print(EI)
-
     def compute_force(self, dt):
         limb_idx = 0
         for limb in super().soft_robots.limbs:
