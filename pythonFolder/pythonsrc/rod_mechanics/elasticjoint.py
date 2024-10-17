@@ -319,5 +319,23 @@ class ElasticJoint:
                 self.d2[i][1] = np.cross(t1, tmp1)
     
     def __compute_material_directors(self):
-        pass
+        for i in range(self.ne):
+            for j in range(i + 1, self.ne):
+                sgn1 = self.sgns[i][0]
+                sgn2 = self.sgns[i][1]
+                theta1_i = self.theta_inds[i][0]
+                theta2_i = self.theta_inds[i][1]
+
+                limb1 = self.limbs[self.connected_nodes[i][1]]
+                limb2 = self.limbs[self.connected_nodes[j][1]]
+                angle1 = limb1.x[theta1_i] * sgn1
+                angle2 = limb2.x[theta2_i] * sgn2
+                cs1, ss1 = np.cos(angle1), np.sin(angle1)
+                cs2, ss2 = np.cos(angle2), np.sin(angle2)
+
+                self.m1[i][0] = cs1 * self.d1[i][0] + ss1 * self.d2[i][0]
+                self.m2[i][0] = -ss1 * self.d1[i][0] + cs1 * self.d2[i][0]
+
+                self.m1[i][1] = cs2 * self.d1[i][1] + ss2 * self.d2[i][1]
+                self.m2[i][1] = -ss2 * self.d1[i][1] + cs2 * self.d2[i][1]
     
