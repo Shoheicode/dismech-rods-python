@@ -257,7 +257,17 @@ class ElasticJoint:
         pass
 
     def __set_reference_length(self):
-        pass
+        for i in range(self.ne):
+            node = self.connected_nodes[i][0]
+            limb_idx = self.connected_nodes[i][1]
+            curr_limb = self.limbs[limb_idx]
+            self.ref_len[i] = np.linalg.norm(self.x[0:3] - curr_limb.x[4 * node:4 * node + 3])
+
+        curr_index = 0
+        for i in range(self.ne):
+            for j in range(i + 1, self.ne):
+                self.voronoi_len[curr_index] = 0.5 * (self.ref_len[i] + self.ref_len[j])
+                curr_index += 1
     
     def __get_ref_twist(self):
         pass
