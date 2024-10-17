@@ -178,25 +178,61 @@ class ElasticJoint:
         self.compute_time_parallel()
         
     def setup(self) -> None:
-        """Set up the joint's physical properties."""
         self.num_bending_combos = 0
-        global n1, n2
-        global sgn1, sgn2
-        global theta1_i, theta2_i
         for i in range(self.ne):
-            n1 = self.connected_nodes[i][0] #Get the first element in the pair
-            
+            n1 = self.connected_nodes[i][0]
             sgn1 = 1 if self.bending_twist_signs[i] == 1 else -1
-            theta1_i = 4*n1+3 if self.bending_twist_signs[i] == 1 else 4*n1-1
+            theta1_i = 4 * n1 + 3 if self.bending_twist_signs[i] == 1 else 4 * n1 - 1
+            for j in range(i + 1, self.ne):
+                n2 = self.connected_nodes[j][0]
+                sgn2 = -1 if self.bending_twist_signs[j] == 1 else 1
+                theta2_i = 4 * n2 + 3 if self.bending_twist_signs[j] == 1 else 4 * n2 - 1
+                self.sgns.append((sgn1, sgn2))
+                self.theta_inds.append((theta1_i, theta2_i))
+                self.num_bending_combos += 1
 
-            for j in range(i+1, self.ne):
-                n2 = self.connected_nodes[i][0] #Get the first element in the pair
-            
-                sgn2 = 1 if self.bending_twist_signs[j] == 1 else -1
-                theta2_i = 4*n1+3 if self.bending_twist_signs[j] == 1 else 4*n1-1
-                self.sgns.append(np.array(sgn1, sgn2))
-                self.theta_inds.append(np.array(theta1_i, theta2_i))
-                self.num_bending_combos+=1
+        self.update_joint()
+        self.update_rods()
+        self.x0 = self.x.copy()
+        self.u0 = self.u.copy()
+
+        self.ref_len = np.zeros(self.ne)
+        self.voronoi_len = np.zeros(self.num_bending_combos)
+
+        self.tangents = np.zeros((self.ne, 3))
+
+        for _ in range(self.num_bending_combos):
+            self.d1.append(np.zeros((2, 3)))
+            self.d2.append(np.zeros((2, 3)))
+            self.d1_old.append(np.zeros((2, 3)))
+            self.d2_old.append(np.zeros((2, 3)))
+            self.m1.append(np.zeros((2, 3)))
+            self.m2.append(np.zeros((2, 3)))
+
+        self.ref_twist = np.zeros(self.num_bending_combos)
+        self.ref_twist_old = np.zeros(self.num_bending_combos)
+
+        self.kb = np.zeros((self.num_bending_combos, 3))
+        self.kappa = np.zeros((self.num_bending_combos, 2))
+        self.twist_bar = np.zeros(self.num_bending_combos)
+        self.edge_len = np.zeros(self.ne)
+
+        self.__set_reference_length()
+        self.__set_mass()
+        self.__compute_tangent()
+        self.__create_reference_directors()
+        self.__compute_material_directors()
+        self.__compute_kappa()
+
+        self.kappa_bar = self.kappa.copy()
+        self.__get_ref_twist()
+        self.__compute_twist_bar()
+        self.__compute_edge_len()
+
+        self.d1_old = self.d1.copy()
+        self.d2_old = self.d2.copy()
+        self.tangents_old = self.tangents.copy()
+        self.ref_twist_old = self.ref_twist.copy()
     
     def __set_mass(self):
         self.mass = 0
