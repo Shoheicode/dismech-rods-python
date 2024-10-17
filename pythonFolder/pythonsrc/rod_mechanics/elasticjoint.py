@@ -285,7 +285,16 @@ class ElasticJoint:
         pass
 
     def __compute_tangent(self):
-        pass
+        for i in range(self.ne):
+            node_num = self.connected_nodes[i][0]
+            limb_idx = self.connected_nodes[i][1]
+            curr_limb = self.limbs[limb_idx]
+
+            if self.bending_twist_signs[i] == 1:
+                self.tangents[i] = self.x - curr_limb.x[4 * node_num:4 * node_num + 3]
+            else:
+                self.tangents[i] = curr_limb.x[4 * node_num:4 * node_num + 3] - self.x
+            self.tangents[i] /= np.linalg.norm(self.tangents[i])
 
     def __create_reference_directors(self):
         pass
