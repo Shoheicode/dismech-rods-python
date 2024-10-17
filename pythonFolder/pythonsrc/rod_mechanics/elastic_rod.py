@@ -417,7 +417,9 @@ class ElasticRod:
             self.m2[i, :] = -ss * self.d1[i, :] + cs * self.d2[i, :]
 
     def __compute_edge_len(self):
-        pass
+        """Compute the length of each edge."""
+        for i in range(self.ne):
+            self.edge_len[i] = np.linalg.norm(self.x[4 * (i + 1): 4 * (i + 1) + 3] - self.x[4 * i: 4 * i + 3])
 
     def __get_ref_twist(self):
         # nv = len(refTwist)
