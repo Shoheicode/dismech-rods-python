@@ -244,7 +244,12 @@ class ElasticRod:
                 c += 1
     
     def update_map(self):
-        pass
+        self.ncons = np.sum((self.is_constrained > 0) | (self.is_dof_joint == 1))
+        self.uncons = self.ndof - self.ncons
+
+        self.unconstrainedMap = np.zeros(self.uncons, dtype=int)
+        self.fullToUnconsMap = np.zeros(self.ndof, dtype=int)
+        self.setup_map()
 
     def add_joint(self, node_num: int, attach_to_joint: bool, joint_node: int, joint_limb: int ):
         if attach_to_joint:
@@ -280,14 +285,16 @@ class ElasticRod:
                 self.is_edge_joint[node_num - 1] = 2
                 self.is_edge_joint[node_num] = 2
 
-    def set_vertex_boundary_condition(position: np.ndarray, k: int):
-        pass
+    def set_vertex_boundary_condition(self,position: np.ndarray, k: int):
+        self.is_constrained[4 * k: 4 * k + 3] = 1
+        self.x[4 * k: 4 * k + 3] = position
 
-    def set_theta_boundary_condition(desired_theta: float, k: int):
-        pass
+    def set_theta_boundary_condition(self, desired_theta: float, k: int):
+        self.is_constrained[4 * k + 3] = 1
+        self.x[4 * k + 3] = desired_theta
 
-    def free_vertex_boundary_condition(k: int):
-        pass
+    def free_vertex_boundary_condition(self, k: int):
+        self.is_constrained[4 * k: 4 * k + 3] = 0
 
     def get_tangent(k: int):
         pass
