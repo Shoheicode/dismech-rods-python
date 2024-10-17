@@ -98,12 +98,9 @@ class ElasticJoint:
         """
         Update the positions of the "replaced" nodes in other limbs.
         """
-        for node_num, limb_idx in self.replaced_nodes:
-            if limb_idx >= len(self.limbs):
-                continue
-            rod = self.limbs[limb_idx]
-            rod.set_position(node_num, self.x)
-            rod.set_velocity(node_num, self.u)
+        for num_node, limb_idx in self.replaced_nodes:
+            curr_limb = self.limbs[limb_idx]
+            curr_limb.x[4 * num_node:4 * num_node + 3] = self.x[0:3]
 
     def update_connected_nodes(self, node_num: int, limb_idx: int, remove_dof: bool):
         nv = self.limbs[limb_idx].nv
