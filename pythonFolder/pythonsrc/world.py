@@ -57,8 +57,8 @@ class world:
             print("Completed simulation.")
             return False
 
-    def get_time_step():
-        pass
+    def get_time_step(self):
+        return self.curr_time
 
     def print_sim_data(self):
         cf = self.forces.cf
