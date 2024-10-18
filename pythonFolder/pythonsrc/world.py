@@ -41,8 +41,8 @@ class world:
     def get_coordinate(self, i, limb_idx):
         return self.soft_robots.limbs[limb_idx].x[i]
 
-    def get_M1(i, limb_idx):
-        pass
+    def get_M1(self, i, limb_idx):
+        return self.soft_robots.limbs[limb_idx].m1[i, :]
 
     def get_M2(i, limb_idx):
         pass
