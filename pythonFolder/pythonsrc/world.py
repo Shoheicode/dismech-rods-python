@@ -84,8 +84,8 @@ class world:
         else:
             print(f"time: {self.curr_time:.4f} | iters: {self.stepper.iter}")
 
-    def floor_exists():
-        pass
+    def floor_exists(self):
+        return self.forces.ff is not None
 
     def get_floor_Z():
         pass
