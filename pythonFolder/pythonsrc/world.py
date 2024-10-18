@@ -56,8 +56,29 @@ class world:
     def get_time_step():
         pass
 
-    def print_sim_data():
-        pass
+    def print_sim_data(self):
+        cf = self.forces.cf
+        ff = self.forces.ff
+
+        if cf and ff:
+            if cf.get_num_collisions() > 0:
+                print(f"time: {self.curr_time:.4f} | iters: {self.stepper.iter} | "
+                      f"con: {cf.get_num_collisions()} | min_dist: {cf.get_min_dist():.6f} | "
+                      f"floor_con: {ff.num_contacts} | f_min_dist: {ff.min_dist:.6f}")
+            else:
+                print(f"time: {self.curr_time:.4f} | iters: {self.stepper.iter} | con: 0 | "
+                      f"min_dist: N/A | floor_con: {ff.num_contacts} | f_min_dist: {ff.min_dist:.6f}")
+        elif cf:
+            if cf.get_num_collisions() > 0:
+                print(f"time: {self.curr_time:.4f} | iters: {self.stepper.iter} | "
+                      f"con: {cf.get_num_collisions()} | min_dist: {cf.get_min_dist():.6f}")
+            else:
+                print(f"time: {self.curr_time:.4f} | iters: {self.stepper.iter} | con: 0 | min_dist: N/A")
+        elif ff:
+            print(f"time: {self.curr_time:.4f} | iters: {self.stepper.iter} | "
+                  f"floor_con: {ff.num_contacts} | f_min_dist: {ff.min_dist:.6f}")
+        else:
+            print(f"time: {self.curr_time:.4f} | iters: {self.stepper.iter}")
 
     def floor_exists():
         pass
