@@ -1,5 +1,7 @@
 from typing import List, Optional
 
+from pythonFolder.pythonsrc.rod_mechanics.external_forces.contact_force import ContactForce
+from pythonFolder.pythonsrc.rod_mechanics.external_forces.floor_contact_force import FloorContactForce
 from pythonsrc.rod_mechanics.base_force import BaseForce
 
 
@@ -7,8 +9,8 @@ class ForceContainer:
     def __init__(self, m_forces: Optional[List[BaseForce]] = None):
         #print("HIHIHI I AM RUNNING")
         self.__forces = m_forces if m_forces is not None else []
-        self.cf = None
-        self.ff = None
+        self.cf : ContactForce= None
+        self.ff : FloorContactForce = None
 
     def compute_force(self,dt):
         for force in self.__forces:
