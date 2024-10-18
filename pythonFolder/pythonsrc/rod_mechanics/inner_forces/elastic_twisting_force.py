@@ -183,7 +183,7 @@ class ElasticTwistingForce(BaseForce):
                 self.tilde_t = (self.te + self.tf) / self.chi
 
                 # Create cross product matrix for te
-                self.te_matrix = self.cross_mat(self.te, self.te_matrix)#np.cross(np.identity(3), self.te)
+                self.te_matrix = self.cross_mat(self.te, self.te_matrix) #np.cross(np.identity(3), self.te)
 
                 self.d2m_de2 = -0.25 / self.norm2_e * (np.dot(self.kbLocal, (self.te + self.tilde_t).T) + np.dot((self.te + self.tilde_t), self.kbLocal.T))
                 self.d2m_df2 = -0.25 / self.norm2_f * (np.dot(self.kbLocal, (self.tf + self.tilde_t).T) + np.dot((self.tf + self.tilde_t), self.kbLocal.T))
@@ -294,7 +294,7 @@ class ElasticTwistingForce(BaseForce):
                     self.chi = 1.0 + np.dot(self.te, self.tf)
                     self.tilde_t = (self.te + self.tf) / self.chi
 
-                    self.te_matrix = np.cross(np.identity(3), self.te)
+                    self.te_matrix = self.cross_mat(self.te, self.te_matrix)
 
                     self.d2m_de2 = -0.25 / self.norm2_e * (np.dot(self.kb_local, (self.te + self.tilde_t).T) + np.dot((self.te + self.tilde_t), self.kb_local.T))
                     self.d2m_df2 = -0.25 / self.norm2_f * (np.dot(self.kb_local, (self.tf + self.tilde_t).T) + np.dot((self.tf + self.tilde_t), self.kb_local.T))
