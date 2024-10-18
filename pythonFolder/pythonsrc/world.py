@@ -13,7 +13,7 @@ class world:
         self.soft_robots = soft_robots
         self.forces = forces
         self.time_step = 0
-        self.currTime = 0
+        self.curr_time = 0
         self.total_time = sim_params.sim_time
         self.stepper:BaseTimeStepper= None
 
@@ -34,12 +34,11 @@ class world:
 
         self.stepper.update_system_for_next_time_step()
 
-        pass
+    def update_time_step(self):
+        self.curr_time += self.stepper.step_forward_in_time()
+        self.time_step += 1
 
-    def update_time_step():
-        pass
-
-    def get_coordinate(i, limb_idx):
+    def get_coordinate(self, i, limb_idx):
         pass
 
     def get_M1(i, limb_idx):
@@ -66,7 +65,9 @@ class world:
     def get_floor_Z():
         pass
 
-    def update_cons():
-        pass
+    def update_cons(self):
+        for limb in self.soft_robots.limbs:
+            limb.update_map()
+        self.stepper.update()
 
     
