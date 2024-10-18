@@ -4,7 +4,7 @@ from pythonsrc.rod_mechanics.elastic_rod import ElasticRod
 from pythonsrc.rod_mechanics.soft_robots import SoftRobots
 import numpy as np
 
-class elasticStretchingForce(BaseForce):
+class ElasticStretchingForce(BaseForce):
     
     def __init__(self, soft_robots: SoftRobots):
         # Initialize class attributes related to forces and Jacobians

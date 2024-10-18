@@ -4,7 +4,7 @@ from pythonsrc.rod_mechanics.elastic_rod import ElasticRod
 from pythonsrc.rod_mechanics.soft_robots import SoftRobots
 import numpy as np
 
-class elasticBendingForce(BaseForce):
+class ElasticBendingForce(BaseForce):
     ci = 0
     chi = 0.0
     len = 0.0

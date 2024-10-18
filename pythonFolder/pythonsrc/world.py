@@ -11,7 +11,7 @@ class world:
         self.currTime = 0
         self.total_time = simParams.sim_time
 
-        self.forces.add_force(None)
+        self.forces.add_force(ElasticStretchingForce(soft_robots))
         pass
 
     def update_time_step():
