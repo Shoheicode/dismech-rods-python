@@ -39,7 +39,7 @@ class world:
         self.time_step += 1
 
     def get_coordinate(self, i, limb_idx):
-        pass
+        return self.soft_robots.limbs[limb_idx].x[i]
 
     def get_M1(i, limb_idx):
         pass
