@@ -27,7 +27,7 @@ def test_rotateAxisAngle():
   v = np.array([1, 0, 0])
   axis = np.array([0, 0, 1])
   theta = np.pi/2
-  v_rotated = rotateAxisAngle(v, axis, theta)
+  v_rotated = rotate_axis_angle(v, axis, theta)
 
   # Expected output
   v_expected = np.array([0, 1, 0])
