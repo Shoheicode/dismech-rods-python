@@ -47,8 +47,8 @@ class world:
     def get_M2(self, i, limb_idx):
         return self.soft_robots.limbs[limb_idx].m2[i, :]
 
-    def get_current_time():
-        pass
+    def get_current_time(self):
+        return self.curr_time
 
     def simulation_runing(self):
         if self.curr_time < self.total_time:
