@@ -50,8 +50,12 @@ class world:
     def get_current_time():
         pass
 
-    def simulation_runing():
-        pass
+    def simulation_runing(self):
+        if self.curr_time < self.total_time:
+            return True
+        else:
+            print("Completed simulation.")
+            return False
 
     def get_time_step():
         pass
