@@ -87,8 +87,10 @@ class world:
     def floor_exists(self):
         return self.forces.ff is not None
 
-    def get_floor_Z():
-        pass
+    def get_floor_Z(self):
+        if self.forces.ff:
+            return self.forces.ff.floor_z
+        raise RuntimeError("Floor does not exist.")
 
     def update_cons(self):
         for limb in self.soft_robots.limbs:
