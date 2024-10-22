@@ -17,3 +17,45 @@ def compute_kappa(node0 = None,node1 = None,node2 = None,m1e = None,m2e = None,m
             # Calculate the values for kappa
             self.kappa[i, 0] = 0.5 * np.dot(self.kb[i, :], (m2e + m2f))  # First component of kappa
             self.kappa[i, 1] = -0.5 * np.dot(self.kb[i, :], (m1e + m1f))  # Second component of kappa
+
+def test_computekappa():
+  """
+  This function tests the computekappa function by comparing the output with
+  expected values for a specific test case.
+  """
+
+  # Test case 1: Straight rod with no curvature
+  node0 = np.array([0, 0, 0])
+  node1 = np.array([1, 0, 0])
+  node2 = np.array([2, 0, 0])
+  m1e = np.array([0, 1, 0])
+  m2e = np.array([0, 0, 1])
+  m1f = np.array([0, 1, 0])
+  m2f = np.array([0, 0, 1])
+
+  kappa_calculated = computekappa(node0, node1, node2, m1e, m2e, m1f, m2f)
+
+  # Expected output: zero curvature for a straight rod
+  kappa_expected = np.array([0, 0])
+
+  # Check if the calculated curvature is close to the expected curvature
+  assert np.allclose(kappa_calculated, kappa_expected), "Test case failed"
+
+  # Test case 2: A rod with inifinite curvature (180 degrees turn)
+  node0 = np.array([0, 0, 0])
+  node1 = np.array([1, 0, 0])
+  node2 = np.array([0, 0, 0])
+  m1e = np.array([0, 1, 0])
+  m2e = np.array([0, 0, 1])
+  m1f = np.array([0, 1, 1])
+  m2f = np.array([0, 0, -1])
+
+  kappa_calculated = compute_kappa(node0, node1, node2, m1e, m2e, m1f, m2f)
+
+  # Check for NaN values
+  assert np.isnan(kappa_calculated[0]), "NaN curvature check 1 failed"
+  assert np.isnan(kappa_calculated[1]), "NaN curvature check 2 failed"
+
+  print("Test case passed")
+
+test_computekappa()
