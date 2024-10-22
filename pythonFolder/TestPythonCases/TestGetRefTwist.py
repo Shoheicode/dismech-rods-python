@@ -93,11 +93,6 @@ def get_ref_twist(d1 : np.ndarray, tangent, refTwist = None):
         
         return refTwist
 
-
-
-
-        
-
 def test_getRefTwist():
   """
   This function tests the getRefTwist function by comparing the output
@@ -108,14 +103,14 @@ def test_getRefTwist():
   d1 = np.array([[1, 0, 0], [1, 0, 0], [1, 0, 0]])
   tangent = np.array([[0, 1, 0], [0, 1, 0], [0, 1, 0]])
   refTwist = np.zeros(4)
-  refTwist_calculated = getRefTwist(d1, tangent, refTwist)
+  refTwist_calculated = get_ref_twist(d1, tangent, refTwist)
   assert np.allclose(refTwist_calculated, np.zeros(4)), "Test case 1 failed"
 
   # Test case 2: Twisted rod (90 degrees twist)
   d1 = np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
   tangent = np.array([[0, 1, 0], [0, 0, 1], [1, 0, 0]])
   refTwist = np.zeros(4)
-  refTwist_calculated = getRefTwist(d1, tangent, refTwist)
+  refTwist_calculated = get_ref_twist(d1, tangent, refTwist)
   assert np.allclose(refTwist_calculated,
                       np.array([0, np.pi/2, np.pi/2, 0])), "Test case 2 failed"
 
