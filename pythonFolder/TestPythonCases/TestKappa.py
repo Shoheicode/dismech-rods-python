@@ -21,8 +21,8 @@ def compute_kappa(node0 = None,node1 = None,node2 = None,m1e = None,m2e = None,m
     #     self.kappa[i, 1] = -0.5 * np.dot(self.kb[i, :], (m1e + m1f))  # Second component of kappa
     
     nodes:List[np.ndarray] = [node0, node1, node2]
-    print("NODES", nodes)
-    nv = 3
+    # print("NODES", nodes)
+    nv = len(nodes)
     ne = nv-1
     tangent = np.zeros((ne, 3))
     kb = np.zeros((nv, 3))
@@ -38,8 +38,8 @@ def compute_kappa(node0 = None,node1 = None,node2 = None,m1e = None,m2e = None,m
         if i < nv - 1:
             x[4*i+3] = 0
     
-    print("X VALUE")
-    print(x)
+    # print("X VALUE")
+    # print(x)
 
     # From tangent code
     def compute_tangent():
@@ -51,15 +51,15 @@ def compute_kappa(node0 = None,node1 = None,node2 = None,m1e = None,m2e = None,m
             tangent[i, :] = tangent[i, :] / np.linalg.norm(tangent[i, :])
     
     compute_tangent()
-    print("TANGENT: ")
-    print(tangent)
+    # print("TANGENT: ")
+    # print(tangent)
     global t0,t1
 
     for i in range(1, ne):
         t0 = tangent[i - 1, :]  # Get the (i-1)th row of the tangent array
         t1 = tangent[i, :]      # Get the ith row of the tangent array
         kb[i, :] = 2.0 * np.cross(t0, t1) / (1.0 + np.dot(t0, t1))
-        print("CROSS1:",kb[i,:])
+        #print("CROSS1:",kb[i,:])
 
     # t2 = (node1 - node0) / np.linalg.norm(node1 - node0)
     # t3 = (node2 - node1) / np.linalg.norm(node2 - node1)
@@ -79,11 +79,11 @@ def compute_kappa(node0 = None,node1 = None,node2 = None,m1e = None,m2e = None,m
         #print("KAPPA:", kappa[i, 0])
         kappa[i, 1] = -0.5 * np.dot(kb[i, :], (m1e + m1f))  # Second component of kappa
 
-    # print(kappa[0])
+    # print(kappa)
     # print(kappa[1])
-    return kappa[1]
+    return kappa[1] #Because based on the C++ code, this is what is implemented
 
-
+# Test works
 def test_computekappa():
   """
   This function tests the computekappa function by comparing the output with
