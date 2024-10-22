@@ -140,6 +140,8 @@ class ElasticRod:
         self.kappa = np.zeros((self.nv, 2))
         self.kappa_bar = np.zeros((self.nv, 2))
 
+        self.ref_twist_old = np.zeros(self.ne)
+
         self.__get_ref_twist()
 
         self.__compute_twist_bar()
