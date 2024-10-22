@@ -1,8 +1,9 @@
+from typing import List
 import numpy as np
 
 def compute_kappa(node0 = None,node1 = None,node2 = None,m1e = None,m2e = None,m1f = None,m2f = None):
     #CODE THAT I IMPLEMENTED. ADJUSTED TO WORK WITH GIVEN TEST CASES
-    
+
     # # First loop: Compute kb using the tangent vectors
     # for i in range(1, self.ne):
     #     t0 = self.tangent[i - 1, :]  # Get the (i-1)th row of the tangent array
@@ -18,6 +19,17 @@ def compute_kappa(node0 = None,node1 = None,node2 = None,m1e = None,m2e = None,m
     #     # Calculate the values for kappa
     #     self.kappa[i, 0] = 0.5 * np.dot(self.kb[i, :], (m2e + m2f))  # First component of kappa
     #     self.kappa[i, 1] = -0.5 * np.dot(self.kb[i, :], (m1e + m1f))  # Second component of kappa
+    x:List[np.ndarray] = [node0, node1, node2]
+    ne = 3-1
+    tangent = np.zeros((ne, 3))
+
+    def compute_tangent():
+        for i in range(ne):
+            # Extract segments (3 elements) from 'x' to compute the tangent vector.
+            tangent[i, :] = x[4 * (i + 1): 4 * (i + 1) + 3] - x[4 * i: 4 * i + 3]
+
+            # Normalize the tangent vector.
+            tangent[i, :] = tangent[i, :] / np.linalg.norm(tangent[i, :])
 
 def test_computekappa():
   """
