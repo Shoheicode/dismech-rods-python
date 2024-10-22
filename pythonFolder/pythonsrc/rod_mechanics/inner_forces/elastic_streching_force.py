@@ -39,10 +39,10 @@ class ElasticStretchingForce(BaseForce):
                 # Apply forces to the start and end nodes of the edge
                 for k in range(3):
                     ind = 4 * i + k  # Index for the first node
-                    super().stepper.addForce(ind, -self.f[k], limb_idx)  # Subtract elastic force
+                    super().stepper.add_force(ind, -self.f[k], limb_idx)  # Subtract elastic force
 
                     ind = 4 * (i + 1) + k  # Index for the second node
-                    super().stepper.addForce(ind, self.f[k], limb_idx)  # Add elastic force
+                    super().stepper.add_force(ind, self.f[k], limb_idx)  # Add elastic force
 
             limb_idx += 1  # Move to the next limb
         
@@ -63,10 +63,10 @@ class ElasticStretchingForce(BaseForce):
                 # Apply forces to the nodes of the joint
                 for k in range(3):
                     ind = 4 * n1 + k  # Index for the connected node
-                    super().stepper.addForce(ind, -self.f[k], limb_idx)  # Subtract force from node
+                    super().stepper.add_force(ind, -self.f[k], limb_idx)  # Subtract force from node
 
                     ind = 4 * joint.joint_node + k  # Index for the joint node itself
-                    super().stepper.addForce(ind, self.f[k], joint.joint_limb)  # Add force to the joint limb
+                    super().stepper.add_force(ind, self.f[k], joint.joint_limb)  # Add force to the joint limb
 
     # Function to compute both the force and Jacobian (stiffness matrix) for each limb and joint
     def compute_force_and_jacobian(self, dt):
@@ -107,7 +107,7 @@ class ElasticStretchingForce(BaseForce):
                     for k in range(7):
                         ind1 = 4*i + j
                         ind2 = 4*i + k
-                        super().stepper.addJacobian(ind1, ind2, -self.JSS[k, j], limb_idx)
+                        super().stepper.add_jacobian(ind1, ind2, -self.JSS[k, j], limb_idx)
 
             limb_idx += 1  # Move to the next limb
 
@@ -150,7 +150,7 @@ class ElasticStretchingForce(BaseForce):
                 # Add Jacobian terms for the node-node, node-joint, joint-node, and joint-joint interactions
                 for j in range(3):
                     for k in range(3):
-                        super().stepper.addJacobian(4*n1 + j, 4*n1 + k, -self.JSS[k, j], l1)
-                        super().stepper.addJacobian(4*n1 + j, 4*n2 + k, -self.JSS[k + 4, j], l1, l2)
-                        super().stepper.addJacobian(4*n2 + j, 4*n1 + k, -self.JSS[k, j + 4], l2, l1)
-                        super().stepper.addJacobian(4*n2 + j, 4*n2 + k, -self.JSS[k + 4, j + 4], l2)
+                        super().stepper.add_jacobian(4*n1 + j, 4*n1 + k, -self.JSS[k, j], l1)
+                        super().stepper.add_jacobian(4*n1 + j, 4*n2 + k, -self.JSS[k + 4, j], l1, l2)
+                        super().stepper.add_jacobian(4*n2 + j, 4*n1 + k, -self.JSS[k, j + 4], l2, l1)
+                        super().stepper.add_jacobian(4*n2 + j, 4*n2 + k, -self.JSS[k + 4, j + 4], l2)
