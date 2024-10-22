@@ -20,12 +20,27 @@ def compute_kappa(node0 = None,node1 = None,node2 = None,m1e = None,m2e = None,m
     #     self.kappa[i, 0] = 0.5 * np.dot(self.kb[i, :], (m2e + m2f))  # First component of kappa
     #     self.kappa[i, 1] = -0.5 * np.dot(self.kb[i, :], (m1e + m1f))  # Second component of kappa
     
-    x:List[np.array] = [node0, node1, node2]
+    nodes:List[np.ndarray] = [node0, node1, node2]
+    print("NODES", nodes)
     nv = 3
     ne = nv-1
     tangent = np.zeros((ne, 3))
     kb = np.zeros((nv, 3))
     kappa = np.zeros((nv, 2))
+    ndof = len(nodes) * 4 - 1
+
+    x: np.ndarray = np.zeros(ndof)   # Current timestep DOFs
+
+    for i in range(nv):
+        x[4*i] = nodes[i][0]
+        x[4*i+1] = nodes[i][1]
+        x[4*i+2] = nodes[i][2]
+        if i < nv - 1:
+            x[4*i+3] = 0
+    
+    print("X VALUE")
+    print(x)
+
     # From tangent code
     def compute_tangent():
         for i in range(ne):
@@ -36,6 +51,7 @@ def compute_kappa(node0 = None,node1 = None,node2 = None,m1e = None,m2e = None,m
             tangent[i, :] = tangent[i, :] / np.linalg.norm(tangent[i, :])
     
     compute_tangent()
+    print("TANGENT: ")
     print(tangent)
     global t0,t1
 
@@ -43,22 +59,29 @@ def compute_kappa(node0 = None,node1 = None,node2 = None,m1e = None,m2e = None,m
         t0 = tangent[i - 1, :]  # Get the (i-1)th row of the tangent array
         t1 = tangent[i, :]      # Get the ith row of the tangent array
         kb[i, :] = 2.0 * np.cross(t0, t1) / (1.0 + np.dot(t0, t1))
+        print("CROSS1:",kb[i,:])
 
-    print(t0)
-    print(t1)
-    print(kb)
+    # t2 = (node1 - node0) / np.linalg.norm(node1 - node0)
+    # t3 = (node2 - node1) / np.linalg.norm(node2 - node1)
+    # print("CROSS2:", 2.0 * np.cross(t2,t3) / (1.0 + np.dot(t2,t3)))
+
+
+    # print("T0: ",t0)
+    # print("T1: ", t1)
+    # print("KB: ", kb)
+    
     # # Second loop: Compute kappa using m1, m2, and kb
     for i in range(1, ne):
-        # m1e = m1[i - 1, :]  # Get the (i-1)th row of m1
-        # m2e = m2[i - 1, :]  # Get the (i-1)th row of m2
-        # m1f = m1[i, :]      # Get the ith row of m1
-        # m2f = m2[i, :]      # Get the ith row of m2
 
         # Calculate the values for kappa
+        #print(kb[i,:])
         kappa[i, 0] = 0.5 * np.dot(kb[i, :], (m2e + m2f))  # First component of kappa
+        #print("KAPPA:", kappa[i, 0])
         kappa[i, 1] = -0.5 * np.dot(kb[i, :], (m1e + m1f))  # Second component of kappa
 
-    return kappa
+    # print(kappa[0])
+    # print(kappa[1])
+    return kappa[1]
 
 
 def test_computekappa():
