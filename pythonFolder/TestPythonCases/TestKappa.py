@@ -33,7 +33,7 @@ def test_computekappa():
   m1f = np.array([0, 1, 0])
   m2f = np.array([0, 0, 1])
 
-  kappa_calculated = computekappa(node0, node1, node2, m1e, m2e, m1f, m2f)
+  kappa_calculated = compute_kappa(node0, node1, node2, m1e, m2e, m1f, m2f)
 
   # Expected output: zero curvature for a straight rod
   kappa_expected = np.array([0, 0])
