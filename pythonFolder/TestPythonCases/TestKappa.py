@@ -19,10 +19,14 @@ def compute_kappa(node0 = None,node1 = None,node2 = None,m1e = None,m2e = None,m
     #     # Calculate the values for kappa
     #     self.kappa[i, 0] = 0.5 * np.dot(self.kb[i, :], (m2e + m2f))  # First component of kappa
     #     self.kappa[i, 1] = -0.5 * np.dot(self.kb[i, :], (m1e + m1f))  # Second component of kappa
-    x:List[np.ndarray] = [node0, node1, node2]
-    ne = 3-1
+    
+    x:List[np.array] = [node0, node1, node2]
+    nv = 3
+    ne = nv-1
     tangent = np.zeros((ne, 3))
-
+    kb = np.zeros((nv, 3))
+    kappa = np.zeros((nv, 2))
+    # From tangent code
     def compute_tangent():
         for i in range(ne):
             # Extract segments (3 elements) from 'x' to compute the tangent vector.
@@ -30,6 +34,32 @@ def compute_kappa(node0 = None,node1 = None,node2 = None,m1e = None,m2e = None,m
 
             # Normalize the tangent vector.
             tangent[i, :] = tangent[i, :] / np.linalg.norm(tangent[i, :])
+    
+    compute_tangent()
+    print(tangent)
+    global t0,t1
+
+    for i in range(1, ne):
+        t0 = tangent[i - 1, :]  # Get the (i-1)th row of the tangent array
+        t1 = tangent[i, :]      # Get the ith row of the tangent array
+        kb[i, :] = 2.0 * np.cross(t0, t1) / (1.0 + np.dot(t0, t1))
+
+    print(t0)
+    print(t1)
+    print(kb)
+    # # Second loop: Compute kappa using m1, m2, and kb
+    for i in range(1, ne):
+        # m1e = m1[i - 1, :]  # Get the (i-1)th row of m1
+        # m2e = m2[i - 1, :]  # Get the (i-1)th row of m2
+        # m1f = m1[i, :]      # Get the ith row of m1
+        # m2f = m2[i, :]      # Get the ith row of m2
+
+        # Calculate the values for kappa
+        kappa[i, 0] = 0.5 * np.dot(kb[i, :], (m2e + m2f))  # First component of kappa
+        kappa[i, 1] = -0.5 * np.dot(kb[i, :], (m1e + m1f))  # Second component of kappa
+
+    return kappa
+
 
 def test_computekappa():
   """
