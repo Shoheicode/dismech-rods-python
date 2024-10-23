@@ -17,9 +17,9 @@ class RodNodeLogger(WorldLogger):
         self.logging_output_file = logging_output_file
         self.logging_period = logging_period
 
-    def __del__(self):
-        """Destructor equivalent in Python, called when the object is deleted."""
-        print("RodNodeLogger object is being deleted")
+    # def __del__(self):
+    #     """Destructor equivalent in Python, called when the object is deleted."""
+    #     print("RodNodeLogger object is being deleted")
 
     def get_log_header(self):
         """
