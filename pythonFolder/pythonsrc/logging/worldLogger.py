@@ -60,6 +60,8 @@ class WorldLogger(ABC):
 
         # SOMEONE ELSE must init the log file, since that depends on the derived class!
         # init_log_file(p_world, file_name_prefix)
+        
+        # MAY NEED TO LOOK AT THIS
         # self.world_ptr = world()
         # self.m_fileName = ""
     
