@@ -88,8 +88,8 @@
 # glutMainLoop()
 
 from pythonsrc.globalDefinitions import RenderParams, SimParams, RenderEngine
+from pythonsrc.cantliever_case.cantlieverExample import get_robot_description
 from pythonsrc.logging.worldLogger import WorldLogger
-from pythonsrc.robot_description import get_robot_description
 from pythonsrc.rod_mechanics.force_container import ForceContainer
 from pythonsrc.rod_mechanics.soft_robots import SoftRobots
 from pythonsrc.simulation_environment.derSimulationEnvironment import derSimulationEnvironment
@@ -107,27 +107,29 @@ def main():
 
     logger : WorldLogger = None
 
-    get_robot_description(None, sys.argv, soft_robots, forces, logger, sim_params, render_params)
+    lis = get_robot_description(None, sys.argv, soft_robots, forces, logger, sim_params, render_params)
 
-    soft_robots.setup()
+    print(lis)
 
-    my_world = world(soft_robots, forces, sim_params)
+    # soft_robots.setup()
 
-    env : derSimulationEnvironment = None
+    # my_world = world(soft_robots, forces, sim_params)
 
-    match render_params.renderer:
-        case RenderEngine.HEADLESS:
-            print("HIHIHI")
-            env = HeadlessDERSimulationEnvironment(my_world, render_params, logger)
-        case RenderEngine.OPENGL:
-            print("OPTION 2 selected")
-            return "Option 2 selected"
-        case _:
-            raise RuntimeError("Unknown renderer type provided")
+    # env : derSimulationEnvironment = None
+
+    # match render_params.renderer:
+    #     case RenderEngine.HEADLESS:
+    #         print("HIHIHI")
+    #         env = HeadlessDERSimulationEnvironment(my_world, render_params, logger)
+    #     case RenderEngine.OPENGL:
+    #         print("OPTION 2 selected")
+    #         return "Option 2 selected"
+    #     case _:
+    #         raise RuntimeError("Unknown renderer type provided")
         
-    env.runSimulation()
+    # env.runSimulation()
 
-    exit(0)
+    # exit(0)
     
 if __name__ == "__main__":
     main()
