@@ -1,6 +1,6 @@
 import numpy as np
 
-from pythonFolder.pythonsrc.rod_mechanics.base_force import BaseForce
+from pythonsrc.rod_mechanics.base_force import BaseForce
 
 class ContactForce(BaseForce):
     def __init__(self, soft_robots, col_limit, delta, k_scaler, friction, nu, self_contact):

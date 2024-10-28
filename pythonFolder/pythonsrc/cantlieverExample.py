@@ -30,7 +30,7 @@ def get_robot_description(soft_robots:SoftRobots, forces: ForceContainer, logger
     poisson = 0.5
 
     # Create a beam along the x-y plane
-    soft_robots.addLimb(np.array([0.0, 0.0, 0.0]), np.array([1.0, 0.0, 0.0]), n, density, radius, young_mod, poisson)
+    soft_robots.add_limb(np.array([0.0, 0.0, 0.0]), np.array([1.0, 0.0, 0.0]), n, density, radius, young_mod, poisson)
 
     # Fix one end
     soft_robots.lockEdge(0, 0)
