@@ -9,6 +9,9 @@ from pythonFolder.pythonsrc.rod_mechanics.soft_robots import SoftRobots
 def load_txt(filepath):
     return np.loadtxt(filepath)
 
+def convert_float_to_scientific_str(value):
+    return f"{value:.6e}"  # Adjust precision if needed
+
 # Main function to define the robot description
 def get_robot_description(soft_robots:SoftRobots, forces: ForceContainer, logger: WorldLogger, sim_params: SimParams, render_params: RenderParams):
 
