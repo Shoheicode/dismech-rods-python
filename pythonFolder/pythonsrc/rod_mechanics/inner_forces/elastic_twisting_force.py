@@ -1,7 +1,7 @@
 import numpy as np
 from typing import List
 from pythonsrc.rod_mechanics.base_force import BaseForce
-from soft_robots import SoftRobots
+from pythonsrc.rod_mechanics.soft_robots import SoftRobots
 
 class ElasticTwistingForce(BaseForce):
     def __init__(self, m_soft_robots: List[SoftRobots]):

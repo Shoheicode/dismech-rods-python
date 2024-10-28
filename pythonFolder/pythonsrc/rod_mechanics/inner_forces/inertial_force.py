@@ -1,4 +1,4 @@
-from pythonFolder.pythonsrc.rod_mechanics.base_force import BaseForce
+from pythonsrc.rod_mechanics.base_force import BaseForce
 
 
 class InertialForce(BaseForce):

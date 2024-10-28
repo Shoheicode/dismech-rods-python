@@ -1,7 +1,7 @@
 from typing import List, Optional
 
-from pythonFolder.pythonsrc.rod_mechanics.external_forces.contact_force import ContactForce
-from pythonFolder.pythonsrc.rod_mechanics.external_forces.floor_contact_force import FloorContactForce
+from pythonsrc.rod_mechanics.external_forces.contact_force import ContactForce
+from pythonsrc.rod_mechanics.external_forces.floor_contact_force import FloorContactForce
 from pythonsrc.rod_mechanics.base_force import BaseForce
 
 
