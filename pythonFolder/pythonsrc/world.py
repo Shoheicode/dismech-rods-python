@@ -1,8 +1,8 @@
-from pythonFolder.pythonsrc.rod_mechanics.inner_forces.elastic_bending_force import ElasticBendingForce
-from pythonFolder.pythonsrc.rod_mechanics.inner_forces.elastic_streching_force import ElasticStretchingForce
-from pythonFolder.pythonsrc.rod_mechanics.inner_forces.elastic_twisting_force import ElasticTwistingForce
-from pythonFolder.pythonsrc.rod_mechanics.inner_forces.inertial_force import InertialForce
-from pythonFolder.pythonsrc.time_stepper.basetimestepper import BaseTimeStepper
+from pythonsrc.rod_mechanics.inner_forces.elastic_bending_force import ElasticBendingForce
+from pythonsrc.rod_mechanics.inner_forces.elastic_streching_force import ElasticStretchingForce
+from pythonsrc.rod_mechanics.inner_forces.elastic_twisting_force import ElasticTwistingForce
+from pythonsrc.rod_mechanics.inner_forces.inertial_force import InertialForce
+from pythonsrc.time_stepper.basetimestepper import BaseTimeStepper
 from pythonsrc.globalDefinitions import IntegratorMethod, SimParams
 from pythonsrc.rod_mechanics.force_container import ForceContainer
 from pythonsrc.rod_mechanics.soft_robots import SoftRobots

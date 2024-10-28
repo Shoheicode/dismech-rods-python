@@ -1,6 +1,6 @@
 import numpy as np
 from typing import List
-from pythonFolder.pythonsrc.rod_mechanics.base_force import BaseForce
+from pythonsrc.rod_mechanics.base_force import BaseForce
 from soft_robots import SoftRobots
 
 class ElasticTwistingForce(BaseForce):

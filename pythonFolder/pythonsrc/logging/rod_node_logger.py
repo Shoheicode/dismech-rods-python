@@ -1,4 +1,4 @@
-from pythonFolder.pythonsrc.logging.worldLogger import WorldLogger
+from pythonsrc.logging.worldLogger import WorldLogger
 
 
 class RodNodeLogger(WorldLogger):
