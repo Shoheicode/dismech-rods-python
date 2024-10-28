@@ -13,7 +13,7 @@ class SoftRobots():
 
     # Method to add a limb using start and end points with other parameters
     def add_limb(self, start: np.ndarray, end: np.ndarray, num_nodes: int, rho: float, rod_radius: float, 
-                 youngs_modulus: float, poisson_ratio: float, mu: float):
+                 youngs_modulus: float, poisson_ratio: float, mu: float = 0.0):
         limb = ElasticRod(self.num_limbs, start, end, num_nodes, None, rho, rod_radius, youngs_modulus, poisson_ratio, mu)
         self.limbs.append(limb)  # Add new limb to the list
         self.num_limbs += 1  # Increment limb counter
