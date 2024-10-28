@@ -108,8 +108,8 @@ class ElasticBendingForce(BaseForce):
     
     def __init__(self, soft_robots: SoftRobots):
         super().__init__(soft_robots)
-
-        for limb in super().soft_robots.limbs:
+        
+        for limb in super().getSoftRobots().limbs:
             EI = limb.EI
             # Create a 2x2 matrix EIMat and append to EIMatrices
             EIMat = np.array([[EI, 0],
@@ -122,8 +122,10 @@ class ElasticBendingForce(BaseForce):
             # Append a zero matrix of shape (nv, 11) to both gradKappa1s and gradKappa2s
             self.gradKappa1s.append(np.zeros((nv, 11)))
             self.gradKappa2s.append(np.zeros((nv, 11)))
+            print(limb)
+            print("HIHIHI")
 
-        for joint in super().soft_robots.joints:
+        for joint in super().getSoftRobots().joints:
             nb = joint.num_bending_combos
             self.gradKappa1s.append(np.zeros((nb, 11)))
             self.gradKappa2s.append(np.zeros((nb, 11)))
@@ -147,7 +149,7 @@ class ElasticBendingForce(BaseForce):
     def compute_force(self, dt):
         limb_idx = 0
 
-        for limb in super().soft_robots.limbs:
+        for limb in super().getSoftRobots().limbs:
             self.gradKappa1 = self.gradKappa1s[limb_idx]
             self.gradKappa2 = self.gradKappa2s[limb_idx]
 

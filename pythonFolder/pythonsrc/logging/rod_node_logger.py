@@ -1,3 +1,4 @@
+from io import StringIO
 from pythonsrc.logging.worldLogger import WorldLogger
 
 
@@ -28,7 +29,7 @@ class RodNodeLogger(WorldLogger):
         Returns the header for the log file.
         :return: String header for the log file
         """
-        return "Log Header: time, position, velocity"
+        return ""
 
     def get_log_data(self):
         """
@@ -36,4 +37,12 @@ class RodNodeLogger(WorldLogger):
         :return: String data for the log file
         """
         # In a real scenario, this would gather actual data.
-        return "Log Data: 0.0, [1.0, 0.0, 0.0], [0.0, 0.0, 0.0]"
+        log_data = StringIO()
+        log_data.write(f"{super().world_ptr.get_current_time()}")
+        
+        for limb in self.world_ptr.soft_robots.limbs:
+            for i in range(limb.nv):
+                v = limb.get_vertex(i)
+                log_data.write(f",{v[0]},{v[1]},{v[2]}")
+                
+        return log_data.getvalue()

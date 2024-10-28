@@ -24,6 +24,17 @@ class world:
         if sim_params.integrator not in [IntegratorMethod.FORWARD_EULER, IntegratorMethod.VERLET_POSITION]:
             self.forces.add_force(InertialForce(soft_robots))
 
+        if sim_params.integrator == IntegratorMethod.FORWARD_EULER:
+            self.stepper = None #ForwardEuler(soft_robots, forces, sim_params)
+        elif sim_params.integrator == IntegratorMethod.VERLET_POSITION:
+            self.stepper = None # VerletPosition(soft_robots, forces, sim_params)
+        elif sim_params.integrator == IntegratorMethod.BACKWARD_EULER:
+            self.stepper = BackwardEuler(soft_robots, forces, sim_params, PARDISO_SOLVER)
+        elif sim_params.integrator == IntegratorMethod.IMPLICIT_MIDPOINT:
+            self.stepper = None # ImplicitMidpoint(soft_robots, forces, sim_params, PARDISO_SOLVER)
+        else:
+            raise ValueError(f"Unknown integrator type: {sim_params.integrator}")
+
         self.stepper.init_stepper()
 
         if sim_params.enable_2d_sim:

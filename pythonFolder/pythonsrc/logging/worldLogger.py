@@ -62,7 +62,7 @@ class WorldLogger(ABC):
         # init_log_file(p_world, file_name_prefix)
         
         # MAY NEED TO LOOK AT THIS
-        # self.world_ptr = world()
+        # self.world_ptr = world(None, None, None)
         # self.m_fileName = ""
     
     def setup(self):

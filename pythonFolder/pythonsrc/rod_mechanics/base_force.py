@@ -17,5 +17,11 @@ class BaseForce(object):
     def compute_force_and_jacobian(self, dt):
         pass
 
+    def getSoftRobots(self):
+        return self.soft_robots
+    
+    def getStepper(self):
+        return self.stepper
+
     def set_time_stepper(self, stepper: BaseTimeStepper):
         self.stepper = stepper

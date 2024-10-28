@@ -12,13 +12,13 @@ class ElasticTwistingForce(BaseForce):
         self.theta_fs: List[List[np.ndarray]] = []
         self.theta_es: List[List[np.ndarray]] = []
 
-        for limb in super().soft_robots.limbs:
+        for limb in super().getSoftRobots().limbs:
             self.grad_twists.append(np.zeros((limb.nv, 11)))  # GradTwists for the vertices of the limb
             self.deltams.append(np.zeros(limb.ne))  # Delta m values for edges
             self.theta_fs.append(np.zeros(limb.ne))  # Final twist angles for edges
             self.theta_es.append(np.zeros(limb.ne))  # Elastic twist angles for edges
 
-        for joint in super().soft_robots.joints:
+        for joint in super().getSoftRobots().joints:
             nb = joint.num_bending_combos  # Number of bending combos
             self.grad_twists.append(np.zeros((nb, 11)))  # GradTwists for the joint
             self.deltams.append(np.zeros(nb))  # Delta m values for the joint
