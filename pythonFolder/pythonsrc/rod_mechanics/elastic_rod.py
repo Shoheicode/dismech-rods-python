@@ -402,7 +402,7 @@ class ElasticRod:
             d = np.zeros(3)
             
             # Call parallelTransport (assuming you have a Python function for it)
-            d = self.__parallel_transport(a, b, c, d)  # Perform parallel transport
+            d = self.__parallel_transport(self, a, b, c, d)  # Perform parallel transport
             self.d1[i + 1, :] = d  # Store result in the next row of d1
             self.d2[i + 1, :] = np.cross(c, d)  # Store the cross product in d2
 
@@ -433,9 +433,9 @@ class ElasticRod:
             t0 = self.tangent[i-1]
             t =  self.tangent[i]
             ut = np.zeros(3)
-            ut = self.__parallel_transport(u0,t0,t, ut)
-            ut = self.__rotate_axis_angle(ut,t,self.ref_twist_old[i])
-            sgnAngle = self.__signed_angle(ut,u1,t)
+            ut = self.__parallel_transport(self, u0,t0,t, ut)
+            ut = self.__rotate_axis_angle(self, ut,t,self.ref_twist_old[i])
+            sgnAngle = self.__signed_angle(self, ut,u1,t)
             self.ref_twist[i] = self.ref_twist_old[i] + sgnAngle
 
         # return self.ref_twist

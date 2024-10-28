@@ -44,6 +44,7 @@ def get_robot_description(argc, argv,soft_robots:SoftRobots, forces: ForceContai
     # Set logger to record nodes
     logfile_base = "log_files/cantilever"
     logging_period = 1
-    logger = RodNodeLogger(logfile_base, convert_float_to_scientific_str(young_mod), 'log_output.txt', logging_period)
+    a = convert_float_to_scientific_str(young_mod)
+    logger = RodNodeLogger(logfile_base, a, 'log_output.txt', logging_period)
 
     return [soft_robots, forces,sim_params, render_params, logger]

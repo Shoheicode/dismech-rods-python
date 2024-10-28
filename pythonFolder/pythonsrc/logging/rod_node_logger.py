@@ -2,6 +2,8 @@ from pythonsrc.logging.worldLogger import WorldLogger
 
 
 class RodNodeLogger(WorldLogger):
+    def setup_helper(self):
+        pass  # Abstract method to be implemented in the subclass
     def __init__(self, logfile_base, logfile_suffix=None, logging_output_file=None, logging_period=1):
         """
         Initializes the RodNodeLogger class with parameters.
@@ -11,7 +13,7 @@ class RodNodeLogger(WorldLogger):
         :param logging_output_file: The output file object for logging
         :param logging_period: Period for logging
         """
-        super().__init__()
+        super().__init__("node", logfile_base, logging_output_file, logging_period)
         self.logfile_base = logfile_base
         self.logfile_suffix = logfile_suffix
         self.logging_output_file = logging_output_file

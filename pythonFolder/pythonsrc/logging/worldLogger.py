@@ -6,6 +6,9 @@ from pythonsrc.world import world
 
 # Abstract class in Python for worldLogger
 class WorldLogger(ABC):
+    @abstractmethod
+    def setup_helper(self):
+        pass  # Abstract method to be implemented in the subclass
     def __init__(self, file_name_prefix: str, logfile_base: str, data_file, period: int):
         self.m_data_file = data_file  # file object
         self.period = period
@@ -57,7 +60,7 @@ class WorldLogger(ABC):
 
         # SOMEONE ELSE must init the log file, since that depends on the derived class!
         # init_log_file(p_world, file_name_prefix)
-        self.world_ptr = world()
+        # self.world_ptr = world()
         # self.m_fileName = ""
     
     def setup(self):
@@ -142,5 +145,5 @@ class WorldLogger(ABC):
         """
         Destructor to ensure the file is properly closed.
         """
-        if not self.m_data_file.closed:
-            self.m_data_file.close()
+        # if not self.m_data_file.closed:
+        #     self.m_data_file.close()
