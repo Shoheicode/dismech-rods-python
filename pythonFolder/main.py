@@ -88,7 +88,7 @@
 # glutMainLoop()
 
 from pythonsrc.globalDefinitions import RenderParams, SimParams, RenderEngine
-from pythonsrc.examples.cantliever_case.cantlieverExample import get_robot_description
+from pythonsrc.cantliever_case.cantlieverExample import get_robot_description
 from pythonsrc.logging.worldLogger import WorldLogger
 from pythonsrc.rod_mechanics.force_container import ForceContainer
 from pythonsrc.rod_mechanics.soft_robots import SoftRobots

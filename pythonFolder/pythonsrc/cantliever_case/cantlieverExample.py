@@ -1,10 +1,10 @@
 import numpy as np
 
-from pythonFolder.pythonsrc.globalDefinitions import RenderParams, SimParams
-from pythonFolder.pythonsrc.logging.rod_node_logger import RodNodeLogger
-from pythonFolder.pythonsrc.logging.worldLogger import WorldLogger
-from pythonFolder.pythonsrc.rod_mechanics.force_container import ForceContainer
-from pythonFolder.pythonsrc.rod_mechanics.soft_robots import SoftRobots
+from pythonsrc.globalDefinitions import RenderParams, SimParams
+from pythonsrc.logging.rod_node_logger import RodNodeLogger
+from pythonsrc.logging.worldLogger import WorldLogger
+from pythonsrc.rod_mechanics.force_container import ForceContainer
+from pythonsrc.rod_mechanics.soft_robots import SoftRobots
 
 def load_txt(filepath):
     return np.loadtxt(filepath)
