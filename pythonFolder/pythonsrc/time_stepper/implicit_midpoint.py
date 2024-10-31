@@ -6,7 +6,7 @@ from pythonsrc.time_stepper.backward_euler import BackwardEuler
 
 
 class ImplicitMidpoint(BackwardEuler):
-    def __init__(self, soft_robots: SoftRobots, forces: ForceContainer, sim_params: SimParams, solver_type: SolverType):
+    def __init__(self, soft_robots: SoftRobots, forces: ForceContainer, sim_params: SimParams, solver_type: str):
         super().__init__(soft_robots, forces, sim_params, solver_type)
 
     def step_forward_in_time(self):

@@ -1,4 +1,5 @@
 import numpy as np
+from pythonsrc.solvers.base_solver import BaseSolver
 from pythonsrc.rod_mechanics.elastic_rod import ElasticRod
 from pythonsrc.globalDefinitions import IntegratorMethod, SimParams
 from pythonsrc.time_stepper.base_time_stepper import BaseTimeStepper
@@ -7,7 +8,7 @@ from typing import List, Tuple, Optional
 from pythonsrc.solvers.solver_types import SolverType
 
 class ImplicitTimeStepper(BaseTimeStepper):
-    def __init__(self, soft_robots, forces, sim_params: SimParams, solver_type: SolverType):
+    def __init__(self, soft_robots, forces, sim_params: SimParams, solver_type: str):
         super().__init__(soft_robots, forces, sim_params)
         self.solver_type = solver_type
 
@@ -35,7 +36,7 @@ class ImplicitTimeStepper(BaseTimeStepper):
         self.ia = None
 
         # Private attributes
-        self.solver = None  # Unique pointer equivalent to `baseSolver`
+        self.solver:BaseSolver = None  # Unique pointer equivalent to `baseSolver`
         self.dgbsv_jacobian_len = 0
 
     def add_jacobian(self, ind1, ind2, p, limb_idx1, limb_idx2=None):
@@ -81,7 +82,9 @@ class ImplicitTimeStepper(BaseTimeStepper):
     def update(self):
         # Update the system state; implementation needed based on your requirements.
         super().update()
+        print("UPDATE IS RUNNING")
         if self.solver_type == "PARDISO_SOLVER":
+            print("I AM RUNNING PARDISO")
             self.ia = np.zeros(self.freeDOF + 1, dtype=int)
             self.ia[0] = 1
         elif self.solver_type == "DGBSV_SOLVER":

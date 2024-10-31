@@ -7,15 +7,11 @@ from pythonsrc.rod_mechanics.soft_robots import SoftRobots
 from pythonsrc.solvers.solver_types import SolverType
 
 class BackwardEuler(ImplicitTimeStepper):
-    def __init__(self, soft_robots: SoftRobots, forces: ForceContainer, sim_params: SimParams, solver_type: SolverType):
+    def __init__(self, soft_robots: SoftRobots, forces: ForceContainer, sim_params: SimParams, solver_type: str):
         super().__init__(soft_robots, forces, sim_params, solver_type)
 
     def __del__(self):
         # Destructor equivalent, if needed in Python, though typically handled by Python's garbage collection.
-        pass
-
-    def update_system_for_next_time_step(self):
-        # Override with the implementation of system update logic.
         pass
 
     def newton_method(self, dt):

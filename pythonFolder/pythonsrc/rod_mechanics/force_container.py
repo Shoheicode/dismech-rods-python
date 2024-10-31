@@ -32,4 +32,7 @@ class ForceContainer:
         
         self.__forces.append(force)
 
+    def get_force(self):
+        return self.__forces
+
     
