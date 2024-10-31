@@ -1,6 +1,6 @@
 import numpy as np
 from pythonsrc.solvers.base_solver import BaseSolver
-from scipy.sparse.linalg import spsolve
+from scipy.sparse.linalg import spsolve, csr_matrix
 
 class PardisoSolver(BaseSolver):
     def __init__(self, stepper):
@@ -14,30 +14,40 @@ class PardisoSolver(BaseSolver):
         
         # Initialize Pardiso control parameters and memory pointers.
         self.pt = [None] * 64  # Memory pointer
-        self.mtype = 11  # Default type for real nonsymmetric matrices
-        self.iparm = [0] * 64  # Pardiso control parameters
-        self.maxfct = 1  # Maximum number of factors
-        self.mnum = 1  # Which factor to use
-        self.phase = 0  # Phase of the Pardiso solver
-        self.error = 0  # Error flag
-        self.msglvl = 0  # Message level
-
-        # Additional setup for `iparm` if needed, based on Pardiso documentation.
+        self.mtype = 11  # Real unsymmetric matrix
+        self.maxfct = 1  # Maximum number of numerical factorizations
+        self.mnum = 1    # Which factorization to use
+        self.msglvl = 0  # No printout
+        self.error = 0   # Initialize error flag
+        self.iparm = [0] * 64
+        self.iparm[0] = 1  # No solver default
+        self.iparm[1] = 2  # Fill-in reordering from METIS
+        self.iparm[7] = 2  # Max numbers of iterative refinement steps
+        self.iparm[9] = 13 # Perturb pivot elements with 1E-13
+        self.iparm[23] = 10 # Two-level factorization for nonsymmetric matrices
 
     def integrator(self):
         """
         Perform the integration step using the Pardiso solver.
-        This method solves the system of equations for the current time step.
+        This method assembles the matrix in CSR format and solves the system.
         """
-        # Assuming stepper.Jacobian is the matrix and stepper.Force is the RHS.
-        # If using Pardiso, you would call the Pardiso-specific solver functions here.
-        # However, using SciPy's `spsolve` as an alternative for this example.
+        n = self.stepper.freeDOF
+        ia = self.stepper.ia
+
+        # Cumulative sum for CSR indexing
+        ia[1:] = np.cumsum(ia[:-1]) + ia[1:]
         
-        if self.stepper.Jacobian is not None and self.stepper.Force is not None:
-            try:
-                # Solve the linear system `Jacobian * x = Force`
-                result = spsolve(self.stepper.Jacobian, self.stepper.Force)
-                self.stepper.DX = result  # Update the result back to the stepper's `DX`
-            except Exception as e:
-                print(f"Solver error: {e}")
-                self.error = 1  # Set error flag if any exception occurs
+        # Generate CSR format for Jacobian matrix
+        non_zero_elements = sorted(self.stepper.non_zero_elements)
+        ja = np.array([col + 1 for _, col in non_zero_elements], dtype=np.int32)
+        a = np.array([self.stepper.Jacobian[row, col] for row, col in non_zero_elements], dtype=np.float64)
+        
+        csr_matrix_a = csr_matrix((a, ja - 1, ia), shape=(n, n))
+
+        try:
+            # Solve the linear system using Pardiso
+            solution = spsolve(csr_matrix_a, self.stepper.force)
+            self.stepper.dx = solution
+        except Exception as e:
+            print(f"Solver error: {e}")
+            self.error = 1
