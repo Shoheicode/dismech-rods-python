@@ -1,7 +1,5 @@
-from pythonsrc.time_stepper.implicit_time_stepper import ImplicitTimeStepper
-
 class BaseSolver:
-    def __init__(self, stepper: ImplicitTimeStepper, solver_type:str):
+    def __init__(self, stepper, solver_type:str):
         """
         Initialize the base solver with a time stepper and solver type.
         
