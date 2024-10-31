@@ -24,6 +24,7 @@ class BackwardEuler(ImplicitTimeStepper):
         while not solved:
             self.prep_system_for_iteration()
             self.forces.compute_forces_and_jacobian(dt)
+            print(dt)
 
             # Compute norm of the force equations
             normf = np.linalg.norm(self.Force)

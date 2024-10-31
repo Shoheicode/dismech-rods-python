@@ -20,7 +20,7 @@ class HeadlessDERSimulationEnvironment(derSimulationEnvironment):
             return
         
         # print("ESCAPED THE FIRST STATEMENT")
-
+        # print(self.is_logging)
         if self.is_logging:
             self.logger_p.log_world_data()
         
