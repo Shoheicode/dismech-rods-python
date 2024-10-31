@@ -1,10 +1,13 @@
+import numpy as np
+from pythonsrc.rod_mechanics.elastic_rod import ElasticRod
+from pythonsrc.globalDefinitions import IntegratorMethod, SimParams
 from pythonsrc.time_stepper.base_time_stepper import BaseTimeStepper
 from typing import List, Tuple, Optional
 
 from pythonsrc.solvers.solver_types import SolverType
 
 class ImplicitTimeStepper(BaseTimeStepper):
-    def __init__(self, soft_robots, forces, sim_params, solver_type: SolverType):
+    def __init__(self, soft_robots, forces, sim_params: SimParams, solver_type: SolverType):
         super().__init__(soft_robots, forces, sim_params)
         self.solver_type = solver_type
 
@@ -17,47 +20,100 @@ class ImplicitTimeStepper(BaseTimeStepper):
         self.num_rows = 0
 
         # Protected attributes
-        self.ftol = 0.0
-        self.dtol = 0.0
-        self.max_iter = 0
-        self.terminate_at_max = False
-        self.line_search = False
-        self.orig_dt = 0.0
-        self.adaptive_time_stepping = False
-        self.adaptive_time_stepping_threshold = 0
+        self.ftol = sim_params.ftol
+        self.dtol = sim_params.dtol
+        self.max_iter = sim_params.max_iters["num_iters"]
+        self.terminate_at_max = sim_params.max_iters["terminate_at_max"]
+        self.line_search = sim_params.line_search
+        self.orig_dt = sim_params.dt
+        self.adaptive_time_stepping_threshold = sim_params.adaptive_time_stepping
+        self.adaptive_time_stepping = sim_params.adaptive_time_stepping != 0
+        self.solver_type = solver_type
+
+        self.Jacobian = np.zeros((self.freeDOF, self.freeDOF))
+        self.dgbsv_jacobian = None
+        self.ia = None
 
         # Private attributes
         self.solver = None  # Unique pointer equivalent to `baseSolver`
         self.dgbsv_jacobian_len = 0
 
     def add_jacobian(self, ind1, ind2, p, limb_idx1, limb_idx2=None):
-        # Add the Jacobian entry. This is an overloaded method in C++.
         if limb_idx2 is None:
-            # Single limb index case
-            self.non_zero_elements.append((ind1, ind2, p, limb_idx1))
-        else:
-            # Dual limb index case
-            self.non_zero_elements.append((ind1, ind2, p, limb_idx1, limb_idx2))
+            limb_idx2 = limb_idx1
+
+        limb1: ElasticRod = self.limbs[limb_idx1]
+        limb2: ElasticRod = self.limbs[limb_idx2]
+        mapped_ind1 = limb1.full_to_uncons_map[ind1]
+        mapped_ind2 = limb2.full_to_uncons_map[ind2]
+        offset1 = self.offsets[limb_idx1]
+        offset2 = self.offsets[limb_idx2]
+        jac_ind1 = mapped_ind2 + offset2
+        jac_ind2 = mapped_ind1 + offset1
+
+        if limb1.is_constrained[ind1] == 0 and limb2.is_constrained[ind2] == 0:
+            if self.solver_type == "PARDISO_SOLVER":
+                if self.Jacobian[jac_ind1, jac_ind2] == 0 and p != 0:
+                    self.ia[jac_ind1 + 1] += 1
+                    self.non_zero_elements.append((jac_ind1, jac_ind2))
+                elif self.Jacobian[jac_ind1, jac_ind2] != 0 and self.Jacobian[jac_ind1, jac_ind2] + p == 0:
+                    self.ia[jac_ind1 + 1] -= 1
+                    self.non_zero_elements.remove((jac_ind1, jac_ind2))
+                self.Jacobian[jac_ind1, jac_ind2] += p
+            elif self.solver_type == "DGBSV_SOLVER":
+                dgbsv_row = self.kl + self.ku + jac_ind1 - jac_ind2
+                dgbsv_col = jac_ind2
+                dgbsv_offset = dgbsv_row + dgbsv_col * self.num_rows
+                self.dgbsv_jacobian[dgbsv_offset] += p
+                self.Jacobian[jac_ind1, jac_ind2] += p
 
     def set_zero(self):
         # Reset or zero out any matrices or structures as necessary.
-        self.non_zero_elements.clear()
+        super().set_zero()
+        if self.solver_type == "PARDISO_SOLVER":
+            self.non_zero_elements.clear()
+            self.ia.fill(0)
+            self.ia[0] = 1
+        elif self.solver_type == "DGBSV_SOLVER":
+            self.dgbsv_jacobian.fill(0)
+        self.Jacobian.fill(0)
 
     def update(self):
         # Update the system state; implementation needed based on your requirements.
-        pass
+        super().update()
+        if self.solver_type == "PARDISO_SOLVER":
+            self.ia = np.zeros(self.freeDOF + 1, dtype=int)
+            self.ia[0] = 1
+        elif self.solver_type == "DGBSV_SOLVER":
+            local_solver = self.solver
+            self.dgbsv_jacobian_len = local_solver.NUMROWS * self.freeDOF
+            self.dgbsv_jacobian = np.zeros(self.dgbsv_jacobian_len)
+        self.Jacobian.fill(0)
 
     def integrator(self):
         # Integrate using this timestepper.
-        pass
+        self.solver.integrator()
 
     def init_stepper(self):
         # Initialize the stepper; set any parameters or configurations.
-        pass
+        super().init_stepper()
+        if self.solver_type == "PARDISO_SOLVER":
+            self.solver = SolverType.PARDISO_SOLVER
+            self.ia = np.zeros(self.freeDOF + 1, dtype=int)
+            self.ia[0] = 1
+        elif self.solver_type == "DGBSV_SOLVER":
+            self.solver = SolverType.DGBSV_SOLVER
+            local_solver = self.solver
+            self.dgbsv_jacobian_len = local_solver.NUMROWS * self.freeDOF
+            self.kl = local_solver.kl
+            self.ku = local_solver.ku
+            self.num_rows = local_solver.NUMROWS
+            self.dgbsv_jacobian = np.zeros(self.dgbsv_jacobian_len)
 
     def prep_system_for_iteration(self):
         # Prepare the system for the next iteration.
-        pass
+        super().prep_system_for_iteration()
+        self.set_zero()
 
     def newton_method(self, dt):
         # Pure virtual method in C++; define it as abstract in subclasses.
