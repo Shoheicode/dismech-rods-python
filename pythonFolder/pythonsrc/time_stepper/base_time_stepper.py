@@ -1,21 +1,26 @@
 import numpy as np
 from abc import ABC, abstractmethod
 
+from pythonFolder.pythonsrc.globalDefinitions import SimParams
+from pythonFolder.pythonsrc.rod_mechanics.force_container import ForceContainer
+from pythonFolder.pythonsrc.rod_mechanics.soft_robots import SoftRobots
+
 class BaseTimeStepper(ABC):
-    def __init__(self, soft_robots, forces, sim_params):
+    def __init__(self, soft_robots: SoftRobots, forces: ForceContainer, sim_params: SimParams):
         # Constructor for baseTimeStepper class
-        self.soft_robots = soft_robots  # shared_ptr<softRobots> equivalent
         self.forces = forces            # shared_ptr<forceContainer> equivalent
         self.sim_params = sim_params    # simParams equivalent
+
+        self.freeDOF = 0
         
         # Initialize variables
-        self.dx = np.zeros(sim_params.freeDOF)     # Equivalent to double* dx
-        self.force = np.zeros(sim_params.freeDOF)  # Equivalent to double* force
-        self.Force = np.zeros(sim_params.freeDOF)  # Map<VectorXd> Force
-        self.DX = np.zeros(sim_params.freeDOF)     # Map<VectorXd> DX
-        self.Jacobian = np.zeros((sim_params.freeDOF, sim_params.freeDOF))  # MatrixXd Jacobian
+        self.dx = np.zeros(self.freeDOF)     # Equivalent to double* dx
+        self.force = np.zeros(self.freeDOF)  # Equivalent to double* force
+        self.Force = np.zeros(self.freeDOF)  # Map<VectorXd> Force
+        self.DX = np.zeros(self.freeDOF)     # Map<VectorXd> DX
+        self.Jacobian = np.zeros((self.freeDOF, self.freeDOF))  # MatrixXd Jacobian
         
-        self.freeDOF = sim_params.freeDOF  # Integer for free degrees of freedom
+        self.freeDOF = self.freeDOF  # Integer for free degrees of freedom
         self.offsets = []                 # Equivalent to vector<int> offsets
         self.iter = 0                     # Iteration count
         
