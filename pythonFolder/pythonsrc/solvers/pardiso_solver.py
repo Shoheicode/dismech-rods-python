@@ -1,6 +1,7 @@
 import numpy as np
 from pythonsrc.solvers.base_solver import BaseSolver
-from scipy.sparse.linalg import spsolve, csr_matrix
+from scipy.sparse.linalg import spsolve
+from scipy.sparse import csr_matrix
 
 class PardisoSolver(BaseSolver):
     def __init__(self, stepper):
