@@ -18,6 +18,7 @@ class ForceContainer:
 
     def compute_forces_and_jacobian(self, dt):
         for force in self.__forces:
+            print(force)
             force.compute_force_and_jacobian(dt)
 
     def setup_force_stepper_access(self, stepper):

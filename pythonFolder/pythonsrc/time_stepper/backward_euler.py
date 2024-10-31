@@ -72,6 +72,8 @@ class BackwardEuler(ImplicitTimeStepper):
                 else:
                     solved = True
 
+        print("SOLVED")
+
         return dt
 
     def line_search_func(self, dt):

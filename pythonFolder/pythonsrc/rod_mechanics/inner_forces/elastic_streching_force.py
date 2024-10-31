@@ -25,7 +25,7 @@ class ElasticStretchingForce(BaseForce):
     # Function to compute the elastic stretching force for each limb and joint
     def compute_force(self, dt):
         limb_idx = 0  # Keep track of limb index
-        for limb in super().soft_robots.limbs:
+        for limb in self.soft_robots.limbs:
             for i in range(limb.ne):  # Iterate over each edge in the limb
                 if limb.is_edge_joint[i]:
                     continue  # Skip if the edge is part of a joint
@@ -39,20 +39,20 @@ class ElasticStretchingForce(BaseForce):
                 # Apply forces to the start and end nodes of the edge
                 for k in range(3):
                     ind = 4 * i + k  # Index for the first node
-                    super().stepper.add_force(ind, -self.f[k], limb_idx)  # Subtract elastic force
+                    self.stepper.add_force(ind, -self.f[k], limb_idx)  # Subtract elastic force
 
                     ind = 4 * (i + 1) + k  # Index for the second node
-                    super().stepper.add_force(ind, self.f[k], limb_idx)  # Add elastic force
+                    self.stepper.add_force(ind, self.f[k], limb_idx)  # Add elastic force
 
             limb_idx += 1  # Move to the next limb
         
         # Handle the joints in the soft robot
-        for joint in super().soft_robots.joints:
+        for joint in self.soft_robots.joints:
             for i in range(joint.ne):  # Iterate over each edge in the joint
                 sgn = 1 if joint.bending_twist_signs[i] == 1 else -1  # Determine sign of bending/twist
                 n1 = joint.connected_nodes[i][0]  # First connected node
                 limb_idx = joint.connected_nodes[i][1]  # Limb index where node is connected
-                curr_limb = super().soft_robots.limbs[limb_idx]  # Get current limb
+                curr_limb = self.soft_robots.limbs[limb_idx]  # Get current limb
 
                 # Calculate strain (epsX) for the joint based on current and reference length
                 self.epsX = joint.edge_len[i] / joint.ref_len[i] - 1.0
@@ -63,17 +63,17 @@ class ElasticStretchingForce(BaseForce):
                 # Apply forces to the nodes of the joint
                 for k in range(3):
                     ind = 4 * n1 + k  # Index for the connected node
-                    super().stepper.add_force(ind, -self.f[k], limb_idx)  # Subtract force from node
+                    self.stepper.add_force(ind, -self.f[k], limb_idx)  # Subtract force from node
 
                     ind = 4 * joint.joint_node + k  # Index for the joint node itself
-                    super().stepper.add_force(ind, self.f[k], joint.joint_limb)  # Add force to the joint limb
+                    self.stepper.add_force(ind, self.f[k], joint.joint_limb)  # Add force to the joint limb
 
     # Function to compute both the force and Jacobian (stiffness matrix) for each limb and joint
     def compute_force_and_jacobian(self, dt):
         self.compute_force(dt)  # First, compute the forces
 
         limb_idx = 0  # Keep track of limb index
-        for limb in super().soft_robots.limbs:
+        for limb in self.soft_robots.limbs:
             for i in range(limb.ne):
                 if limb.is_edge_joint[i]:
                     continue  # Skip if the edge is part of a joint
@@ -107,16 +107,16 @@ class ElasticStretchingForce(BaseForce):
                     for k in range(7):
                         ind1 = 4*i + j
                         ind2 = 4*i + k
-                        super().stepper.add_jacobian(ind1, ind2, -self.JSS[k, j], limb_idx)
+                        self.stepper.add_jacobian(ind1, ind2, -self.JSS[k, j], limb_idx)
 
             limb_idx += 1  # Move to the next limb
 
         # Process the joints in the soft robot for the Jacobian
-        for joint in super().soft_robots.joints:
+        for joint in self.soft_robots.joints:
             for i in range(joint.ne):
                 n1 = joint.connected_nodes[i][0]  # First connected node of the joint
                 limb_idx = joint.connected_nodes[i][1]  # Limb index
-                curr_limb = super().soft_robots.limbs[limb_idx]
+                curr_limb = self.soft_robots.limbs[limb_idx]
 
                 # Calculate current and reference lengths for the joint
                 self.len = joint.edge_len[i]
@@ -150,7 +150,7 @@ class ElasticStretchingForce(BaseForce):
                 # Add Jacobian terms for the node-node, node-joint, joint-node, and joint-joint interactions
                 for j in range(3):
                     for k in range(3):
-                        super().stepper.add_jacobian(4*n1 + j, 4*n1 + k, -self.JSS[k, j], l1)
-                        super().stepper.add_jacobian(4*n1 + j, 4*n2 + k, -self.JSS[k + 4, j], l1, l2)
-                        super().stepper.add_jacobian(4*n2 + j, 4*n1 + k, -self.JSS[k, j + 4], l2, l1)
-                        super().stepper.add_jacobian(4*n2 + j, 4*n2 + k, -self.JSS[k + 4, j + 4], l2)
+                        self.stepper.add_jacobian(4*n1 + j, 4*n1 + k, -self.JSS[k, j], l1)
+                        self.stepper.add_jacobian(4*n1 + j, 4*n2 + k, -self.JSS[k + 4, j], l1, l2)
+                        self.stepper.add_jacobian(4*n2 + j, 4*n1 + k, -self.JSS[k, j + 4], l2, l1)
+                        self.stepper.add_jacobian(4*n2 + j, 4*n2 + k, -self.JSS[k + 4, j + 4], l2)
