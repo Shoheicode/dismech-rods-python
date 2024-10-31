@@ -1,8 +1,12 @@
+from pythonsrc.globalDefinitions import SimParams
+from pythonsrc.rod_mechanics.force_container import ForceContainer
+from pythonsrc.solvers.solver_types import SolverType
+from pythonsrc.rod_mechanics.soft_robots import SoftRobots
 from pythonsrc.time_stepper.backward_euler import BackwardEuler
 
 
 class ImplicitMidpoint(BackwardEuler):
-    def __init__(self, soft_robots, forces, sim_params, solver_type):
+    def __init__(self, soft_robots: SoftRobots, forces: ForceContainer, sim_params: SimParams, solver_type: SolverType):
         super().__init__(soft_robots, forces, sim_params, solver_type)
 
     def step_forward_in_time(self):
