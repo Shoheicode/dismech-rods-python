@@ -111,9 +111,11 @@ def main():
 
     print(lis)
 
+    print("HIHIH", sim_params.integrator)
+
     soft_robots.setup()
 
-    # my_world = world(soft_robots, forces, sim_params)
+    my_world = world(soft_robots, forces, sim_params)
 
     # env : derSimulationEnvironment = None
 

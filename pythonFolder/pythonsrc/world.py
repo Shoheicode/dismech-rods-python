@@ -1,3 +1,4 @@
+from pythonsrc.time_stepper.implicit_midpoint import ImplicitMidpoint
 from pythonsrc.solvers.solver_types import SolverType
 from pythonsrc.time_stepper.backward_euler import BackwardEuler
 from pythonsrc.rod_mechanics.inner_forces.elastic_bending_force import ElasticBendingForce
@@ -33,7 +34,7 @@ class world:
         elif sim_params.integrator == IntegratorMethod.BACKWARD_EULER:
             self.stepper = BackwardEuler(soft_robots, forces, sim_params, SolverType.PARDISO_SOLVER)
         elif sim_params.integrator == IntegratorMethod.IMPLICIT_MIDPOINT:
-            self.stepper = None # ImplicitMidpoint(soft_robots, forces, sim_params, PARDISO_SOLVER)
+            self.stepper = ImplicitMidpoint(soft_robots, forces, sim_params, SolverType.PARDISO_SOLVER)
         else:
             raise ValueError(f"Unknown integrator type: {sim_params.integrator}")
 

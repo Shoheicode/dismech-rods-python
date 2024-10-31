@@ -1,6 +1,6 @@
 import numpy as np
 
-from pythonsrc.globalDefinitions import RenderParams, SimParams
+from pythonsrc.globalDefinitions import IntegratorMethod, RenderParams, SimParams
 from pythonsrc.logging.rod_node_logger import RodNodeLogger
 from pythonsrc.logging.worldLogger import WorldLogger
 from pythonsrc.rod_mechanics.force_container import ForceContainer
@@ -19,7 +19,7 @@ def get_robot_description(argc, argv,soft_robots:SoftRobots, forces: ForceContai
     sim_params.sim_time = 100
     sim_params.dtol = 1e-3
     sim_params.enable_2d_sim = True
-    sim_params.integrator = 'IMPLICIT_MIDPOINT'
+    sim_params.integrator = IntegratorMethod.IMPLICIT_MIDPOINT
 
     render_params.show_mat_frames = True
 
