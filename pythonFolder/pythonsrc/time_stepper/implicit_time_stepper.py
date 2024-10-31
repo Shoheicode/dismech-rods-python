@@ -63,7 +63,7 @@ class ImplicitTimeStepper(BaseTimeStepper):
         # Pure virtual method in C++; define it as abstract in subclasses.
         raise NotImplementedError("This method should be overridden in a subclass")
 
-    def line_search(self, dt):
+    def line_search_func(self, dt):
         # Pure virtual method in C++; define it as abstract in subclasses.
         raise NotImplementedError("This method should be overridden in a subclass")
 
