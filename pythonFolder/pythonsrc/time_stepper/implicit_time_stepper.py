@@ -1,9 +1,10 @@
 from base_time_stepper import BaseTimeStepper
-from solver_types import SolverType
 from typing import List, Tuple, Optional
 
+from pythonFolder.pythonsrc.solvers.solver_types import SolverType
+
 class ImplicitTimeStepper(BaseTimeStepper):
-    def __init__(self, soft_robots, forces, sim_params, solver_type):
+    def __init__(self, soft_robots, forces, sim_params, solver_type: SolverType):
         super().__init__(soft_robots, forces, sim_params)
         self.solver_type = solver_type
 

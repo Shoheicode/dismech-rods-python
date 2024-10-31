@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 from pythonsrc.rod_mechanics.soft_robots import SoftRobots
-from pythonsrc.time_stepper.basetimestepper import BaseTimeStepper
+from pythonFolder.pythonsrc.time_stepper.base_time_stepper import BaseTimeStepper
 
 class BaseForce(object):
     def __init__(self, soft_robots: SoftRobots):
