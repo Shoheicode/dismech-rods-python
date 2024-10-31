@@ -10,7 +10,7 @@ class HeadlessDERSimulationEnvironment(derSimulationEnvironment):
 
     def stepSimulation(self):
         try:
-            print("RUNNINGT STEP SIMULATION CODE")
+            # print("RUNNINGT STEP SIMULATION CODE")
             print(self.w_p.stepper)
             self.w_p.update_time_step()
         except RuntimeError as e:
@@ -19,7 +19,7 @@ class HeadlessDERSimulationEnvironment(derSimulationEnvironment):
             self.cleanShutdown()
             return
         
-        print("ESCAPED THE FIRST STATEMENT")
+        # print("ESCAPED THE FIRST STATEMENT")
 
         if self.is_logging:
             self.logger_p.log_world_data()

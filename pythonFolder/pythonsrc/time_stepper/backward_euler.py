@@ -72,7 +72,7 @@ class BackwardEuler(ImplicitTimeStepper):
                 else:
                     solved = True
 
-        print("SOLVED")
+        # print("SOLVED")
 
         return dt
 

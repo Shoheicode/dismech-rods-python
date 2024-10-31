@@ -63,8 +63,8 @@ class ElasticBendingForce(BaseForce):
     gradKappa2 = np.zeros((3, 3))
     relevantPart = np.zeros((3, 3))
     kappa = np.zeros((3, 3))
-    DDkappa1 = np.zeros((3, 3))
-    DDkappa2 = np.zeros((3, 3))
+    DDkappa1 = np.zeros((11, 11))
+    DDkappa2 = np.zeros((11, 11))
     Jbb = np.zeros((3, 3))
 
     EIMatrices: List[np.ndarray] = []
@@ -122,8 +122,8 @@ class ElasticBendingForce(BaseForce):
             # Append a zero matrix of shape (nv, 11) to both gradKappa1s and gradKappa2s
             self.gradKappa1s.append(np.zeros((nv, 11)))
             self.gradKappa2s.append(np.zeros((nv, 11)))
-            print(limb)
-            print("HIHIHI")
+            # print(limb)
+            # print("HIHIHI")
 
         for joint in self.getSoftRobots().joints:
             nb = joint.num_bending_combos
@@ -489,7 +489,7 @@ class ElasticBendingForce(BaseForce):
 
             joint_idx += 1
             
-    def crossMat(a):
+    def cross_mat(self, a):
         b = np.zeros((3, 3))
         b[0, 1] = -a[2]
         b[0, 2] = a[1]
@@ -577,9 +577,16 @@ class ElasticBendingForce(BaseForce):
         self.D2kappa2DfDthetaf = (1.0 / self.norm_f * ((0.5 * self.kb_local.dot(self.d2f)) * self.tilde_t
                                             + 1.0 / self.chi * np.cross(self.te, self.d2f)))
 
-        self.DDkappa1 = np.zeros((9, 9))
+        # print(self.DDkappa1)
+        self.DDkappa1 = np.zeros((11, 11))
         self.DDkappa1[0:3, 0:3] = self.D2kappa1De2
+        # print("RETTET")
+        # print(-self.D2kappa1De2 + self.D2kappa1DeDf)
         self.DDkappa1[0:3, 4:7] = -self.D2kappa1De2 + self.D2kappa1DeDf
+        # print("D2Kappa1dedf")
+        # print(-self.D2kappa1DeDf)
+        # print("GETING THIG")
+        # print(self.DDkappa1[0:3, 8:11])
         self.DDkappa1[0:3, 8:11] = -self.D2kappa1DeDf
         self.DDkappa1[4:7, 0:3] = -self.D2kappa1De2 + self.D2kappa1DfDe
         self.DDkappa1[4:7, 4:7] = self.D2kappa1De2 - self.D2kappa1DeDf - self.D2kappa1DfDe + self.D2kappa1Df2
@@ -599,7 +606,7 @@ class ElasticBendingForce(BaseForce):
         self.DDkappa1[4:7, 7] = self.D2kappa1DeDthetaf - self.D2kappa1DfDthetaf
         self.DDkappa1[8:11, 7] = self.D2kappa1DfDthetaf
 
-        self.DDkappa2 = np.zeros((9, 9))
+        self.DDkappa2 = np.zeros((11, 11))
         self.DDkappa2[0:3, 0:3] = self.D2kappa2De2
         self.DDkappa2[0:3, 4:7] = -self.D2kappa2De2 + self.D2kappa2DeDf
         self.DDkappa2[0:3, 8:11] = -self.D2kappa2DeDf

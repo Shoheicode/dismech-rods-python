@@ -30,7 +30,7 @@ class ImplicitMidpoint(BackwardEuler):
         if self.forces.cf:
             self.forces.cf.broad_phase_collision_detection()
 
-        print("NEWTON METHOD")
+        # print("NEWTON METHOD")
 
         # Compute position at T = t + 0.5 * dt
         self.dt = 2 * self.newton_method(0.5 * self.dt)
