@@ -24,4 +24,4 @@ class HeadlessDERSimulationEnvironment(derSimulationEnvironment):
 
     def runSimulation(self):
         while super().w_p.simulation_runing():
-            super().stepSimulation()
+            self.stepSimulation()
