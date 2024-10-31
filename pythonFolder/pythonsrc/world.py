@@ -69,7 +69,7 @@ class world:
         return self.curr_time
 
     def simulation_runing(self):
-        # print(self.curr_time)
+        print(self.total_time)
         if self.curr_time < self.total_time:
             return True
         else:
