@@ -1,5 +1,6 @@
 from typing import List
 import numpy as np
+from pythonsrc.controllers.base_controller import BaseController
 from pythonsrc.rod_mechanics.elastic_rod import ElasticRod
 from pythonsrc.rod_mechanics.elasticjoint import ElasticJoint
 
@@ -8,7 +9,7 @@ class SoftRobots():
     def __init__(self):
         self.limbs :List[ElasticRod] = [] # List of elastic rod (limbs)
         self.joints :List[ElasticJoint] = [] # List of elastic joints
-        self.controllers = []
+        self.controllers :List[BaseController] = []
         self.num_limbs = 0  # Counter to track the number of limbs
 
     # Method to add a limb using start and end points with other parameters
