@@ -152,3 +152,24 @@ class BackwardEuler(ImplicitTimeStepper):
 
         self.update_system_for_next_time_step()
         return self.dt
+    
+    def update_system_for_next_time_step(self):
+        self.prep_system_for_iteration()
+
+        # Update controllers
+        for controller in self.controllers:
+            controller.update_time_step(self.dt)
+
+        # Update limb information
+        for limb in self.limbs:
+            limb.d1_old = limb.d1
+            limb.d2_old = limb.d2
+            limb.tangent_old = limb.tangent
+            limb.ref_twist_old = limb.ref_twist
+
+        # Update joint information similarly
+        for joint in self.joints:
+            joint.d1_old = joint.d1
+            joint.d2_old = joint.d2
+            joint.tangents_old = joint.tangents
+            joint.ref_twist_old = joint.ref_twist
