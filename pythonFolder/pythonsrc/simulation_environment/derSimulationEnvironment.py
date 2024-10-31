@@ -2,6 +2,7 @@
 
 from abc import abstractmethod
 
+from pythonsrc.globalDefinitions import RenderParams
 from pythonsrc.logging.worldLogger import WorldLogger
 from pythonsrc.world import world
 
@@ -12,7 +13,7 @@ class derSimulationEnvironment(object):
     logger_p : WorldLogger = None
     is_logging = False
     cmdline_per: int = 0
-    def __init__(self, m_world, render_params, logger):
+    def __init__(self, m_world, render_params : RenderParams, logger):
         self.w_p = m_world
         if logger != None:
             self.is_logging = True
@@ -20,6 +21,8 @@ class derSimulationEnvironment(object):
         if self.is_logging:
             self.logger_p.world_ptr = self.w_p
             self.logger_p.setup()
+        
+        self.cmdline_per = render_params.cmd_line_per
 
     @abstractmethod
     def runSimulation():
@@ -33,7 +36,8 @@ class derSimulationEnvironment(object):
         """
         Helper method to make command line output consistent across environments.
         """
-        self.__class__.cmdlineOutputHelperStatic(self.w_p, self.cmdline_per)
+        print("RUNNING")
+        self.cmdlineOutputHelperStatic(self.w_p, self.cmdline_per)
 
     @staticmethod
     def cmdlineOutputHelperStatic(s_world_p: world, s_cmdline_per):
@@ -43,6 +47,7 @@ class derSimulationEnvironment(object):
         :param s_world_p: The world object.
         :param s_cmdline_per: The command line verbosity frequency.
         """
+        print("RINININGHIGI")
         if s_cmdline_per == 0: return
         if s_world_p.get_time_step() % s_cmdline_per == 0:
             s_world_p.print_sim_data()

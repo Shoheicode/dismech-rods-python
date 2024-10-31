@@ -24,6 +24,7 @@ class HeadlessDERSimulationEnvironment(derSimulationEnvironment):
         if self.is_logging:
             self.logger_p.log_world_data()
         
+        # print(self.cmdlineOutputHelper())
         self.cmdlineOutputHelper()
 
     def runSimulation(self):
