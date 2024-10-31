@@ -132,4 +132,23 @@ class BackwardEuler(ImplicitTimeStepper):
 
     def step_forward_in_time(self):
         # Override with time-stepping logic.
-        return 0.0  # Replace with the actual return value from the method's computation
+        self.dt = self.orig_dt
+
+        # Initial guess using the last solution
+        for limb in self.limbs:
+            limb.update_guess(0.01, self.dt)
+
+        # Perform collision detection if contact is enabled
+        if self.forces.cf:
+            self.forces.cf.broad_phase_collision_detection()
+
+        # Run Newton's method to find the next time step
+        self.dt = self.newton_method(self.dt)
+
+        # Update limb positions and velocities
+        for limb in self.limbs:
+            limb.u = (limb.x - limb.x0) / self.dt
+            limb.x0 = limb.x
+
+        self.update_system_for_next_time_step()
+        return self.dt
