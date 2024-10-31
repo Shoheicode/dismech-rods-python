@@ -27,8 +27,8 @@ class world:
         if sim_params.integrator not in [IntegratorMethod.FORWARD_EULER, IntegratorMethod.VERLET_POSITION]:
             self.forces.add_force(InertialForce(soft_robots))
 
-        print("FORCES")
-        print(self.forces.get_force())
+        # print("FORCES")
+        # print(self.forces.get_force())
 
         if sim_params.integrator == IntegratorMethod.FORWARD_EULER:
             self.stepper = None #ForwardEuler(soft_robots, forces, sim_params)

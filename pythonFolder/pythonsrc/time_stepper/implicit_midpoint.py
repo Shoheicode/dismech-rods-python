@@ -14,7 +14,7 @@ class ImplicitMidpoint(BackwardEuler):
         This method implements the specific time-stepping algorithm for the implicit midpoint.
         It should use the midpoint of the interval to compute the next time step.
         """
-        print("FORWARD IN TIME")
+        # print("FORWARD IN TIME")
         # Placeholder for the time-stepping implementation
         # Specific implicit midpoint step logic should be implemented here
         # Set initial time step
@@ -24,7 +24,7 @@ class ImplicitMidpoint(BackwardEuler):
         for limb in self.limbs:
             limb.update_guess(0.01, 0.5 * self.dt)
 
-        print(self.forces.cf)
+        # print(self.forces.cf)
 
         # Perform collision detection if contact is enabled
         if self.forces.cf:

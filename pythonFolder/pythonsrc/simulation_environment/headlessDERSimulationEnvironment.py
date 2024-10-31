@@ -11,7 +11,7 @@ class HeadlessDERSimulationEnvironment(derSimulationEnvironment):
     def stepSimulation(self):
         try:
             # print("RUNNINGT STEP SIMULATION CODE")
-            print(self.w_p.stepper)
+            # print(self.w_p.stepper)
             self.w_p.update_time_step()
         except RuntimeError as e:
             print("Caught a runtime error when trying to world->updateTimeStep: ", e)
