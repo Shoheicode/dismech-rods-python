@@ -1,5 +1,5 @@
-from pythonFolder.pythonsrc.solvers.solver_types import SolverType
-from pythonFolder.pythonsrc.time_stepper.backward_euler import BackwardEuler
+from pythonsrc.solvers.solver_types import SolverType
+from pythonsrc.time_stepper.backward_euler import BackwardEuler
 from pythonsrc.rod_mechanics.inner_forces.elastic_bending_force import ElasticBendingForce
 from pythonsrc.rod_mechanics.inner_forces.elastic_streching_force import ElasticStretchingForce
 from pythonsrc.rod_mechanics.inner_forces.elastic_twisting_force import ElasticTwistingForce

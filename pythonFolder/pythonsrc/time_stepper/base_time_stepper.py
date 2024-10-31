@@ -1,9 +1,9 @@
 import numpy as np
 from abc import ABC, abstractmethod
 
-from pythonFolder.pythonsrc.globalDefinitions import SimParams
-from pythonFolder.pythonsrc.rod_mechanics.force_container import ForceContainer
-from pythonFolder.pythonsrc.rod_mechanics.soft_robots import SoftRobots
+from pythonsrc.globalDefinitions import SimParams
+from pythonsrc.rod_mechanics.force_container import ForceContainer
+from pythonsrc.rod_mechanics.soft_robots import SoftRobots
 
 class BaseTimeStepper(ABC):
     def __init__(self, soft_robots: SoftRobots, forces: ForceContainer, sim_params: SimParams):
@@ -12,6 +12,19 @@ class BaseTimeStepper(ABC):
         self.sim_params = sim_params    # simParams equivalent
 
         self.freeDOF = 0
+
+        # References for shared objects
+        self.limbs = soft_robots.limbs        # Vector of shared_ptr<elasticRod>
+        self.joints = soft_robots.joints      # Vector of shared_ptr<elasticJoint>
+        self.controllers = soft_robots.controllers  # Vector of shared_ptr<baseController>
+
+        self.offsets = []                 # Equivalent to vector<int> offsets
+
+        for limb in self.limbs:
+            self.offsets.append(self.freeDOF)
+            self.freeDOF += limb.uncons
+
+        self.force = np.zeros(self.freeDOF)
         
         # Initialize variables
         self.dx = np.zeros(self.freeDOF)     # Equivalent to double* dx
@@ -21,13 +34,7 @@ class BaseTimeStepper(ABC):
         self.Jacobian = np.zeros((self.freeDOF, self.freeDOF))  # MatrixXd Jacobian
         
         self.freeDOF = self.freeDOF  # Integer for free degrees of freedom
-        self.offsets = []                 # Equivalent to vector<int> offsets
         self.iter = 0                     # Iteration count
-        
-        # References for shared objects
-        self.limbs = soft_robots.limbs        # Vector of shared_ptr<elasticRod>
-        self.joints = soft_robots.joints      # Vector of shared_ptr<elasticJoint>
-        self.controllers = soft_robots.controllers  # Vector of shared_ptr<baseController>
 
         self.mappedInd = None
         self.mappedInd1 = None

@@ -1,8 +1,8 @@
-from implicit_time_stepper import ImplicitTimeStepper
-from pythonFolder.pythonsrc.globalDefinitions import SimParams
-from pythonFolder.pythonsrc.rod_mechanics.force_container import ForceContainer
-from pythonFolder.pythonsrc.rod_mechanics.soft_robots import SoftRobots
-from pythonFolder.pythonsrc.solvers.solver_types import SolverType
+from pythonsrc.time_stepper.implicit_time_stepper import ImplicitTimeStepper
+from pythonsrc.globalDefinitions import SimParams
+from pythonsrc.rod_mechanics.force_container import ForceContainer
+from pythonsrc.rod_mechanics.soft_robots import SoftRobots
+from pythonsrc.solvers.solver_types import SolverType
 
 class BackwardEuler(ImplicitTimeStepper):
     def __init__(self, soft_robots: SoftRobots, forces: ForceContainer, sim_params: SimParams, solver_type: SolverType):
