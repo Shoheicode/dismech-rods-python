@@ -12,4 +12,33 @@ class ImplicitMidpoint(BackwardEuler):
         """
         # Placeholder for the time-stepping implementation
         # Specific implicit midpoint step logic should be implemented here
-        pass
+        # Set initial time step
+        self.dt = self.orig_dt
+
+        # Initial guess using last solution
+        for limb in self.limbs:
+            limb.update_guess(0.01, 0.5 * self.dt)
+
+        # Perform collision detection if contact is enabled
+        if self.forces.cf:
+            self.forces.cf.broad_phase_collision_detection()
+
+        # Compute position at T = t + 0.5 * dt
+        self.dt = 2 * self.newton_method(0.5 * self.dt)
+
+        for limb in self.limbs:
+            # Compute velocity at T = t + 0.5 * dt
+            limb.u = (limb.x - limb.x0) / (0.5 * self.dt)
+
+            # Compute position at T = t + dt
+            limb.x = 2 * limb.x - limb.x0
+            limb.x0 = limb.x
+
+            # Compute velocity at T = t + dt
+            limb.u = 2 * limb.u - limb.u0
+            limb.u0 = limb.u
+
+        # Update the system for the next time step
+        self.update_system_for_next_time_step()
+
+        return self.dt

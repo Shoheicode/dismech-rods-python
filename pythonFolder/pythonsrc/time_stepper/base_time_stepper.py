@@ -72,7 +72,6 @@ class BaseTimeStepper(ABC):
     def add_jacobian(self, ind1, ind2, p, limb_idx):
         pass
     
-    @abstractmethod
     def add_jacobian_2(self, ind1, ind2, p, limb_idx1, limb_idx2):
         pass
     
