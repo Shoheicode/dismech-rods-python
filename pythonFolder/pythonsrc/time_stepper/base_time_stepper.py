@@ -48,9 +48,8 @@ class BaseTimeStepper(ABC):
         self.force[ind] += p
     
     # Abstract methods (pure virtual in C++)
-    @abstractmethod
     def init_stepper(self):
-        pass
+        self.forces.setup_force_stepper_access(self)
     
     @abstractmethod
     def prep_system_for_iteration(self):

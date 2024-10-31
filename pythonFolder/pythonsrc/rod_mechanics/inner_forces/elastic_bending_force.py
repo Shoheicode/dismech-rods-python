@@ -109,7 +109,7 @@ class ElasticBendingForce(BaseForce):
     def __init__(self, soft_robots: SoftRobots):
         super().__init__(soft_robots)
         
-        for limb in super().getSoftRobots().limbs:
+        for limb in self.getSoftRobots().limbs:
             EI = limb.EI
             # Create a 2x2 matrix EIMat and append to EIMatrices
             EIMat = np.array([[EI, 0],
@@ -125,7 +125,7 @@ class ElasticBendingForce(BaseForce):
             print(limb)
             print("HIHIHI")
 
-        for joint in super().getSoftRobots().joints:
+        for joint in self.getSoftRobots().joints:
             nb = joint.num_bending_combos
             self.gradKappa1s.append(np.zeros((nb, 11)))
             self.gradKappa2s.append(np.zeros((nb, 11)))
@@ -149,7 +149,7 @@ class ElasticBendingForce(BaseForce):
     def compute_force(self, dt):
         limb_idx = 0
 
-        for limb in super().getSoftRobots().limbs:
+        for limb in self.getSoftRobots().limbs:
             self.gradKappa1 = self.gradKappa1s[limb_idx]
             self.gradKappa2 = self.gradKappa2s[limb_idx]
 
@@ -203,27 +203,27 @@ class ElasticBendingForce(BaseForce):
                     self.ci = 4 * i - 4
                     for k in range(11):
                         ind = self.ci + k
-                        super().stepper.add_force(ind, -self.f[k], limb_idx)
+                        self.stepper.add_force(ind, -self.f[k], limb_idx)
                 else:
                     n1, l1 = limb.joint_ids[i - 1]
                     n2, l2 = limb.joint_ids[i]
                     n3, l3 = limb.joint_ids[i + 1]
 
                     for k in range(3):
-                        super().stepper.add_force(4 * n1 + k, -self.f[k], l1)
-                        super().stepper.add_force(4 * n2 + k, -self.f[k + 4], l2)
-                        super().stepper.add_force(4 * n3 + k, -self.f[k + 8], l3)
+                        self.stepper.add_force(4 * n1 + k, -self.f[k], l1)
+                        self.stepper.add_force(4 * n2 + k, -self.f[k + 4], l2)
+                        self.stepper.add_force(4 * n3 + k, -self.f[k + 8], l3)
 
                     ci = 4 * i - 4
-                    super().stepper.add_force(ci + 3, -self.f[3], limb_idx)
-                    super().stepper.add_force(ci + 7, -self.f[7], limb_idx)
+                    self.stepper.add_force(ci + 3, -self.f[3], limb_idx)
+                    self.stepper.add_force(ci + 7, -self.f[7], limb_idx)
 
             limb_idx += 1
 
         joint_idx = 0
-        num_limbs = len(super().soft_robots.limbs)
+        num_limbs = len(self.soft_robots.limbs)
 
-        for joint in super().soft_robots.joints:
+        for joint in self.soft_robots.joints:
             curr_iter = 0
             self.gradKappa1 = self.gradKappa1s[num_limbs + joint_idx]
             self.gradKappa2 = self.gradKappa2s[num_limbs + joint_idx]
@@ -295,12 +295,12 @@ class ElasticBendingForce(BaseForce):
                     self.f = -np.dot(self.relevantPart, np.dot(self.EIMatrices[0], self.kappaL)) / joint.voronoi_len[curr_iter]
 
                     for k in range(3):
-                        super().stepper.add_force(4 * n1 + k, -self.f[k], l1)
-                        super().stepper.add_force(4 * n2 + k, -self.f[k + 4], l2)
-                        super().stepper.add_force(4 * n3 + k, -self.f[k + 8], l3)
+                        self.stepper.add_force(4 * n1 + k, -self.f[k], l1)
+                        self.stepper.add_force(4 * n2 + k, -self.f[k + 4], l2)
+                        self.stepper.add_force(4 * n3 + k, -self.f[k + 8], l3)
 
-                    super().stepper.add_force(theta1_i, -self.f[3] * sgn1, l1)
-                    super().stepper.add_force(theta2_i, -self.f[7] * sgn2, l3)
+                    self.stepper.add_force(theta1_i, -self.f[3] * sgn1, l1)
+                    self.stepper.add_force(theta2_i, -self.f[7] * sgn2, l3)
 
                     curr_iter += 1
 
@@ -311,7 +311,7 @@ class ElasticBendingForce(BaseForce):
 
         # Iterate through the limbs of the soft robot
         limb_idx = 0
-        for limb in super().soft_robots.limbs:
+        for limb in self.soft_robots.limbs:
             self.gradKappa1 = self.gradKappa1s[limb_idx]
             self.gradKappa2 = self.gradKappa2s[limb_idx]
             
@@ -369,17 +369,17 @@ class ElasticBendingForce(BaseForce):
 
                     for t in range(3):
                         for k in range(3):
-                            super().stepper.add_jacobian(4 * n1 + t, 4 * n1 + k, -self.Jbb[k, t], l1)
-                            super().stepper.add_jacobian(4 * n1 + t, 4 * n2 + k, -self.Jbb[k + 4, t], l1, l2)
-                            super().stepper.add_jacobian(4 * n1 + t, 4 * n3 + k, -self.Jbb[k + 8, t], l1, l3)
+                            self.stepper.add_jacobian(4 * n1 + t, 4 * n1 + k, -self.Jbb[k, t], l1)
+                            self.stepper.add_jacobian(4 * n1 + t, 4 * n2 + k, -self.Jbb[k + 4, t], l1, l2)
+                            self.stepper.add_jacobian(4 * n1 + t, 4 * n3 + k, -self.Jbb[k + 8, t], l1, l3)
 
-                            super().stepper.add_jacobian(4 * n2 + t, 4 * n1 + k, -self.Jbb[k, t + 4], l2, l1)
-                            super().stepper.add_jacobian(4 * n2 + t, 4 * n2 + k, -self.Jbb[k + 4, t + 4], l2)
-                            super().stepper.add_jacobian(4 * n2 + t, 4 * n3 + k, -self.Jbb[k + 8, t + 4], l2, l3)
+                            self.stepper.add_jacobian(4 * n2 + t, 4 * n1 + k, -self.Jbb[k, t + 4], l2, l1)
+                            self.stepper.add_jacobian(4 * n2 + t, 4 * n2 + k, -self.Jbb[k + 4, t + 4], l2)
+                            self.stepper.add_jacobian(4 * n2 + t, 4 * n3 + k, -self.Jbb[k + 8, t + 4], l2, l3)
 
-                            super().stepper.add_jacobian(4 * n3 + t, 4 * n1 + k, -self.Jbb[k, t + 8], l3, l1)
-                            super().stepper.add_jacobian(4 * n3 + t, 4 * n2 + k, -self.Jbb[k + 4, t + 8], l3, l2)
-                            super().stepper.add_jacobian(4 * n3 + t, 4 * n3 + k, -self.Jbb[k + 8, t + 8], l3)
+                            self.stepper.add_jacobian(4 * n3 + t, 4 * n1 + k, -self.Jbb[k, t + 8], l3, l1)
+                            self.stepper.add_jacobian(4 * n3 + t, 4 * n2 + k, -self.Jbb[k + 4, t + 8], l3, l2)
+                            self.stepper.add_jacobian(4 * n3 + t, 4 * n3 + k, -self.Jbb[k + 8, t + 8], l3)
 
                     ci = 4 * (i - 1)
                     n1_i = 4 * n1
@@ -387,30 +387,30 @@ class ElasticBendingForce(BaseForce):
                     n3_i = 4 * n3
 
                     for k in range(3):
-                        super().stepper.add_jacobian(ci + 3, n1_i + k, -self.Jbb[k, 3], limb_idx, l1)
-                        super().stepper.add_jacobian(n1_i + k, ci + 3, -self.Jbb[3, k], l1, limb_idx)
-                        super().stepper.add_jacobian(ci + 3, n2_i + k, -self.Jbb[k + 4, 3], limb_idx, l2)
-                        super().stepper.add_jacobian(n2_i + k, ci + 3, -self.Jbb[3, k + 4], l2, limb_idx)
-                        super().stepper.add_jacobian(ci + 3, n3_i + k, -self.Jbb[k + 8, 3], limb_idx, l3)
-                        super().stepper.add_jacobian(n3_i + k, ci + 3, -self.Jbb[3, k + 8], l3, limb_idx)
-                        super().stepper.add_jacobian(ci + 7, n1_i + k, -self.Jbb[k, 7], limb_idx, l1)
-                        super().stepper.add_jacobian(n1_i + k, ci + 7, -self.Jbb[7, k], l1, limb_idx)
-                        super().stepper.add_jacobian(ci + 7, n2_i + k, -self.Jbb[k + 4, 7], limb_idx, l2)
-                        super().stepper.add_jacobian(n2_i + k, ci + 7, -self.Jbb[7, k + 4], l2, limb_idx)
-                        super().stepper.add_jacobian(ci + 7, n3_i + k, -self.Jbb[k + 8, 3], limb_idx, l3)
-                        super().stepper.add_jacobian(n3_i + k, ci + 7, -self.Jbb[7, k + 8], l3, limb_idx)
+                        self.stepper.add_jacobian(ci + 3, n1_i + k, -self.Jbb[k, 3], limb_idx, l1)
+                        self.stepper.add_jacobian(n1_i + k, ci + 3, -self.Jbb[3, k], l1, limb_idx)
+                        self.stepper.add_jacobian(ci + 3, n2_i + k, -self.Jbb[k + 4, 3], limb_idx, l2)
+                        self.stepper.add_jacobian(n2_i + k, ci + 3, -self.Jbb[3, k + 4], l2, limb_idx)
+                        self.stepper.add_jacobian(ci + 3, n3_i + k, -self.Jbb[k + 8, 3], limb_idx, l3)
+                        self.stepper.add_jacobian(n3_i + k, ci + 3, -self.Jbb[3, k + 8], l3, limb_idx)
+                        self.stepper.add_jacobian(ci + 7, n1_i + k, -self.Jbb[k, 7], limb_idx, l1)
+                        self.stepper.add_jacobian(n1_i + k, ci + 7, -self.Jbb[7, k], l1, limb_idx)
+                        self.stepper.add_jacobian(ci + 7, n2_i + k, -self.Jbb[k + 4, 7], limb_idx, l2)
+                        self.stepper.add_jacobian(n2_i + k, ci + 7, -self.Jbb[7, k + 4], l2, limb_idx)
+                        self.stepper.add_jacobian(ci + 7, n3_i + k, -self.Jbb[k + 8, 3], limb_idx, l3)
+                        self.stepper.add_jacobian(n3_i + k, ci + 7, -self.Jbb[7, k + 8], l3, limb_idx)
 
-                    super().stepper.add_jacobian(ci + 3, ci + 3, -self.Jbb[3, 3], limb_idx)
-                    super().stepper.add_jacobian(ci + 3, ci + 7, -self.Jbb[7, 3], limb_idx)
-                    super().stepper.add_jacobian(ci + 7, ci + 3, -self.Jbb[3, 7], limb_idx)
-                    super().stepper.add_jacobian(ci + 7, ci + 7, -self.Jbb[7, 7], limb_idx)
+                    self.stepper.add_jacobian(ci + 3, ci + 3, -self.Jbb[3, 3], limb_idx)
+                    self.stepper.add_jacobian(ci + 3, ci + 7, -self.Jbb[7, 3], limb_idx)
+                    self.stepper.add_jacobian(ci + 7, ci + 3, -self.Jbb[3, 7], limb_idx)
+                    self.stepper.add_jacobian(ci + 7, ci + 7, -self.Jbb[7, 7], limb_idx)
 
             limb_idx += 1
 
         # Iterate through the joints
         joint_idx = 0
-        num_limbs = len(super().soft_robots.limbs)
-        for joint in super().soft_robots.joints:
+        num_limbs = len(self.soft_robots.limbs)
+        for joint in self.soft_robots.joints:
             curr_iter = 0
             self.gradKappa1 = self.gradKappa1s[num_limbs + joint_idx]
             self.gradKappa2 = self.gradKappa2s[num_limbs + joint_idx]
@@ -465,25 +465,25 @@ class ElasticBendingForce(BaseForce):
                     # NEED TO ADD THE NODAL FORCE CODE
                     for t in range(3):
                         for k in range(3):
-                            super().stepper.add_jacobian(4*n1+t, 4*n1+k, -self.Jbb[k, t], l1)
-                            super().stepper.add_jacobian(4*n1+t, 4*n2+k, -self.Jbb[k+4, t], l1, l2)
-                            super().stepper.add_jacobian(4*n1+t, 4*n3+k, -self.Jbb[k+8, t], l1, l3)
+                            self.stepper.add_jacobian(4*n1+t, 4*n1+k, -self.Jbb[k, t], l1)
+                            self.stepper.add_jacobian(4*n1+t, 4*n2+k, -self.Jbb[k+4, t], l1, l2)
+                            self.stepper.add_jacobian(4*n1+t, 4*n3+k, -self.Jbb[k+8, t], l1, l3)
 
-                            super().stepper.add_jacobian(4*n2+t, 4*n1+k, -self.Jbb[k, t+4], l2, l1)
-                            super().stepper.add_jacobian(4*n2+t, 4*n2+k, -self.Jbb[k+4, t+4], l2)
-                            super().stepper.add_jacobian(4*n2+t, 4*n3+k, -self.Jbb[k+8, t+4], l2, l3)
+                            self.stepper.add_jacobian(4*n2+t, 4*n1+k, -self.Jbb[k, t+4], l2, l1)
+                            self.stepper.add_jacobian(4*n2+t, 4*n2+k, -self.Jbb[k+4, t+4], l2)
+                            self.stepper.add_jacobian(4*n2+t, 4*n3+k, -self.Jbb[k+8, t+4], l2, l3)
 
-                            super().stepper.add_jacobian(4*n3+t, 4*n1+k, -self.Jbb[k, t+8], l3, l1)
-                            super().stepper.add_jacobian(4*n3+t, 4*n2+k, -self.Jbb[k+4, t+8], l3, l2)
-                            super().stepper.add_jacobian(4*n3+t, 4*n3+k, -self.Jbb[k+8, t+8], l3)
+                            self.stepper.add_jacobian(4*n3+t, 4*n1+k, -self.Jbb[k, t+8], l3, l1)
+                            self.stepper.add_jacobian(4*n3+t, 4*n2+k, -self.Jbb[k+4, t+8], l3, l2)
+                            self.stepper.add_jacobian(4*n3+t, 4*n3+k, -self.Jbb[k+8, t+8], l3)
 
                     if theta1_i is not None and theta2_i is not None:
                         # Add thetheta jacobians
                         for k in range(3):
-                            super().stepper.add_jacobian(theta1_i, 4*n1+k, -self.Jbb[k, 3], l1)
-                            super().stepper.add_jacobian(4*n1+k, theta1_i, -self.Jbb[3, k], l1)
-                            super().stepper.add_jacobian(theta2_i, 4*n3+k, -self.Jbb[k+8, 7], l3)
-                            super().stepper.add_jacobian(4*n3+k, theta2_i, -self.Jbb[7, k+8], l3)
+                            self.stepper.add_jacobian(theta1_i, 4*n1+k, -self.Jbb[k, 3], l1)
+                            self.stepper.add_jacobian(4*n1+k, theta1_i, -self.Jbb[3, k], l1)
+                            self.stepper.add_jacobian(theta2_i, 4*n3+k, -self.Jbb[k+8, 7], l3)
+                            self.stepper.add_jacobian(4*n3+k, theta2_i, -self.Jbb[7, k+8], l3)
 
                     curr_iter += 1
 
