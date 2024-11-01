@@ -71,7 +71,7 @@ class ElasticRod:
         self.setup(nodes)
         
         # Initialize state vectors
-        self.x0 = np.zeros(self.ndof)  # Previous timestep DOFs
+        # self.x0 = np.zeros(self.ndof)  # Previous timestep DOFs
         # self.x = np.zeros(self.ndof)   # Current timestep DOFs
         # self.x_ls = np.zeros(self.ndof)  # Line search state
         # self.u0 = np.zeros(self.ndof)  # Previous timestep velocities
@@ -127,9 +127,9 @@ class ElasticRod:
         # Initialize twists and curvatures
         self.ref_twist = np.zeros(self.ne)
 
-        self.__set_reference_length()
-
         self.__set_mass()
+
+        self.__set_reference_length()
 
         self.__compute_tangent()
 
