@@ -30,7 +30,7 @@ class BaseTimeStepper(ABC):
         # Initialize variables
         self.dx = np.zeros(self.freeDOF)     # Equivalent to double* dx
         self.force = np.zeros(self.freeDOF)  # Equivalent to double* force
-        self.Force = np.zeros(self.freeDOF)  # Map<VectorXd> Force
+        self.Force = self.force  # Map<VectorXd> Force
         self.DX = np.zeros(self.freeDOF)     # Map<VectorXd> DX
         self.Jacobian = np.zeros((self.freeDOF, self.freeDOF))  # MatrixXd Jacobian
         
@@ -64,6 +64,7 @@ class BaseTimeStepper(ABC):
     
     # Abstract methods (pure virtual in C++)
     def init_stepper(self):
+        print("IO AJKLJ")
         self.forces.setup_force_stepper_access(self)
     
     @abstractmethod
@@ -104,7 +105,7 @@ class BaseTimeStepper(ABC):
         self.force = np.zeros(self.freeDOF)
         self.dx = np.zeros(self.freeDOF)
 
-        self.Force = self.force
+        # self.Force = self.force
     
     @abstractmethod
     def integrator(self):

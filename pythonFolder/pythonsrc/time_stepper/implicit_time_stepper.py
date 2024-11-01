@@ -1,4 +1,5 @@
 import numpy as np
+from pythonsrc.solvers.pardiso_solver import PardisoSolver
 from pythonsrc.solvers.base_solver import BaseSolver
 from pythonsrc.rod_mechanics.elastic_rod import ElasticRod
 from pythonsrc.globalDefinitions import IntegratorMethod, SimParams
@@ -94,14 +95,17 @@ class ImplicitTimeStepper(BaseTimeStepper):
         self.Jacobian.fill(0)
 
     def integrator(self):
-        # Integrate using this timestepper.
+        # Integrate using this timestepper
+        print(self.solver)
         self.solver.integrator()
 
     def init_stepper(self):
+        print("IMPLICIT TIME STOPPER")
         # Initialize the stepper; set any parameters or configurations.
         super().init_stepper()
         if self.solver_type == "PARDISO_SOLVER":
-            self.solver = SolverType.PARDISO_SOLVER
+            print("PAR SOLVER")
+            self.solver = PardisoSolver(self)# SolverType.PARDISO_SOLVER
             self.ia = np.zeros(self.freeDOF + 1, dtype=int)
             self.ia[0] = 1
         elif self.solver_type == "DGBSV_SOLVER":

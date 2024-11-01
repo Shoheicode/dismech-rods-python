@@ -23,6 +23,7 @@ class ForceContainer:
 
     def setup_force_stepper_access(self, stepper):
         for force in self.__forces:
+            print(force)
             force.set_time_stepper(stepper)
     
     def add_force(self,force: BaseForce):

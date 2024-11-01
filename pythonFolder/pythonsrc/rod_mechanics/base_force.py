@@ -24,4 +24,5 @@ class BaseForce(object):
         return self.stepper
 
     def set_time_stepper(self, stepper):
+        print(stepper)
         self.stepper = stepper

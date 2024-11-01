@@ -39,6 +39,7 @@ class ElasticStretchingForce(BaseForce):
                 self.f = limb.EA * limb.tangent[i, :] * self.epsX  # NumPy row access
 
                 # Apply forces to the start and end nodes of the edge
+                # print("STEPPER", self.stepper)
                 for k in range(3):
                     ind = 4 * i + k  # Index for the first node
                     self.stepper.add_force(ind, -self.f[k], limb_idx)  # Subtract elastic force
