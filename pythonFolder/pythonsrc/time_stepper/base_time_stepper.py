@@ -72,7 +72,7 @@ class BaseTimeStepper(ABC):
         pass
 
     def prep_system_for_iteration(self):
-        # print("HIHIH")
+        print("HIHIH")
         for self.joint in self.joints:
             self.joint.prep_limbs()
         for self.limb in self.limbs:
@@ -94,6 +94,7 @@ class BaseTimeStepper(ABC):
 
     def update(self):
         """Recalculate degrees of freedom, offsets, and reset force and dx arrays."""
+        print("UPDATE 2 is running")
         self.freeDOF = 0
         self.offsets = []
         
@@ -105,7 +106,7 @@ class BaseTimeStepper(ABC):
         self.force = np.zeros(self.freeDOF)
         self.dx = np.zeros(self.freeDOF)
 
-        # self.Force = self.force
+        self.Force = self.force
     
     @abstractmethod
     def integrator(self):

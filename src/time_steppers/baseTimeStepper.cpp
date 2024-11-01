@@ -19,6 +19,7 @@ baseTimeStepper::baseTimeStepper(const shared_ptr<softRobots>& soft_robots,
 
     dx = new double[freeDOF]{0};
     new (&DX) Map<VectorXd>(dx, freeDOF);
+    
 }
 
 

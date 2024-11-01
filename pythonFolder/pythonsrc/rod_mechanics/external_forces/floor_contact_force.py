@@ -1,5 +1,6 @@
 import numpy as np
 
+from pythonsrc.rod_mechanics.external_forces.symbolic_equations import SymbolicEquations
 from pythonsrc.rod_mechanics.base_force import BaseForce
 
 class FloorContactForce(BaseForce):
@@ -18,7 +19,7 @@ class FloorContactForce(BaseForce):
         self.K1 = 0.0
         self.K2 = 0.0
         self.contact_stiffness = 0.0
-        self.sym_eqs = symbolicEquations()  # Assuming symbolicEquations is implemented
+        self.sym_eqs = SymbolicEquations()  # Assuming symbolicEquations is implemented
 
         # Vector and matrix initialization
         self.contact_input = np.zeros(2)

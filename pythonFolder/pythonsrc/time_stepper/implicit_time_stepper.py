@@ -96,7 +96,7 @@ class ImplicitTimeStepper(BaseTimeStepper):
 
     def integrator(self):
         # Integrate using this timestepper
-        print(self.solver)
+        print("This is my solver:", self.solver_type)
         self.solver.integrator()
 
     def init_stepper(self):

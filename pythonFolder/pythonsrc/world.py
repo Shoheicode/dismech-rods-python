@@ -41,14 +41,17 @@ class world:
         else:
             raise ValueError(f"Unknown integrator type: {sim_params.integrator}")
 
+        print("ININININI")
         self.stepper.init_stepper()
 
         if sim_params.enable_2d_sim:
             for limb in soft_robots.limbs:
                 limb.enable_2d_sim()
 
+        print("UPDATE CONS")
         self.update_cons()
 
+        print("UPDATE SYSTEM FOR NEXT TIME STEP")
         self.stepper.update_system_for_next_time_step()
 
     def update_time_step(self):
