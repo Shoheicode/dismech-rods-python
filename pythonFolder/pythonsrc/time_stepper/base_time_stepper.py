@@ -86,7 +86,7 @@ class BaseTimeStepper(ABC):
 
     def set_zero(self):
         """Set the Force array to zero."""
-        self.force.fill(0)
+        self.Force.fill(0)
     
     @abstractmethod
     def update(self):

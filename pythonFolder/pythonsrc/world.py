@@ -117,6 +117,7 @@ class world:
     def update_cons(self):
         for limb in self.soft_robots.limbs:
             limb.update_map()
+        print("UPDATE STEPPER VALUES")
         self.stepper.update()
 
     

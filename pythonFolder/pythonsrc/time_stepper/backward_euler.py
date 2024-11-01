@@ -163,9 +163,11 @@ class BackwardEuler(ImplicitTimeStepper):
         return self.dt
     
     def update_system_for_next_time_step(self):
+        print("BACK WARD EULER RIGHT")
         self.prep_system_for_iteration()
 
         # Update controllers
+        # print(self.controllers)
         for controller in self.controllers:
             controller.update_time_step(self.dt)
 
