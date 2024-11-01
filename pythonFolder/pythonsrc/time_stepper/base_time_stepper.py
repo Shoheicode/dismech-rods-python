@@ -25,7 +25,7 @@ class BaseTimeStepper(ABC):
             self.offsets.append(self.freeDOF)
             self.freeDOF += limb.uncons
 
-        self.force = np.zeros(self.freeDOF)
+        # self.force = np.zeros(self.freeDOF)
         
         # Initialize variables
         self.dx = np.zeros(self.freeDOF)     # Equivalent to double* dx
@@ -54,6 +54,7 @@ class BaseTimeStepper(ABC):
             p (float): Force value to add.
             limb_idx (int): Index of the limb.
         """
+        # print("HIHIHI")
         limb:ElasticRod = self.limbs[limb_idx]
         offset = self.offsets[limb_idx]
 
@@ -70,6 +71,7 @@ class BaseTimeStepper(ABC):
         pass
 
     def prep_system_for_iteration(self):
+        # print("HIHIH")
         for self.joint in self.joints:
             self.joint.prep_limbs()
         for self.limb in self.limbs:
@@ -101,6 +103,8 @@ class BaseTimeStepper(ABC):
         # Reset force and dx arrays
         self.force = np.zeros(self.freeDOF)
         self.dx = np.zeros(self.freeDOF)
+
+        self.Force = self.force
     
     @abstractmethod
     def integrator(self):
