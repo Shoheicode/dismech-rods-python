@@ -38,6 +38,8 @@ def get_robot_description(argc, argv,soft_robots:SoftRobots, forces: ForceContai
     # Read initial velocity values
     velocities = load_txt("examples/cantilever_case/cantilever_init_velocity_n=201.txt")
 
+    # print("VEL", velocities)
+
     # Apply the velocities
     soft_robots.applyInitialVelocities(0, velocities)
 

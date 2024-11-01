@@ -110,9 +110,7 @@ def main():
     lis = get_robot_description(None, sys.argv, soft_robots, forces, logger, sim_params, render_params)
 
     # soft_robots = lis[0]
-    print("SOFT ROBOT:", soft_robots.limbs[0].ref_len)
-
-    # print("HIHIH", sim_params.integrator)
+    print("SOFT ROBOT:", soft_robots.limbs[0].youngM)
 
     soft_robots.setup()
 
