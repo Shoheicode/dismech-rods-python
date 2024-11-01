@@ -1,6 +1,7 @@
 import numpy as np
 from abc import ABC, abstractmethod
 
+from pythonsrc.rod_mechanics.elastic_rod import ElasticRod
 from pythonsrc.globalDefinitions import SimParams
 from pythonsrc.rod_mechanics.force_container import ForceContainer
 from pythonsrc.rod_mechanics.soft_robots import SoftRobots
@@ -45,7 +46,20 @@ class BaseTimeStepper(ABC):
     
     # Add force to the system
     def add_force(self, ind, p, limb_idx):
-        self.force[ind] += p
+        """
+        Add a force to a specific degree of freedom for a given limb.
+        
+        Parameters:
+            ind (int): Index of the degree of freedom.
+            p (float): Force value to add.
+            limb_idx (int): Index of the limb.
+        """
+        limb:ElasticRod = self.limbs[limb_idx]
+        offset = self.offsets[limb_idx]
+
+        if limb.is_constrained[ind] == 0:  # Free DOF
+            mapped_ind = limb.full_to_uncons_map[ind]
+            self.force[mapped_ind + offset] += p
     
     # Abstract methods (pure virtual in C++)
     def init_stepper(self):
@@ -54,14 +68,39 @@ class BaseTimeStepper(ABC):
     @abstractmethod
     def prep_system_for_iteration(self):
         pass
+
+    def prep_system_for_iteration(self):
+        for self.joint in self.joints:
+            self.joint.prep_limbs()
+        for self.limb in self.limbs:
+            self.limb.prepare_for_iteration()
+        for self.joint in self.joints:
+            self.joint.prepare_for_iteration()
     
     @abstractmethod
     def set_zero(self):
         pass
+
+    def set_zero(self):
+        """Set the Force array to zero."""
+        self.force.fill(0)
     
     @abstractmethod
     def update(self):
         pass
+
+    def update(self):
+        """Recalculate degrees of freedom, offsets, and reset force and dx arrays."""
+        self.freeDOF = 0
+        self.offsets = []
+        
+        for limb in self.limbs:
+            self.offsets.append(self.freeDOF)
+            self.freeDOF += limb.uncons
+        
+        # Reset force and dx arrays
+        self.force = np.zeros(self.freeDOF)
+        self.dx = np.zeros(self.freeDOF)
     
     @abstractmethod
     def integrator(self):
@@ -75,6 +114,9 @@ class BaseTimeStepper(ABC):
         pass
     
     @abstractmethod
+    def update_system_for_next_time_step(self):
+        pass
+
     def update_system_for_next_time_step(self):
         pass
     

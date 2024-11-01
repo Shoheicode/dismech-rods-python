@@ -375,7 +375,7 @@ class ElasticRod:
             t0 = self.tangent_old[i]
             t1 = self.tangent[i]
             d1_vector = np.zeros(3)
-            d1_vector = self.__parallel_transport(self.d1_old[i], t0, t1, d1_vector)
+            d1_vector = self.__parallel_transport(self, self.d1_old[i], t0, t1, d1_vector)
             self.d1[i] = d1_vector
             self.d2[i] = np.cross(t1, d1_vector)
 

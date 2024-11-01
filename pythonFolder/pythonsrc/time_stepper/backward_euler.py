@@ -21,7 +21,7 @@ class BackwardEuler(ImplicitTimeStepper):
         solved = False
         self.iter = 0
 
-        # print("NEWTON METHOD RUNNING")
+        print("NEWTON METHOD RUNNING")
 
         while not solved:
             self.prep_system_for_iteration()
@@ -36,12 +36,14 @@ class BackwardEuler(ImplicitTimeStepper):
 
             # Force tolerance check
             if normf <= normf0 * self.ftol:
+                print("NORMF")
                 solved = True
                 self.iter += 1
                 continue
 
             # Adaptive time stepping if enabled
             if self.adaptive_time_stepping and self.iter != 0 and self.iter % self.adaptive_time_stepping_threshold == 0:
+                print("ADAPTIVE")
                 dt *= 0.5
                 for limb in self.limbs:
                     limb.update_guess(0.01, dt)
@@ -59,6 +61,10 @@ class BackwardEuler(ImplicitTimeStepper):
                 curr_dx = limb.update_newton_x(self.dx, self.offsets[idx], self.alpha)
                 max_dx = max(max_dx, curr_dx)
 
+            print("MAX DX:", max_dx)
+            print("dt:", dt)
+            print("dt:", self.dtol)
+
             # Dynamics tolerance check
             if max_dx / dt < self.dtol:
                 solved = True
@@ -75,7 +81,7 @@ class BackwardEuler(ImplicitTimeStepper):
                 else:
                     solved = True
 
-        # print("SOLVED")
+        print(iter)
 
         return dt
 
