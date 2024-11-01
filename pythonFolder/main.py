@@ -109,7 +109,8 @@ def main():
 
     lis = get_robot_description(None, sys.argv, soft_robots, forces, logger, sim_params, render_params)
 
-    print(lis)
+    # soft_robots = lis[0]
+    print("SOFT ROBOT:", soft_robots.limbs[0].ref_len)
 
     # print("HIHIH", sim_params.integrator)
 
@@ -119,17 +120,17 @@ def main():
 
     env : derSimulationEnvironment = None
 
-    match render_params.renderer:
-        case RenderEngine.HEADLESS:
-            print("HEADLESS")
-            env = HeadlessDERSimulationEnvironment(my_world, render_params, logger)
-        case RenderEngine.OPENGL:
-            print("OPTION 2 selected")
-            return "Option 2 selected"
-        case _:
-            raise RuntimeError("Unknown renderer type provided")
+    # match render_params.renderer:
+    #     case RenderEngine.HEADLESS:
+    #         print("HEADLESS")
+    #         env = HeadlessDERSimulationEnvironment(my_world, render_params, logger)
+    #     case RenderEngine.OPENGL:
+    #         print("OPTION 2 selected")
+    #         return "Option 2 selected"
+    #     case _:
+    #         raise RuntimeError("Unknown renderer type provided")
         
-    env.runSimulation()
+    # env.runSimulation()
 
     exit(0)
     

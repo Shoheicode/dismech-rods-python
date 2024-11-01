@@ -127,9 +127,9 @@ class ElasticRod:
         # Initialize twists and curvatures
         self.ref_twist = np.zeros(self.ne)
 
-        self.__set_mass()
-
         self.__set_reference_length()
+
+        self.__set_mass()
 
         self.__compute_tangent()
 
@@ -280,7 +280,7 @@ class ElasticRod:
             else:
                 raise ValueError("Tried removing DOFs at the midpoint of an edge.")
         else:
-            self.isDOFJoint[4 * node_num: 4 * node_num + 3] = 2
+            self.is_dof_joint[4 * node_num: 4 * node_num + 3] = 2
 
             if node_num == 0:
                 self.is_node_joint[0] = 2
