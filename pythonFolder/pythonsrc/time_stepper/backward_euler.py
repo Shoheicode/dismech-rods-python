@@ -21,6 +21,8 @@ class BackwardEuler(ImplicitTimeStepper):
         solved = False
         self.iter = 0
 
+        # print("NEWTON METHOD RUNNING")
+
         while not solved:
             self.prep_system_for_iteration()
             self.forces.compute_forces_and_jacobian(dt)

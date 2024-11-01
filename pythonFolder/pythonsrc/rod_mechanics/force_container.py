@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, cast
 
 from pythonsrc.rod_mechanics.external_forces.contact_force import ContactForce
 from pythonsrc.rod_mechanics.external_forces.floor_contact_force import FloorContactForce
@@ -25,11 +25,13 @@ class ForceContainer:
         for force in self.__forces:
             force.set_time_stepper(stepper)
     
-    def add_force(self,force):
-        if self.cf == None:
-            cf = force # NEED TO TYPE CAST THIS TO A CONTACT FORCE
-        if self.ff == None:
-            ff = force # NEED TO TYPE CASE THIS AS A FLOOR CONTACT FORCE
+    def add_force(self,force: BaseForce):
+        if self.cf == None and isinstance(force, ContactForce):
+            print("HIHIH")
+            self.cf = force # NEED TO TYPE CAST THIS TO A CONTACT FORCE
+            print(self.cf)
+        if self.ff == None and isinstance(force, ContactForce):
+            self.ff = force # NEED TO TYPE CASE THIS AS A FLOOR CONTACT FORCE
         
         self.__forces.append(force)
 

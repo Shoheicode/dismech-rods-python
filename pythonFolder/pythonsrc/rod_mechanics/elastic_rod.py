@@ -342,18 +342,18 @@ class ElasticRod:
                 self.mass_array[4 * i + 3] = (self.rod_radius ** 2) * dm / 2.0
 
     def __set_reference_length(self):
-        ref_len = np.zeros(self.ne)
+        self.ref_len = np.zeros(self.ne)
         for i in range(self.ne):
-            ref_len[i] = np.linalg.norm(self.x[4*(i+1):4*(i+1)+3] - self.x[4*i:4*i+3])
+            self.ref_len[i] = np.linalg.norm(self.x[4*(i+1):4*(i+1)+3] - self.x[4*i:4*i+3])
 
         self.voronoi_len = np.zeros(self.nv)
         for i in range(self.nv):
             if i == 0:
-                self.voronoi_len[i] = 0.5 * ref_len[i]
+                self.voronoi_len[i] = 0.5 * self.ref_len[i]
             elif i == self.nv - 1:
-                self.voronoi_len[i] = 0.5 * ref_len[i - 1]
+                self.voronoi_len[i] = 0.5 * self.ref_len[i - 1]
             else:
-                self.voronoi_len[i] = 0.5 * (ref_len[i - 1] + ref_len[i])
+                self.voronoi_len[i] = 0.5 * (self.ref_len[i - 1] + self.ref_len[i])
 
     def __compute_tangent(self):
         for i in range(self.ne):

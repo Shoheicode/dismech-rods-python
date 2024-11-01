@@ -1,5 +1,6 @@
 import numpy as np
 
+from pythonsrc.rod_mechanics.external_forces.collision_dector import CollisionDetector
 from pythonsrc.rod_mechanics.base_force import BaseForce
 
 class ContactForce(BaseForce):
