@@ -111,7 +111,7 @@ def main():
 
     print(lis)
 
-    print("HIHIH", sim_params.integrator)
+    # print("HIHIH", sim_params.integrator)
 
     soft_robots.setup()
 

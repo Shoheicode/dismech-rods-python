@@ -29,6 +29,7 @@ class ElasticRod:
         """
         self.limb_idx = limb_idx
         if nodes == None:
+            print("WITHOUT NODES")
             self.nv = num_nodes
             self.ne = num_nodes - 1
             self.ndof = num_nodes * 4 - 1
@@ -43,6 +44,7 @@ class ElasticRod:
             nodes = [start + i * dir_vec for i in range(num_nodes)]       
         else:
             # Constructor with pre-defined nodes
+            print("NODES")
             self.nv = len(nodes)
             self.ne = self.nv - 1
             self.ndof = len(nodes) * 4 - 1

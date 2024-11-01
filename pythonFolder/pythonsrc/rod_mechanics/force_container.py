@@ -28,7 +28,7 @@ class ForceContainer:
     
     def add_force(self,force: BaseForce):
         if self.cf == None and isinstance(force, ContactForce):
-            print("HIHIH")
+            # print("HIHIH")
             self.cf = force # NEED TO TYPE CAST THIS TO A CONTACT FORCE
             print(self.cf)
         if self.ff == None and isinstance(force, ContactForce):

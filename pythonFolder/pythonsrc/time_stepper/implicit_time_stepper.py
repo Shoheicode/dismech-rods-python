@@ -119,7 +119,7 @@ class ImplicitTimeStepper(BaseTimeStepper):
 
     def prep_system_for_iteration(self):
         # Prepare the system for the next iteration.
-        print("PREP")
+        # print("PREP")
         super().prep_system_for_iteration()
         self.set_zero()
 
