@@ -39,6 +39,8 @@ class ImplicitMidpoint(BackwardEuler):
             # Compute velocity at T = t + 0.5 * dt
             limb.u = (limb.x - limb.x0) / (0.5 * self.dt)
 
+            print("U POSITION: ", limb.u)
+
             # Compute position at T = t + dt
             limb.x = 2 * limb.x - limb.x0
             limb.x0 = limb.x

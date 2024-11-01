@@ -35,6 +35,8 @@ class PardisoSolver(BaseSolver):
         n = self.stepper.freeDOF
         ia = self.stepper.ia
 
+        print(ia)
+
         # Cumulative sum for CSR indexing
         ia[1:] = np.cumsum(ia[:-1]) + ia[1:]
         
@@ -43,6 +45,8 @@ class PardisoSolver(BaseSolver):
         ja = np.array([col + 1 for _, col in non_zero_elements], dtype=np.int32)
         a = np.array([self.stepper.Jacobian[row, col] for row, col in non_zero_elements], dtype=np.float64)
         
+        print(ja - 1)
+
         csr_matrix_a = csr_matrix((a, ja - 1, ia), shape=(n, n))
 
         try:
