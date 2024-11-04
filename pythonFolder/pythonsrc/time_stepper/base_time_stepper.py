@@ -16,6 +16,7 @@ class BaseTimeStepper(ABC):
 
         # References for shared objects
         self.limbs = soft_robots.limbs        # Vector of shared_ptr<elasticRod>
+        # print("LIMBS", self.limbs)
         self.joints = soft_robots.joints      # Vector of shared_ptr<elasticJoint>
         self.controllers = soft_robots.controllers  # Vector of shared_ptr<baseController>
 
@@ -36,6 +37,8 @@ class BaseTimeStepper(ABC):
         
         self.freeDOF = self.freeDOF  # Integer for free degrees of freedom
         self.iter = 0                     # Iteration count
+        force_mapped = np.array(self.force[:self.freeDOF])
+        print("FORCE MAPPED: ", force_mapped)
 
         self.mappedInd = None
         self.mappedInd1 = None
@@ -106,7 +109,7 @@ class BaseTimeStepper(ABC):
         self.force = np.zeros(self.freeDOF)
         self.dx = np.zeros(self.freeDOF)
 
-        # self.Force = self.force
+        self.Force = self.force
     
     @abstractmethod
     def integrator(self):

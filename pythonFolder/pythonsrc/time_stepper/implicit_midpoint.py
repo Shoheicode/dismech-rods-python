@@ -42,8 +42,8 @@ class ImplicitMidpoint(BackwardEuler):
             # Compute position at T = t + dt
             limb.x = 2 * limb.x - limb.x0
             for i in range(limb.ne):
-                print("X POSITION", i, ":", limb.x[i*4])
-                print("Y POSITION", i, ":", limb.x[i*4+1])
+                # print("X POSITION", i, ":", limb.x[i*4])
+                # print("Y POSITION", i, ":", limb.x[i*4+1])
                 print("Z POSITION", i, ":", limb.x[i*4+2])
             limb.x0 = limb.x
 
