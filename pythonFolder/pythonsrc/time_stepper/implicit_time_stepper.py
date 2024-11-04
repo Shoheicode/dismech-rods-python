@@ -41,20 +41,24 @@ class ImplicitTimeStepper(BaseTimeStepper):
         self.dgbsv_jacobian_len = 0
 
     def add_jacobian(self, ind1, ind2, p, limb_idx1, limb_idx2=None):
+        print("ADD JACOBIAN")
         if limb_idx2 is None:
+            print("LIMB IS NONE")
             limb_idx2 = limb_idx1
 
         limb1: ElasticRod = self.limbs[limb_idx1]
         limb2: ElasticRod = self.limbs[limb_idx2]
-        mapped_ind1 = limb1.full_to_uncons_map[ind1]
-        mapped_ind2 = limb2.full_to_uncons_map[ind2]
+        self.mapped_ind1 = limb1.full_to_uncons_map[ind1]
+        self.mapped_ind2 = limb2.full_to_uncons_map[ind2]
         offset1 = self.offsets[limb_idx1]
         offset2 = self.offsets[limb_idx2]
-        jac_ind1 = mapped_ind2 + offset2
-        jac_ind2 = mapped_ind1 + offset1
+        jac_ind1 = self.mapped_ind2 + offset2
+        jac_ind2 = self.mapped_ind1 + offset1
 
         if limb1.is_constrained[ind1] == 0 and limb2.is_constrained[ind2] == 0:
             if self.solver_type == "PARDISO_SOLVER":
+                print("PARDISO SOLVER")
+                print("jac_ind1: ", jac_ind1)
                 if self.Jacobian[jac_ind1, jac_ind2] == 0 and p != 0:
                     self.ia[jac_ind1 + 1] += 1
                     self.non_zero_elements.append((jac_ind1, jac_ind2))

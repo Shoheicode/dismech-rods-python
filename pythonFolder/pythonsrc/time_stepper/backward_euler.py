@@ -30,6 +30,7 @@ class BackwardEuler(ImplicitTimeStepper):
 
             # Compute norm of the force equations
             # print(self.force)
+            print(self.Force)
             normf = np.linalg.norm(self.Force)
             print(normf)
 

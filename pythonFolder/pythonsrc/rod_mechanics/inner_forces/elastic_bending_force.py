@@ -307,6 +307,7 @@ class ElasticBendingForce(BaseForce):
             joint_idx += 1
     
     def compute_force_and_jacobian(self, dt):
+        print("ELASTIC BENDING FORCE ")
         self.compute_force(dt)
 
         # Iterate through the limbs of the soft robot
@@ -406,6 +407,8 @@ class ElasticBendingForce(BaseForce):
                     self.stepper.add_jacobian(ci + 7, ci + 7, -self.Jbb[7, 7], limb_idx)
 
             limb_idx += 1
+        print("HIHIHIHIHIHI")
+        print(self.stepper)
 
         # Iterate through the joints
         joint_idx = 0
