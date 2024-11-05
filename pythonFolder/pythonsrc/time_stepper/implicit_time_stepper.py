@@ -41,9 +41,9 @@ class ImplicitTimeStepper(BaseTimeStepper):
         self.dgbsv_jacobian_len = 0
 
     def add_jacobian(self, ind1, ind2, p, limb_idx1, limb_idx2=None):
-        print("ADD JACOBIAN")
+        # print("ADD JACOBIAN")
         if limb_idx2 is None:
-            print("LIMB IS NONE")
+            # print("LIMB IS NONE")
             limb_idx2 = limb_idx1
 
         limb1: ElasticRod = self.limbs[limb_idx1]
@@ -57,12 +57,15 @@ class ImplicitTimeStepper(BaseTimeStepper):
 
         if limb1.is_constrained[ind1] == 0 and limb2.is_constrained[ind2] == 0:
             if self.solver_type == "PARDISO_SOLVER":
-                print("PARDISO SOLVER")
-                print("jac_ind1: ", jac_ind1)
+                # print("PARDISO SOLVER")
+                # print("jac_ind1: ", jac_ind1)
+                # print(self.Jacobian[jac_ind1, jac_ind2])
                 if self.Jacobian[jac_ind1, jac_ind2] == 0 and p != 0:
+                    # print("JACOBIAN self time")
                     self.ia[jac_ind1 + 1] += 1
                     self.non_zero_elements.append((jac_ind1, jac_ind2))
                 elif self.Jacobian[jac_ind1, jac_ind2] != 0 and self.Jacobian[jac_ind1, jac_ind2] + p == 0:
+                    print("JACOBIAN not equal time")
                     self.ia[jac_ind1 + 1] -= 1
                     self.non_zero_elements.remove((jac_ind1, jac_ind2))
                 self.Jacobian[jac_ind1, jac_ind2] += p
@@ -87,9 +90,9 @@ class ImplicitTimeStepper(BaseTimeStepper):
     def update(self):
         # Update the system state; implementation needed based on your requirements.
         super().update()
-        print("UPDATE IS RUNNING")
+        # print("UPDATE IS RUNNING")
         if self.solver_type == "PARDISO_SOLVER":
-            print("I AM RUNNING PARDISO")
+            # print("I AM RUNNING PARDISO")
             self.ia = np.zeros(self.freeDOF + 1, dtype=int)
             self.ia[0] = 1
         elif self.solver_type == "DGBSV_SOLVER":
@@ -100,15 +103,15 @@ class ImplicitTimeStepper(BaseTimeStepper):
 
     def integrator(self):
         # Integrate using this timestepper
-        print("This is my solver:", self.solver_type)
+        # print("This is my solver:", self.solver_type)
         self.solver.integrator()
 
     def init_stepper(self):
-        print("IMPLICIT TIME STOPPER")
+        # print("IMPLICIT TIME STOPPER")
         # Initialize the stepper; set any parameters or configurations.
         super().init_stepper()
         if self.solver_type == "PARDISO_SOLVER":
-            print("PAR SOLVER")
+            # print("PAR SOLVER")
             self.solver = PardisoSolver(self)# SolverType.PARDISO_SOLVER
             self.ia = np.zeros(self.freeDOF + 1, dtype=int)
             self.ia[0] = 1
