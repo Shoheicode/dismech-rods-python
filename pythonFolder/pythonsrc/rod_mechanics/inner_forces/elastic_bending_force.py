@@ -586,10 +586,6 @@ class ElasticBendingForce(BaseForce):
         # print("RETTET")
         # print(-self.D2kappa1De2 + self.D2kappa1DeDf)
         self.DDkappa1[0:3, 4:7] = -self.D2kappa1De2 + self.D2kappa1DeDf
-        # print("D2Kappa1dedf")
-        # print(-self.D2kappa1DeDf)
-        # print("GETING THIG")
-        # print(self.DDkappa1[0:3, 8:11])
         self.DDkappa1[0:3, 8:11] = -self.D2kappa1DeDf
         self.DDkappa1[4:7, 0:3] = -self.D2kappa1De2 + self.D2kappa1DfDe
         self.DDkappa1[4:7, 4:7] = self.D2kappa1De2 - self.D2kappa1DeDf - self.D2kappa1DfDe + self.D2kappa1Df2
