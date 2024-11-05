@@ -26,9 +26,8 @@ class ElasticStretchingForce(BaseForce):
     def compute_force(self, dt):
         limb_idx = 0  # Keep track of limb index
         for limb in self.soft_robots.limbs:
+            print("LIMBS COMPUTE FORCE STRETCHING", limb)
             for i in range(limb.ne):  # Iterate over each edge in the limb
-                # print("i ", i)
-                # print(limb.ref_len[i])
                 if limb.is_edge_joint[i]:
                     continue  # Skip if the edge is part of a joint
 
@@ -51,6 +50,7 @@ class ElasticStretchingForce(BaseForce):
         
         # Handle the joints in the soft robot
         for joint in self.soft_robots.joints:
+            print("JOINTS")
             for i in range(joint.ne):  # Iterate over each edge in the joint
                 sgn = 1 if joint.bending_twist_signs[i] == 1 else -1  # Determine sign of bending/twist
                 n1 = joint.connected_nodes[i][0]  # First connected node
@@ -77,6 +77,7 @@ class ElasticStretchingForce(BaseForce):
 
         limb_idx = 0  # Keep track of limb index
         for limb in self.soft_robots.limbs:
+            print("LIMB", limb.EA)
             for i in range(limb.ne):
                 if limb.is_edge_joint[i]:
                     continue  # Skip if the edge is part of a joint
@@ -98,6 +99,8 @@ class ElasticStretchingForce(BaseForce):
                 # Compute M0 matrix for the edge, based on elasticity and displacement
                 self.M0 = limb.EA * ((1 / self.ref_length - 1 / self.len) * self.Id3 + 
                                      (1 / self.len) * np.outer(self.u, self.u) / (self.u.dot(self.u)))
+                
+                # print("M0000 VALUE", self.M0)
 
                 # Update the blocks of the 7x7 Jacobian matrix
                 self.JSS[0:3, 0:3] = -self.M0

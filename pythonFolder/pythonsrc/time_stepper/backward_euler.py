@@ -28,11 +28,11 @@ class BackwardEuler(ImplicitTimeStepper):
             self.forces.compute_forces_and_jacobian(dt)
             print(dt)
 
-            # Compute norm of the force equations
+            # Compute norm of the force equationsS
             # print(self.force)
             print(self.Force)
             normf = np.linalg.norm(self.Force)
-            print(normf)
+            print("FORM", normf)
 
             if self.iter == 0:
                 normf0 = normf
@@ -54,6 +54,7 @@ class BackwardEuler(ImplicitTimeStepper):
                 continue
 
             # Solve equations of motion
+            
             self.integrator()
             if self.line_search:
                 self.line_search_func(dt)
@@ -61,6 +62,7 @@ class BackwardEuler(ImplicitTimeStepper):
             # Newton update
             max_dx = 0
             for idx, limb in enumerate(self.limbs):
+                print("INDEX", idx)
                 curr_dx = limb.update_newton_x(self.dx, self.offsets[idx], self.alpha)
                 max_dx = max(max_dx, curr_dx)
 
