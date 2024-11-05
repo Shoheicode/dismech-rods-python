@@ -29,7 +29,8 @@ class ElasticRod:
         """
         self.limb_idx = limb_idx
         if nodes == None:
-            print("WITHOUT NODES")
+            ("WITHOUT NODES")
+            (num_nodes)
             self.nv = num_nodes
             self.ne = num_nodes - 1
             self.ndof = num_nodes * 4 - 1
@@ -44,7 +45,7 @@ class ElasticRod:
             nodes = [start + i * dir_vec for i in range(num_nodes)]       
         else:
             # Constructor with pre-defined nodes
-            print("NODES")
+            ("NODES")
             self.nv = len(nodes)
             self.ne = self.nv - 1
             self.ndof = len(nodes) * 4 - 1
@@ -62,7 +63,7 @@ class ElasticRod:
         self.uncons = self.ndof
         
         ## Initialize constraint maps
-        self.is_constrained = np.zeros(self.ndof, dtype=bool)
+        self.is_constrained = np.zeros(self.ndof, dtype=int)
         self.is_dof_joint = np.zeros(self.ndof, dtype=int)
         self.is_node_joint = np.zeros(self.nv, dtype=int)
         self.is_edge_joint = np.zeros(self.ne, dtype=int)
@@ -73,7 +74,7 @@ class ElasticRod:
         # Initialize state vectors
         # self.x0 = np.zeros(self.ndof)  # Previous timestep DOFs
         # self.x = np.zeros(self.ndof)   # Current timestep DOFs
-        # self.x_ls = np.zeros(self.ndof)  # Line search state
+        self.x_ls = np.zeros(self.ndof)  # Line search state
         # self.u0 = np.zeros(self.ndof)  # Previous timestep velocities
         # self.u = np.zeros(self.ndof)   # Current timestep velocities
 
@@ -88,6 +89,7 @@ class ElasticRod:
             self.x[4*i+2] = nodes[i][2]
             if i < self.nv - 1:
                 self.x[4*i+3] = 0
+        ("X VALUES:", self.x)
 
         self.x0 = self.x
         self.u = np.zeros(self.ndof)
@@ -96,7 +98,7 @@ class ElasticRod:
         # Unconstrained and constrained DOFs
         self.ncons = 0
         self.uncons = self.ndof
-        self.is_constrained = np.zeros(self.ndof, dtype=bool)
+        self.is_constrained = np.zeros(self.ndof, dtype=int)
         self.is_dof_joint = np.zeros(self.ndof, dtype=int)
         self.is_node_joint = np.zeros(self.nv, dtype=int)
         self.is_edge_joint = np.zeros(self.ne, dtype=int)

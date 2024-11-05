@@ -22,7 +22,7 @@ class RodNodeLogger(WorldLogger):
 
     # def __del__(self):
     #     """Destructor equivalent in Python, called when the object is deleted."""
-    #     print("RodNodeLogger object is being deleted")
+    #     ("RodNodeLogger object is being deleted")
 
     def get_log_header(self):
         """

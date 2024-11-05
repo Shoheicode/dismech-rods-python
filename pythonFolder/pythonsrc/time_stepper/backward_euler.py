@@ -102,6 +102,8 @@ class BackwardEuler(ImplicitTimeStepper):
         al, au = 0, 1
         a = 1
 
+        print(self.Force.T)
+
         # Compute the initial slope
         q0 = 0.5 * np.power(np.linalg.norm(self.Force), 2)
         dq0 = -(self.Force.T @ self.Jacobian @ self.DX)[0]

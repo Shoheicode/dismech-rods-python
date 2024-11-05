@@ -5,7 +5,7 @@ from pythonsrc.rod_mechanics.soft_robots import SoftRobots
 
 class BaseForce(object):
     def __init__(self, soft_robots: SoftRobots):
-        # print('none')
+        # ('none')
         self.soft_robots = soft_robots
         self.stepper= None
     
@@ -24,5 +24,5 @@ class BaseForce(object):
         return self.stepper
 
     def set_time_stepper(self, stepper):
-        # print(stepper)
+        # (stepper)
         self.stepper = stepper

@@ -35,7 +35,7 @@ class WorldLogger(ABC):
         # Expand out the folder path based on a nicely organized year, month, day, hour hierarchy (commented out in C++)
         # logfile_base = os.path.join(logfile_base, get_time_date_folder_path()) 
         # if verbosity >= 1:
-        #     print(f"Logging data in the folder {logfile_base}")
+        #     (f"Logging data in the folder {logfile_base}")
 
         # Create this folder if it does not already exist
         os.makedirs(logfile_base, exist_ok=True)
@@ -83,14 +83,14 @@ class WorldLogger(ABC):
         """
         Clean shutdown, remove a log file that has no data.
         """
-        print(f"Checking if the log file {self.file_name} is empty...")
+        (f"Checking if the log file {self.file_name} is empty...")
         min_useful_samples = 50
         if self.count_lines_in_log() - self.num_lines_header < min_useful_samples:
-            print("Log file is almost empty, removing...")
+            ("Log file is almost empty, removing...")
             os.remove(self.file_name)
-            print("File removal successful.")
+            ("File removal successful.")
         else:
-            print("Log file contains data, not removing.")
+            ("Log file contains data, not removing.")
 
     def count_lines_in_log(self):
         """

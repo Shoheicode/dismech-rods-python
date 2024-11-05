@@ -55,13 +55,10 @@ class SoftRobots():
         for i in range(limb.nv):
             # Set initial velocities for the limb's nodes
             limb.u[4*i:4*i+3] = limb.u0[4*i:4*i+3] = velocities[i]
-        # print(limb.u)
 
     # Method to set up joints and their configurations
     def setup(self):
-        print("SETUP RUNNING")
         for joint in self.joints:
-            # print("AAA", joint)
             joint.setup()  # Call setup for each joint
 
     # Method to add a controller to the robot

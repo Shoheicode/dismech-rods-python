@@ -1,4 +1,5 @@
 import numpy as np
+from pythonsrc.solvers.solver_types import SolverType
 from pythonsrc.solvers.base_solver import BaseSolver
 from scipy.sparse.linalg import spsolve
 from scipy.sparse import csr_matrix
@@ -11,7 +12,7 @@ class PardisoSolver(BaseSolver):
         Parameters:
             stepper (implicitTimeStepper): The implicit time stepper associated with this solver.
         """
-        super().__init__(stepper, solver_type="PARDISO_SOLVER")
+        super().__init__(stepper, SolverType.PARDISO_SOLVER)
         
         # Initialize Pardiso control parameters and memory pointers.
         self.pt = [None] * 64  # Memory pointer
@@ -33,12 +34,16 @@ class PardisoSolver(BaseSolver):
         This method assembles the matrix in CSR format and solves the system.
         """
         n = self.stepper.freeDOF
-        ia = self.stepper.ia
+        ia = np.array(self.stepper.ia, copy = True)
 
         print(ia)
 
         # Cumulative sum for CSR indexing
-        ia[1:] = np.cumsum(ia[:-1]) + ia[1:]
+        # ia[1:] = np.cumsum(ia[:-1]) + ia[1:]
+        for i in range(n - 1):
+            ia[i + 2] += ia[i + 1]
+        for i in range(n):
+            ia[i + 1] += 1
         
         # Generate CSR format for Jacobian matrix
         non_zero_elements = sorted(self.stepper.non_zero_elements)
@@ -46,6 +51,10 @@ class PardisoSolver(BaseSolver):
         a = np.array([self.stepper.Jacobian[row, col] for row, col in non_zero_elements], dtype=np.float64)
         
         print(ja - 1)
+        print("HELLOOOOOO")
+        print(ia)
+        ia -=1
+        print(ia)
 
         csr_matrix_a = csr_matrix((a, ja - 1, ia), shape=(n, n))
 

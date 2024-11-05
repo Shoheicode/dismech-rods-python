@@ -32,7 +32,7 @@ def get_robot_description(argc, argv,soft_robots:SoftRobots, forces: ForceContai
     # Create a beam along the x-y plane
     soft_robots.add_limb(np.array([0.0, 0.0, 0.0]), np.array([1.0, 0.0, 0.0]), n, density, radius, young_mod, poisson)
 
-    print("JOINTS",soft_robots.joints)
+    ("JOINTS",soft_robots.joints)
 
     # Fix one end
     soft_robots.lockEdge(0, 0)
@@ -40,7 +40,7 @@ def get_robot_description(argc, argv,soft_robots:SoftRobots, forces: ForceContai
     # Read initial velocity values
     velocities = load_txt("examples/cantilever_case/cantilever_init_velocity_n=201.txt")
 
-    # print("VEL", velocities)
+    # ("VEL", velocities)
 
     # Apply the velocities
     soft_robots.applyInitialVelocities(0, velocities)

@@ -408,8 +408,8 @@ class ElasticBendingForce(BaseForce):
                     self.stepper.add_jacobian(ci + 7, ci + 7, -self.Jbb[7, 7], limb_idx)
 
             limb_idx += 1
-        print("HIHIHIHIHIHI")
-        print(self.stepper)
+        # print("HIHIHIHIHIHI")
+        # print(self.stepper)
 
         # Iterate through the joints
         joint_idx = 0
