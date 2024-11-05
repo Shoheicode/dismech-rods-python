@@ -57,13 +57,15 @@ class BaseTimeStepper(ABC):
             p (float): Force value to add.
             limb_idx (int): Index of the limb.
         """
-        # print("HIHIHI")
+        # print("JKJLJLKJLJ")
         limb:ElasticRod = self.limbs[limb_idx]
         offset = self.offsets[limb_idx]
 
         if limb.is_constrained[ind] == 0:  # Free DOF
             mapped_ind = limb.full_to_uncons_map[ind]
             self.force[mapped_ind + offset] += p
+        
+        # self.Force = self.force
     
     # Abstract methods (pure virtual in C++)
     def init_stepper(self):

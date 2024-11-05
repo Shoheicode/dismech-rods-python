@@ -143,6 +143,7 @@ class BackwardEuler(ImplicitTimeStepper):
             joint.x = joint.x_ls.copy()
 
     def step_forward_in_time(self):
+        print("THIS IS FORWARD IN TIME")
         # Override with time-stepping logic.
         self.dt = self.orig_dt
 

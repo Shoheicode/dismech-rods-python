@@ -152,7 +152,7 @@ class ElasticBendingForce(BaseForce):
         for limb in self.getSoftRobots().limbs:
             self.gradKappa1 = self.gradKappa1s[limb_idx]
             self.gradKappa2 = self.gradKappa2s[limb_idx]
-            print("LIMB.NE", limb.ne)
+            # print("LIMB.NE", limb.ne)
 
             for i in range(1, limb.ne):
                 self.norm_e = limb.edge_len[i - 1]

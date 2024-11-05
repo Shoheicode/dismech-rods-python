@@ -57,9 +57,6 @@ class ImplicitTimeStepper(BaseTimeStepper):
 
         if limb1.is_constrained[ind1] == 0 and limb2.is_constrained[ind2] == 0:
             if self.solver_type == "PARDISO_SOLVER":
-                # print("PARDISO SOLVER")
-                # print("jac_ind1: ", jac_ind1)
-                # print(self.Jacobian[jac_ind1, jac_ind2])
                 if self.Jacobian[jac_ind1, jac_ind2] == 0 and p != 0:
                     # print("JACOBIAN self time")
                     self.ia[jac_ind1 + 1] += 1
