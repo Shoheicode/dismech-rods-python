@@ -189,7 +189,7 @@ class ElasticRod:
         """
         max_dx = 0.0
         for c in range(self.uncons):
-            ind = self.unconstrainedMap[c]
+            ind = self.unconstrained_map[c]
             self.x[ind] -= alpha * dx[offset + c]
 
             if (ind - 3) % 4 != 0:  # Non-theta degree of freedom
@@ -201,7 +201,7 @@ class ElasticRod:
     def update_guess(self, weight:float, dt:float):
         """Update the guess for the next time step using a weighted combination of velocities and displacements."""
         for c in range(self.uncons):
-            ind = self.unconstrainedMap[c]
+            ind = self.unconstrained_map[c]
             self.x[ind] = self.x0[ind] + weight * self.u[ind] * dt
 
     def enable_2d_sim(self):
@@ -227,7 +227,7 @@ class ElasticRod:
     
     Initialization (c = 0):
 
-    A counter c is initialized to keep track of the position in the unconstrainedMap array.
+    A counter c is initialized to keep track of the position in the unconstrained_map array.
     Loop (for i in range(ndof)):
 
     A loop iterates over all the degrees of freedom (ndof). This loop runs from i = 0 to i = ndof - 1.
@@ -237,10 +237,10 @@ class ElasticRod:
     If isConstrained[i] == 0, meaning that the degree of freedom i is not constrained.
     If isDOFJoint[i] != 1, meaning that the degree of freedom i is not part of a joint.
     If both these conditions are satisfied, the degree of freedom i is considered "unconstrained."
-    Mapping (unconstrainedMap[c] = i and fullToUnconsMap[i] = c):
+    Mapping (unconstrained_map[c] = i and fullToUnconsMap[i] = c):
 
-    The unconstrainedMap[c] = i line assigns the index i of the unconstrained degree of freedom to the unconstrainedMap at position c.
-    The fullToUnconsMap[i] = c line creates a reverse mapping from the full degrees of freedom list (i) to the index c in the unconstrainedMap.
+    The unconstrained_map[c] = i line assigns the index i of the unconstrained degree of freedom to the unconstrained_map at position c.
+    The fullToUnconsMap[i] = c line creates a reverse mapping from the full degrees of freedom list (i) to the index c in the unconstrained_map.
     """
 
     def setup_map(self):
@@ -255,8 +255,8 @@ class ElasticRod:
         self.ncons = np.sum((self.is_constrained > 0) | (self.is_dof_joint == 1))
         self.uncons = self.ndof - self.ncons
 
-        self.unconstrainedMap = np.zeros(self.uncons, dtype=int)
-        self.fullToUnconsMap = np.zeros(self.ndof, dtype=int)
+        self.unconstrained_map = np.zeros(self.uncons, dtype=int)
+        self.full_to_uncons_map = np.zeros(self.ndof, dtype=int)
         self.setup_map()
 
     def add_joint(self, node_num: int, attach_to_joint: bool, joint_node: int, joint_limb: int ):
