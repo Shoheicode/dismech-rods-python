@@ -122,8 +122,6 @@ class ElasticBendingForce(BaseForce):
             # Append a zero matrix of shape (nv, 11) to both gradKappa1s and gradKappa2s
             self.gradKappa1s.append(np.zeros((nv, 11)))
             self.gradKappa2s.append(np.zeros((nv, 11)))
-            # print(limb)
-            # print("HIHIHI")
 
         for joint in self.getSoftRobots().joints:
             nb = joint.num_bending_combos
@@ -149,10 +147,10 @@ class ElasticBendingForce(BaseForce):
     def compute_force(self, dt):
         limb_idx = 0
 
-        for limb in self.getSoftRobots().limbs:
+        for limb in self.soft_robots.limbs:
+            # print("LIMB FOR THIS")
             self.gradKappa1 = self.gradKappa1s[limb_idx]
             self.gradKappa2 = self.gradKappa2s[limb_idx]
-            # print("LIMB.NE", limb.ne)
 
             for i in range(1, limb.ne):
                 self.norm_e = limb.edge_len[i - 1]
@@ -196,9 +194,18 @@ class ElasticBendingForce(BaseForce):
             for i in range(1, limb.ne):
                 self.relevantPart[:, 0] = self.gradKappa1[i, :]
                 self.relevantPart[:, 1] = self.gradKappa2[i, :]
+                print("LIMB KAPPA")
+                print(limb.kappa[i, : ])
+
+                print("LIMB KAPPA BAR")
+                print(limb.kappa_bar[i, : ])
                 self.kappaL = limb.kappa[i, :] - limb.kappa_bar[i, :]
+                print("KAPPAL")
+                print(self.kappaL)
 
                 self.f = -np.dot(self.relevantPart, np.dot(self.EIMatrices[limb_idx], self.kappaL)) / limb.voronoi_len[i]
+                print("FORCE COMPUTE BENDINGD")
+                print(self.f)
 
                 if limb.is_node_joint[i - 1] != 1 and limb.is_node_joint[i] != 1 and limb.is_node_joint[i + 1] != 1:
                     self.ci = 4 * i - 4
@@ -311,9 +318,13 @@ class ElasticBendingForce(BaseForce):
         print("ELASTIC BENDING FORCE ")
         self.compute_force(dt)
 
+        print(self.stepper)
+
         # Iterate through the limbs of the soft robot
         limb_idx = 0
+        print("FORCE + JACOBIAN + BENDING FORCE")
         for limb in self.soft_robots.limbs:
+            print("FORCE + JACOBIAN + BENDING FORCE")
             self.gradKappa1 = self.gradKappa1s[limb_idx]
             self.gradKappa2 = self.gradKappa2s[limb_idx]
             

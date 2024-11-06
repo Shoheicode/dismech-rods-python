@@ -70,6 +70,8 @@ class ElasticRod:
 
         # Initialize geometry
         self.setup(nodes)
+
+        print("RUNNING FOR SETUP")
         
         # Initialize state vectors
         # self.x0 = np.zeros(self.ndof)  # Previous timestep DOFs
@@ -152,7 +154,7 @@ class ElasticRod:
 
         self.__compute_kappa()
 
-        self.kappa_bar = self.kappa
+        self.kappa_bar = self.kappa.copy()
 
         self.__compute_edge_len()
 
@@ -170,6 +172,7 @@ class ElasticRod:
 
     def prepare_for_iteration(self):
         """Update discrete values and frames for the next timestep."""
+        print("PREPARE FOR ITERATIONS")
         self.__compute_tangent()
         self.__compute_time_parallel()
         self.__get_ref_twist()
@@ -445,6 +448,7 @@ class ElasticRod:
         # return self.ref_twist
 
     def __compute_kappa(self):
+        print("KAPPA COMPUTING")
         # First loop: Compute kb using the tangent vectors
         for i in range(1, self.ne):
             t0 = self.tangent[i - 1, :]  # Get the (i-1)th row of the tangent array
@@ -459,8 +463,12 @@ class ElasticRod:
             m2f = self.m2[i, :]      # Get the ith row of m2
 
             # Calculate the values for kappa
+            # print("KAPPA SELF ")
             self.kappa[i, 0] = 0.5 * np.dot(self.kb[i, :], (m2e + m2f))  # First component of kappa
+            # print(self.kappa[i, 0])
             self.kappa[i, 1] = -0.5 * np.dot(self.kb[i, :], (m1e + m1f))  # Second component of kappa
+            # print(self.kappa[i, 1])
+        print(self.kappa_bar)
 
     @staticmethod
     def __parallel_transport(self, d1_1: np.ndarray, t1: np.ndarray, t2: np.ndarray, 

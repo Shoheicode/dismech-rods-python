@@ -46,7 +46,6 @@
 # #MAKES A SQUARE
 # w,h= 500,500
 # def square():
-#     print(np.zeros(2))
 #     glBegin(GL_QUADS)
 #     for i, surface in enumerate(surfaces):
 #         glColor3fv(colors[i])  # Color the surfaces differently

@@ -38,7 +38,6 @@ class BaseTimeStepper(ABC):
         self.freeDOF = self.freeDOF  # Integer for free degrees of freedom
         self.iter = 0                     # Iteration count
         force_mapped = np.array(self.force[:self.freeDOF])
-        print("FORCE MAPPED: ", force_mapped)
 
         self.mappedInd = None
         self.mappedInd1 = None
