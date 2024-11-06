@@ -34,7 +34,7 @@ class ImplicitTimeStepper(BaseTimeStepper):
 
         self.Jacobian = np.zeros((self.freeDOF, self.freeDOF))
         self.dgbsv_jacobian = None
-        self.ia = None
+        # self.ia = None
 
         # Private attributes
         self.solver:BaseSolver = None  # Unique pointer equivalent to `baseSolver`
@@ -46,25 +46,37 @@ class ImplicitTimeStepper(BaseTimeStepper):
             # print("LIMB IS NONE")
             limb_idx2 = limb_idx1
 
+        # print("limb index", limb_idx1)
+
+        # print("IND 1", ind1)
+        # print("IND 2", ind2)
+
         limb1: ElasticRod = self.limbs[limb_idx1]
         limb2: ElasticRod = self.limbs[limb_idx2]
         self.mapped_ind1 = limb1.full_to_uncons_map[ind1]
         self.mapped_ind2 = limb2.full_to_uncons_map[ind2]
         offset1 = self.offsets[limb_idx1]
         offset2 = self.offsets[limb_idx2]
+
+        # print("self.mapped values", self.mapped_ind1)
+
         jac_ind1 = self.mapped_ind2 + offset2
         jac_ind2 = self.mapped_ind1 + offset1
 
         if limb1.is_constrained[ind1] == 0 and limb2.is_constrained[ind2] == 0:
+            # print("JAC_IND1: ", jac_ind1)
+            # print("JAC IND 2: ", jac_ind2)
             if self.solver_type == "PARDISO_SOLVER":
                 if self.Jacobian[jac_ind1, jac_ind2] == 0 and p != 0:
+                    # print("ADD ME PLEASE", limb_idx1)
                     # print("JACOBIAN self time")
                     self.ia[jac_ind1 + 1] += 1
                     self.non_zero_elements.append((jac_ind1, jac_ind2))
                 elif self.Jacobian[jac_ind1, jac_ind2] != 0 and self.Jacobian[jac_ind1, jac_ind2] + p == 0:
-                    print("JACOBIAN not equal time")
+                    # print("JACOBIAN not equal time")
                     self.ia[jac_ind1 + 1] -= 1
                     self.non_zero_elements.remove((jac_ind1, jac_ind2))
+                # print("LENGTH OF NON ZERO ELEMENTS", len(self.non_zero_elements))
                 self.Jacobian[jac_ind1, jac_ind2] += p
             elif self.solver_type == "DGBSV_SOLVER":
                 dgbsv_row = self.kl + self.ku + jac_ind1 - jac_ind2
@@ -72,10 +84,12 @@ class ImplicitTimeStepper(BaseTimeStepper):
                 dgbsv_offset = dgbsv_row + dgbsv_col * self.num_rows
                 self.dgbsv_jacobian[dgbsv_offset] += p
                 self.Jacobian[jac_ind1, jac_ind2] += p
+        # print("IMPLICIT TIME STEPPER")
 
     def set_zero(self):
         # Reset or zero out any matrices or structures as necessary.
         super().set_zero()
+        print("SET ZERO")
         if self.solver_type == "PARDISO_SOLVER":
             self.non_zero_elements.clear()
             self.ia.fill(0)
@@ -87,7 +101,7 @@ class ImplicitTimeStepper(BaseTimeStepper):
     def update(self):
         # Update the system state; implementation needed based on your requirements.
         super().update()
-        # print("UPDATE IS RUNNING")
+        print("UPDATE IS RUNNING")
         if self.solver_type == "PARDISO_SOLVER":
             # print("I AM RUNNING PARDISO")
             self.ia = np.zeros(self.freeDOF + 1, dtype=int)
@@ -109,9 +123,11 @@ class ImplicitTimeStepper(BaseTimeStepper):
         super().init_stepper()
         if self.solver_type == "PARDISO_SOLVER":
             # print("PAR SOLVER")
-            self.solver = PardisoSolver(self)# SolverType.PARDISO_SOLVER
             self.ia = np.zeros(self.freeDOF + 1, dtype=int)
             self.ia[0] = 1
+            self.solver = PardisoSolver(self)# SolverType.PARDISO_SOLVER
+            # self.ia = np.zeros(self.freeDOF + 1, dtype=int)
+            # self.ia[0] = 1
         elif self.solver_type == "DGBSV_SOLVER":
             self.solver = SolverType.DGBSV_SOLVER
             local_solver = self.solver

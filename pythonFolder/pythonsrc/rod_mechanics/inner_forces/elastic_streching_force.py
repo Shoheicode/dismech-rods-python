@@ -78,10 +78,13 @@ class ElasticStretchingForce(BaseForce):
         limb_idx = 0  # Keep track of limb index
         for limb in self.soft_robots.limbs:
             print("LIMB", limb.EA)
+            print("LIMB NE", limb.ne)
             for i in range(limb.ne):
                 if limb.is_edge_joint[i]:
                     continue  # Skip if the edge is part of a joint
 
+
+                # print("DIFFERENT TIME")
                 # Calculate current and reference lengths of the edge
                 self.len = limb.edge_len[i]
                 self.ref_length = limb.ref_len[i]
@@ -92,6 +95,11 @@ class ElasticStretchingForce(BaseForce):
                 self.dxx[1] = limb.x[4*i+5] - limb.x[4*i+1]
                 self.dxx[2] = limb.x[4*i+6] - limb.x[4*i+2]
 
+                # if(i < 50):
+                #     print("dxx 0 of ",i, " ",self.dxx[0])
+                #     print("dxx 1 of ",i, " ",self.dxx[1])
+                #     print("dxx 2 of ",i, " ",self.dxx[2])
+                
                 # Define u and v (displacement vectors)
                 self.u = self.dxx
                 self.v = self.u.reshape(-1, 1)  # Reshape to a column vector
@@ -100,7 +108,10 @@ class ElasticStretchingForce(BaseForce):
                 self.M0 = limb.EA * ((1 / self.ref_length - 1 / self.len) * self.Id3 + 
                                      (1 / self.len) * np.outer(self.u, self.u) / (self.u.dot(self.u)))
                 
-                # print("M0000 VALUE", self.M0)
+                # print("M0 Value" , i , ": ", self.M0)
+                
+                # print("M0000 VALUE",i, self.M0)
+                # print("")
 
                 # Update the blocks of the 7x7 Jacobian matrix
                 self.JSS[0:3, 0:3] = -self.M0
@@ -108,17 +119,23 @@ class ElasticStretchingForce(BaseForce):
                 self.JSS[4:7, 0:3] = self.M0
                 self.JSS[0:3, 4:7] = self.M0
 
+                # print("self.JSS[0:3, 0:3]", i , ": ", self.JSS[0:3, 0:3])
+                # print("")
+
                 # Add the Jacobian components to the stepper for both nodes of the edge
                 for j in range(7):
                     for k in range(7):
                         ind1 = 4*i + j
                         ind2 = 4*i + k
+                        # print("IND1: ", ind1, "IND2: ", ind2)
+                        # print("JSS VALUE, k: ", k ,"j :",  j, -self.JSS[k, j])
                         self.stepper.add_jacobian(ind1, ind2, -self.JSS[k, j], limb_idx)
 
             limb_idx += 1  # Move to the next limb
 
         # Process the joints in the soft robot for the Jacobian
         for joint in self.soft_robots.joints:
+            print("JOINNTTTTs")
             for i in range(joint.ne):
                 n1 = joint.connected_nodes[i][0]  # First connected node of the joint
                 limb_idx = joint.connected_nodes[i][1]  # Limb index

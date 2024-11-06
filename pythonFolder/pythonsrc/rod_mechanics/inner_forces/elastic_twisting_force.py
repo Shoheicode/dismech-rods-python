@@ -216,8 +216,10 @@ class ElasticTwistingForce(BaseForce):
                 if limb.is_node_joint[i - 1] != 1 and limb.is_node_joint[i] != 1 and limb.is_node_joint[i + 1] != 1:
                     for j in range(11):
                         for k in range(11):
+                            # print("LISTING JAAN")
                             ind1 = 4 * i - 4 + j
                             ind2 = 4 * i - 4 + k
+                            # print("IND1: ", ind1, "IND2: ", ind2)
                             self.stepper.add_jacobian(ind1, ind2, -self.JTT[k, j], limb_idx)
                 else:
                     n1, l1 = limb.joint_ids[i - 1]
@@ -226,6 +228,7 @@ class ElasticTwistingForce(BaseForce):
 
                     for t in range(3):
                         for k in range(3):
+                            # print("LISTING JACOBIAN")
                             self.stepper.add_jacobian(4 * n1 + t, 4 * n1 + k, -self.JTT[k, t], l1)
                             self.stepper.add_jacobian(4 * n1 + t, 4 * n2 + k, -self.JTT[k + 4, t], l1, l2)
                             self.stepper.add_jacobian(4 * n1 + t, 4 * n3 + k, -self.JTT[k + 8, t], l1, l3)

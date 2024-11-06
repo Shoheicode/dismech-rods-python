@@ -30,10 +30,10 @@ class BackwardEuler(ImplicitTimeStepper):
 
             # Compute norm of the force equationsS
             # print(self.force)
-            print("FORCE")
-            print(self.Force)
+            # print("FORCE")
+            # print(self.Force)
             normf = np.linalg.norm(self.Force)
-            print("FORM", normf)
+            # print("FORM", normf)
 
             if self.iter == 0:
                 normf0 = normf
@@ -44,6 +44,8 @@ class BackwardEuler(ImplicitTimeStepper):
                 solved = True
                 self.iter += 1
                 continue
+            
+            print(normf)
 
             # Adaptive time stepping if enabled
             if self.adaptive_time_stepping and self.iter != 0 and self.iter % self.adaptive_time_stepping_threshold == 0:
@@ -103,10 +105,12 @@ class BackwardEuler(ImplicitTimeStepper):
         al, au = 0, 1
         a = 1
 
-        print(self.Force.T)
+        # print(self.Force.T)
 
         # Compute the initial slope
         q0 = 0.5 * np.power(np.linalg.norm(self.Force), 2)
+        # print("FORCE T VALUE", self.Force.T)
+        print("DX VALUES", self.DX)
         dq0 = -(self.Force.T @ self.Jacobian @ self.DX)[0]
 
         success = False

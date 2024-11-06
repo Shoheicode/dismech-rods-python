@@ -17,10 +17,10 @@ class InertialForce(BaseForce):
                     continue
                 # Compute force based on mass and velocities
                 self.f = (limb.mass_array[i] / dt) * ((limb.x[i] - limb.x0[i]) / dt - limb.u[i])
-                if(i < 50):
-                    print("limb VALUE", i , ":", limb.x[i])
-                    print("Prev limb value", i, ":", limb.x0[i])
-                    print("LIMB TEST", i , ": ", limb.x[i] - limb.x0[i])
+                # if(i < 50):
+                    # print("limb VALUE", i , ":", limb.x[i])
+                    # print("Prev limb value", i, ":", limb.x0[i])
+                #     print("LIMB TEST", i , ": ", limb.x[i] - limb.x0[i])
                 # print(limb.x0)
                 
                 self.stepper.add_force(i, self.f, limb_idx)
@@ -33,9 +33,9 @@ class InertialForce(BaseForce):
                 self.stepper.add_force(4 * joint.joint_node + i, self.f, joint.joint_limb)
 
     def compute_force_and_jacobian(self, dt):
-        print("INTERIAL FORCE BASE FORCE")
+        # print("INTERIAL FORCE BASE FORCE")
         # Re-use compute_force function to calculate forces
-        print("DT VALUE",dt)
+        # print("DT VALUE",dt)
         self.compute_force(dt)
         # print(self.stepper)
 

@@ -174,7 +174,7 @@ class ElasticRod:
 
     def prepare_for_iteration(self):
         """Update discrete values and frames for the next timestep."""
-        print("PREPARE FOR ITERATIONS")
+        # print("PREPARE FOR ITERATIONS")
         self.__compute_tangent()
         self.__compute_time_parallel()
         self.__get_ref_twist()
@@ -194,6 +194,7 @@ class ElasticRod:
         Returns:
             Maximum non-theta update magnitude
         """
+        # print("UPDATE NEWTON X")
         max_dx = 0.0
         for c in range(self.uncons):
             ind = self.unconstrained_map[c]
@@ -207,15 +208,20 @@ class ElasticRod:
 
     def update_guess(self, weight:float, dt:float):
         """Update the guess for the next time step using a weighted combination of velocities and displacements."""
+        # print("UNCONSTRAINED MAP", self.unconstrained_map)
         for c in range(self.uncons):
             ind = self.unconstrained_map[c]
             self.x[ind] = self.x0[ind] + weight * self.u[ind] * dt
+            # print("self.x:" , ind , ":", self.x[ind])
 
     def enable_2d_sim(self):
         """Enable 2D simulation in x-z plane."""
+        print("ENABLE 2D SIm")
         for i in range(self.ne):
             self.is_constrained[4 * i + 1] = 1  # Constrain y-axis
             self.is_constrained[4 * i + 3] = 1  #
+
+        self.is_constrained[4*self.ne + 1] = 1
     
     def get_vertex(self, k):
         """Return the position of the vertex at node k."""
@@ -251,15 +257,27 @@ class ElasticRod:
     """
 
     def setup_map(self):
+        print("RUNNING SET UP")
         c = 0
+        
         for i in range(self.ndof):
             if self.is_constrained[i] == 0 and self.is_dof_joint[i] != 1:
                 self.unconstrained_map[c] = i
                 self.full_to_uncons_map[i] = c
                 c += 1
+        # for i in range(self.ndof):
+        #     # print("IS CONSTRAINED ", i, ": ", self.is_constrained[i])
+        #     print("IS CONSTRAINED ", i, ": ", self.full_to_uncons_map[i])
+        # print("MAPPPP", self.full_to_uncons_map[802])
+
+        # print("setup map",self.unconstrained_map)
     
     def update_map(self):
-        self.ncons = np.sum((self.is_constrained > 0) | (self.is_dof_joint == 1))
+        self.ncons = 0
+        for i in range(self.ndof):
+            if(self.is_constrained[i] > 0 or self.is_dof_joint[i] == 1):
+                self.ncons+=1
+            # self.ncons = np.sum((self.is_constrained > 0) | (self.is_dof_joint == 1))
         self.uncons = self.ndof - self.ncons
 
         self.unconstrained_map = np.zeros(self.uncons, dtype=int)

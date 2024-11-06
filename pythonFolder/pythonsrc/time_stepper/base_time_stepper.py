@@ -111,6 +111,7 @@ class BaseTimeStepper(ABC):
         self.dx = np.zeros(self.freeDOF)
 
         self.Force = self.force
+        self.DX = self.dx
     
     @abstractmethod
     def integrator(self):

@@ -21,11 +21,11 @@ class world:
         self.stepper:BaseTimeStepper= None
 
         self.forces.add_force(ElasticStretchingForce(soft_robots))
-        self.forces.add_force(ElasticBendingForce(soft_robots))
-        self.forces.add_force(ElasticTwistingForce(soft_robots))
+        # self.forces.add_force(ElasticBendingForce(soft_robots))
+        # self.forces.add_force(ElasticTwistingForce(soft_robots))
 
-        if sim_params.integrator not in [IntegratorMethod.FORWARD_EULER, IntegratorMethod.VERLET_POSITION]:
-            self.forces.add_force(InertialForce(soft_robots))
+        # if sim_params.integrator not in [IntegratorMethod.FORWARD_EULER, IntegratorMethod.VERLET_POSITION]:
+        #     self.forces.add_force(InertialForce(soft_robots))
 
         # ("FORCES")
         # (self.forces.get_force())
@@ -55,7 +55,7 @@ class world:
         self.stepper.update_system_for_next_time_step()
 
     def update_time_step(self):
-        # ("TIME STEP")
+        print("TIME STEP")
         self.curr_time += self.stepper.step_forward_in_time()
         self.time_step += 1
 

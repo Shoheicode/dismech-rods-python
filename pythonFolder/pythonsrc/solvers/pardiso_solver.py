@@ -1,8 +1,8 @@
 import numpy as np
 from pythonsrc.solvers.solver_types import SolverType
 from pythonsrc.solvers.base_solver import BaseSolver
-from scipy.sparse.linalg import spsolve
-from scipy.sparse import csr_matrix
+from scipy.sparse.linalg import spsolve, splu
+from scipy.sparse import csr_matrix, csc_matrix
 
 class PardisoSolver(BaseSolver):
     def __init__(self, stepper):
@@ -34,9 +34,12 @@ class PardisoSolver(BaseSolver):
         This method assembles the matrix in CSR format and solves the system.
         """
         n = self.stepper.freeDOF
+        # print("stepper before", self.stepper.ia)
+        # print(len(self.stepper.ia))
+        
         ia = np.array(self.stepper.ia, copy = True)
 
-        print(ia)
+        # print(ia)
 
         # Cumulative sum for CSR indexing
         # ia[1:] = np.cumsum(ia[:-1]) + ia[1:]
@@ -44,24 +47,77 @@ class PardisoSolver(BaseSolver):
             ia[i + 2] += ia[i + 1]
         for i in range(n):
             ia[i + 1] += 1
+
+        print("ia After", ia)
         
         # Generate CSR format for Jacobian matrix
         non_zero_elements = sorted(self.stepper.non_zero_elements)
+        print("Non zero elements", non_zero_elements)
         ja = np.array([col + 1 for _, col in non_zero_elements], dtype=np.int32)
         a = np.array([self.stepper.Jacobian[row, col] for row, col in non_zero_elements], dtype=np.float64)
+
+        # print("NONE ZERO ELEMENTS", len(non_zero_elements))
+        # print(non_zero_elements)
+
+        # print(non_zero_elements)
         
-        print(ja - 1)
-        print("HELLOOOOOO")
-        print(ia)
-        ia -=1
+        for i in range(50):
+            print("JA VALUE",i, ja[i])
+
+        for i in range(50):
+            print("A VALUE",i, a[i])
+        # print(ja - 1)
+        # print("HELLOOOOOO")
+        # print(ia)
+        # ia -=1
+        # ia = np.concatenate(([0], ia))
+        # print("print ia", ia)
+        # ia = ia[:-1]
+        print(ja-1)
+        # ia[0] = 0
+        # ia = ia[:-1]
+        ia-=1
+
+        # if ia[-1] != len(a):
+        #     print("I AM WRONG")
+        #     ia[-1] = len(a)
         print(ia)
 
-        csr_matrix_a = csr_matrix((a, ja - 1, ia), shape=(n, n))
+        csr_matrix_a = csc_matrix((a, (ja-1), ia), shape=(n, n))
 
+        # # Assuming `A` is your sparse matrix
+        # if np.linalg.cond(csr_matrix_a.toarray()) > 1 / np.finfo(csr_matrix_a.dtype).eps:
+        #     print("Matrix is ill-conditioned")
+
+        # csr_matrix_a = csc_matrix(csr_matrix_a)
+
+        # if np.linalg.cond(csr_matrix_a.toarray()) > 1 / np.finfo(csr_matrix_a.dtype).eps:
+        #     print("Matrix is ill-conditioned")
+
+        # csr_matrix_a = csr_matrix(csr_matrix_a)
+
+
+        # try:
+        #     # Solve the linear system using Pardiso
+        #     solution = spsolve(csr_matrix_a, self.stepper.force)
+        #     self.stepper.dx = solution
+        #     print("STEPPER DX", self.stepper.dx)
+        # except Exception as e:
+        #     print(f"Solver error: {e}")
+        #     self.error = 1
         try:
-            # Solve the linear system using Pardiso
-            solution = spsolve(csr_matrix_a, self.stepper.force)
-            self.stepper.dx = solution
+            lu = splu(csr_matrix_a)
         except Exception as e:
-            print(f"Solver error: {e}")
-            self.error = 1
+            print("Error during matrix factorization:", e)
+            return
+
+        # Solve the linear system
+        try:
+            b = self.stepper.force
+            dx = lu.solve(b)
+            # print(spsolve(csr_matrix_a, self.stepper.force))
+            self.stepper.dx = dx  # Save the solution back to stepper.dx
+            self.stepper.DX = dx
+            print("Solution:", dx)
+        except Exception as e:
+            print("Error during solution:", e)
