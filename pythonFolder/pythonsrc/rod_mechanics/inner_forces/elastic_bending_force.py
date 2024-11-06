@@ -311,16 +311,16 @@ class ElasticBendingForce(BaseForce):
             joint_idx += 1
     
     def compute_force_and_jacobian(self, dt):
-        print("ELASTIC BENDING FORCE ")
+        # print("ELASTIC BENDING FORCE ")
         self.compute_force(dt)
 
-        print(self.stepper)
+        # print(self.stepper)
 
         # Iterate through the limbs of the soft robot
         limb_idx = 0
-        print("FORCE + JACOBIAN + BENDING FORCE")
+        # print("FORCE + JACOBIAN + BENDING FORCE")
         for limb in self.soft_robots.limbs:
-            print("FORCE + JACOBIAN + BENDING FORCE")
+            # print("FORCE + JACOBIAN + BENDING FORCE")
             self.gradKappa1 = self.gradKappa1s[limb_idx]
             self.gradKappa2 = self.gradKappa2s[limb_idx]
             

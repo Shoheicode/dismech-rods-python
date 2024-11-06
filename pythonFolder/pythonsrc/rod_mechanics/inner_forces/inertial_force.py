@@ -7,7 +7,7 @@ class InertialForce(BaseForce):
         self.jac = 0.0
 
     def compute_force(self, dt):
-        print("STEPPER VALUE: ",self.stepper)
+        # print("STEPPER VALUE: ",self.stepper)
         limb_idx = 0
         for limb in self.soft_robots.limbs:
             # print("LIMB MASS ARRAY",limb.mass_array)

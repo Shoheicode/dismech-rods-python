@@ -55,7 +55,7 @@ class world:
         self.stepper.update_system_for_next_time_step()
 
     def update_time_step(self):
-        print("TIME STEP")
+        # print("TIME STEP")
         self.curr_time += self.stepper.step_forward_in_time()
         self.time_step += 1
 
@@ -82,7 +82,7 @@ class world:
     def get_time_step(self):
         return self.time_step
 
-    def _sim_data(self):
+    def print_sim_data(self):
         cf = self.forces.cf
         ff = self.forces.ff
 

@@ -61,11 +61,11 @@ class PardisoSolver(BaseSolver):
 
         # print(non_zero_elements)
         
-        for i in range(50):
-            print("JA VALUE",i, ja[i])
+        # for i in range(50):
+        #     print("JA VALUE",i, ja[i])
 
-        for i in range(50):
-            print("A VALUE",i, a[i])
+        # for i in range(50):
+        #     print("A VALUE",i, a[i])
         # print(ja - 1)
         # print("HELLOOOOOO")
         # print(ia)
@@ -73,17 +73,12 @@ class PardisoSolver(BaseSolver):
         # ia = np.concatenate(([0], ia))
         # print("print ia", ia)
         # ia = ia[:-1]
-        print(ja-1)
+        # print("FORCE VALUES: ", self.stepper.force)
         # ia[0] = 0
         # ia = ia[:-1]
-        ia-=1
+        # ia -=1
 
-        # if ia[-1] != len(a):
-        #     print("I AM WRONG")
-        #     ia[-1] = len(a)
-        print(ia)
-
-        csr_matrix_a = csc_matrix((a, (ja-1), ia), shape=(n, n))
+        csr_matrix_a = csc_matrix((a, ja-1, ia-1), shape=(n, n))
 
         # # Assuming `A` is your sparse matrix
         # if np.linalg.cond(csr_matrix_a.toarray()) > 1 / np.finfo(csr_matrix_a.dtype).eps:
@@ -118,6 +113,6 @@ class PardisoSolver(BaseSolver):
             # print(spsolve(csr_matrix_a, self.stepper.force))
             self.stepper.dx = dx  # Save the solution back to stepper.dx
             self.stepper.DX = dx
-            print("Solution:", dx)
+            # print("Solution:", dx)
         except Exception as e:
             print("Error during solution:", e)

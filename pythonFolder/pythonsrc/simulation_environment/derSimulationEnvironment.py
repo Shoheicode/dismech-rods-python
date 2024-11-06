@@ -50,6 +50,7 @@ class derSimulationEnvironment(object):
         # print("RINININGHIGI")
         if s_cmdline_per == 0: return
         if s_world_p.get_time_step() % s_cmdline_per == 0:
+            # print(s_world_p)
             s_world_p.print_sim_data()
     
     def cleanShutdown(self):

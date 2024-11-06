@@ -32,7 +32,12 @@ class ImplicitTimeStepper(BaseTimeStepper):
         self.adaptive_time_stepping = sim_params.adaptive_time_stepping != 0
         self.solver_type = solver_type
 
+        print("FREE DOF",self.freeDOF)
+
         self.Jacobian = np.zeros((self.freeDOF, self.freeDOF))
+        # print("FREE DOF", )
+        print("HELLO FROM THE OTHER SIDE", len(self.Jacobian[1:]))
+        print(self.Jacobian)
         self.dgbsv_jacobian = None
         # self.ia = None
 
@@ -110,7 +115,9 @@ class ImplicitTimeStepper(BaseTimeStepper):
             local_solver = self.solver
             self.dgbsv_jacobian_len = local_solver.NUMROWS * self.freeDOF
             self.dgbsv_jacobian = np.zeros(self.dgbsv_jacobian_len)
-        self.Jacobian.fill(0)
+
+        self.Jacobian = np.zeros((self.freeDOF, self.freeDOF))
+        # self.Jacobian.fill(0)
 
     def integrator(self):
         # Integrate using this timestepper

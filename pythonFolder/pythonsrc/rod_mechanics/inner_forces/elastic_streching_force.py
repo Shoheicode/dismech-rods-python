@@ -26,7 +26,7 @@ class ElasticStretchingForce(BaseForce):
     def compute_force(self, dt):
         limb_idx = 0  # Keep track of limb index
         for limb in self.soft_robots.limbs:
-            print("LIMBS COMPUTE FORCE STRETCHING", limb)
+            # print("LIMBS COMPUTE FORCE STRETCHING", limb)
             for i in range(limb.ne):  # Iterate over each edge in the limb
                 if limb.is_edge_joint[i]:
                     continue  # Skip if the edge is part of a joint
@@ -77,8 +77,8 @@ class ElasticStretchingForce(BaseForce):
 
         limb_idx = 0  # Keep track of limb index
         for limb in self.soft_robots.limbs:
-            print("LIMB", limb.EA)
-            print("LIMB NE", limb.ne)
+            # print("LIMB", limb.EA)
+            # print("LIMB NE", limb.ne)
             for i in range(limb.ne):
                 if limb.is_edge_joint[i]:
                     continue  # Skip if the edge is part of a joint

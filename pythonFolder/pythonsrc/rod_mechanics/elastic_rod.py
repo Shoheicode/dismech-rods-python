@@ -71,7 +71,7 @@ class ElasticRod:
         # Initialize geometry
         self.setup(nodes)
 
-        print("RUNNING FOR SETUP")
+        # print("RUNNING FOR SETUP")
         
         # Initialize state vectors
         # self.x0 = np.zeros(self.ndof)  # Previous timestep DOFs
@@ -216,7 +216,7 @@ class ElasticRod:
 
     def enable_2d_sim(self):
         """Enable 2D simulation in x-z plane."""
-        print("ENABLE 2D SIm")
+        # print("ENABLE 2D SIm")
         for i in range(self.ne):
             self.is_constrained[4 * i + 1] = 1  # Constrain y-axis
             self.is_constrained[4 * i + 3] = 1  #
@@ -257,7 +257,7 @@ class ElasticRod:
     """
 
     def setup_map(self):
-        print("RUNNING SET UP")
+        # print("RUNNING SET UP")
         c = 0
         
         for i in range(self.ndof):
