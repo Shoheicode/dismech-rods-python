@@ -7,13 +7,22 @@ class InertialForce(BaseForce):
         self.jac = 0.0
 
     def compute_force(self, dt):
+        print("STEPPER VALUE: ",self.stepper)
         limb_idx = 0
         for limb in self.soft_robots.limbs:
+            # print("LIMB MASS ARRAY",limb.mass_array)
             for i in range(limb.ndof):
                 if limb.is_dof_joint[i]:
+                    print("SKIP THE JOINT")
                     continue
                 # Compute force based on mass and velocities
                 self.f = (limb.mass_array[i] / dt) * ((limb.x[i] - limb.x0[i]) / dt - limb.u[i])
+                if(i < 50):
+                    print("limb VALUE", i , ":", limb.x[i])
+                    print("Prev limb value", i, ":", limb.x0[i])
+                    print("LIMB TEST", i , ": ", limb.x[i] - limb.x0[i])
+                # print(limb.x0)
+                
                 self.stepper.add_force(i, self.f, limb_idx)
             limb_idx += 1
 
@@ -26,8 +35,9 @@ class InertialForce(BaseForce):
     def compute_force_and_jacobian(self, dt):
         print("INTERIAL FORCE BASE FORCE")
         # Re-use compute_force function to calculate forces
+        print("DT VALUE",dt)
         self.compute_force(dt)
-        print(self.stepper)
+        # print(self.stepper)
 
         limb_idx = 0
         for limb in self.soft_robots.limbs:

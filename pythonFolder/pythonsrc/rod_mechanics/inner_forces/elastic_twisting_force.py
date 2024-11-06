@@ -53,7 +53,7 @@ class ElasticTwistingForce(BaseForce):
 
     def compute_force(self, dt: float):
         for limb_idx, limb in enumerate(self.soft_robots.limbs):
-            print("COMPUTER FORCE TWISITNG")
+            # print("COMPUTER FORCE TWISITNG")
             self.GJ = limb.GJ
             self.grad_twist = self.grad_twists[limb_idx]
             self.deltam = self.deltams[limb_idx]
@@ -77,7 +77,7 @@ class ElasticTwistingForce(BaseForce):
                 self.grad_twist[i, 3] = -1
                 self.grad_twist[i, 7] = 1
 
-            print("GRAD TWIST", self.grad_twist)
+            # print("GRAD TWIST", self.grad_twist)
 
             for i in range(1, limb.ne):
                 self.value = self.GJ / limb.voronoi_len[i] * (self.deltam[i] + limb.ref_twist[i] - limb.twist_bar[i])

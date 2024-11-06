@@ -194,18 +194,14 @@ class ElasticBendingForce(BaseForce):
             for i in range(1, limb.ne):
                 self.relevantPart[:, 0] = self.gradKappa1[i, :]
                 self.relevantPart[:, 1] = self.gradKappa2[i, :]
-                print("LIMB KAPPA")
-                print(limb.kappa[i, : ])
-
-                print("LIMB KAPPA BAR")
-                print(limb.kappa_bar[i, : ])
+                
                 self.kappaL = limb.kappa[i, :] - limb.kappa_bar[i, :]
-                print("KAPPAL")
-                print(self.kappaL)
+                # print("KAPPAL")
+                # print(self.kappaL)
 
                 self.f = -np.dot(self.relevantPart, np.dot(self.EIMatrices[limb_idx], self.kappaL)) / limb.voronoi_len[i]
-                print("FORCE COMPUTE BENDINGD")
-                print(self.f)
+                # print("FORCE COMPUTE BENDINGD")
+                # print(self.f)
 
                 if limb.is_node_joint[i - 1] != 1 and limb.is_node_joint[i] != 1 and limb.is_node_joint[i + 1] != 1:
                     self.ci = 4 * i - 4

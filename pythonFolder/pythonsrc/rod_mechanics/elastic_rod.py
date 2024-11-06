@@ -91,9 +91,11 @@ class ElasticRod:
             self.x[4*i+2] = nodes[i][2]
             if i < self.nv - 1:
                 self.x[4*i+3] = 0
-        ("X VALUES:", self.x)
+        # ("X VALUES:", self.x)
 
-        self.x0 = self.x
+        # print(self.x)
+
+        self.x0 = self.x.copy()
         self.u = np.zeros(self.ndof)
         self.u0 = self.u.copy()
 
@@ -448,7 +450,7 @@ class ElasticRod:
         # return self.ref_twist
 
     def __compute_kappa(self):
-        print("KAPPA COMPUTING")
+        # print("KAPPA COMPUTING")
         # First loop: Compute kb using the tangent vectors
         for i in range(1, self.ne):
             t0 = self.tangent[i - 1, :]  # Get the (i-1)th row of the tangent array
@@ -468,7 +470,7 @@ class ElasticRod:
             # print(self.kappa[i, 0])
             self.kappa[i, 1] = -0.5 * np.dot(self.kb[i, :], (m1e + m1f))  # Second component of kappa
             # print(self.kappa[i, 1])
-        print(self.kappa_bar)
+        # print(self.kappa_bar)
 
     @staticmethod
     def __parallel_transport(self, d1_1: np.ndarray, t1: np.ndarray, t2: np.ndarray, 
