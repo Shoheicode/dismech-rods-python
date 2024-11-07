@@ -20,8 +20,8 @@ class world:
         self.total_time = sim_params.sim_time
         self.stepper:BaseTimeStepper= None
 
-        self.forces.add_force(ElasticStretchingForce(soft_robots))
-        # self.forces.add_force(ElasticBendingForce(soft_robots))
+        # self.forces.add_force(ElasticStretchingForce(soft_robots))
+        self.forces.add_force(ElasticBendingForce(soft_robots))
         # self.forces.add_force(ElasticTwistingForce(soft_robots))
 
         # if sim_params.integrator not in [IntegratorMethod.FORWARD_EULER, IntegratorMethod.VERLET_POSITION]:
@@ -104,7 +104,7 @@ class world:
             (f"time: {self.curr_time:.4f} | iters: {self.stepper.iter} | "
                   f"floor_con: {ff.num_contacts} | f_min_dist: {ff.min_dist:.6f}")
         else:
-            (f"time: {self.curr_time:.4f} | iters: {self.stepper.iter}")
+            print(f"time: {self.curr_time:.4f} | iters: {self.stepper.iter}")
 
     def floor_exists(self):
         return self.forces.ff is not None

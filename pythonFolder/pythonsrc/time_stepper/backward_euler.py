@@ -21,9 +21,10 @@ class BackwardEuler(ImplicitTimeStepper):
         solved = False
         self.iter = 0
 
-        print("NEWTON METHOD RUNNING")
+        # print("NEWTON METHOD RUNNING")
 
         while not solved:
+            print("NOT SOLVED")
             self.prep_system_for_iteration()
             self.forces.compute_forces_and_jacobian(dt)
             # print(dt)
@@ -33,23 +34,26 @@ class BackwardEuler(ImplicitTimeStepper):
             # print("FORCE")
             # print(self.Force)
             normf = np.linalg.norm(self.Force)
-            # print("FORM", normf)
+            print(self.iter)
+            print("FORM", normf)
 
             if self.iter == 0:
                 normf0 = normf
 
             # Force tolerance check
+            print("NORMYYY", normf)
+            print("NORM", normf0 * self.ftol)
             if normf <= normf0 * self.ftol:
                 print("NORMF")
                 solved = True
                 self.iter += 1
                 continue
             
-            print(normf)
+            # print(normf)
 
             # Adaptive time stepping if enabled
             if self.adaptive_time_stepping and self.iter != 0 and self.iter % self.adaptive_time_stepping_threshold == 0:
-                print("ADAPTIVE")
+                # print("ADAPTIVE")
                 dt *= 0.5
                 for limb in self.limbs:
                     limb.update_guess(0.01, dt)
@@ -65,13 +69,13 @@ class BackwardEuler(ImplicitTimeStepper):
             # Newton update
             max_dx = 0
             for idx, limb in enumerate(self.limbs):
-                print("INDEX", idx)
+                # print("INDEX", idx)
                 curr_dx = limb.update_newton_x(self.dx, self.offsets[idx], self.alpha)
                 max_dx = max(max_dx, curr_dx)
 
-            print("MAX DX:", max_dx)
-            print("dt:", dt)
-            print("dt:", self.dtol)
+            # print("MAX DX:", max_dx)
+            # print("dt:", dt)
+            # print("dt:", self.dtol)
 
             # Dynamics tolerance check
             if max_dx / dt < self.dtol:
@@ -82,6 +86,7 @@ class BackwardEuler(ImplicitTimeStepper):
             self.iter += 1
 
             # Exit if unable to converge
+            # print(self.max_iter)
             if self.iter > self.max_iter:
                 if self.terminate_at_max:
                     print(f"No convergence after {self.max_iter} iterations")
@@ -89,7 +94,8 @@ class BackwardEuler(ImplicitTimeStepper):
                 else:
                     solved = True
 
-        print("ITER", self.iter)
+        # print("ITER", self.iter)
+        print("LEAVING ")
 
         return dt
 
@@ -111,7 +117,7 @@ class BackwardEuler(ImplicitTimeStepper):
         q0 = 0.5 * np.power(np.linalg.norm(self.Force), 2)
         # print("FORCE T VALUE", self.Force.T)
         # print("DX VALUES", self.DX)
-        print(self.Jacobian)
+        # print(self.Jacobian)
         dq0 = -np.dot(self.Force.T, np.dot(self.Jacobian, self.DX))#[0]
 
         success = False
@@ -151,7 +157,7 @@ class BackwardEuler(ImplicitTimeStepper):
             joint.x = joint.x_ls.copy()
 
     def step_forward_in_time(self):
-        print("THIS IS FORWARD IN TIME")
+        # print("THIS IS FORWARD IN TIME")
         # Override with time-stepping logic.
         self.dt = self.orig_dt
 

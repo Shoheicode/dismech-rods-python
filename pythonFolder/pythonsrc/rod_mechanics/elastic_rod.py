@@ -162,8 +162,8 @@ class ElasticRod:
 
         self.__compute_elastic_stiffness()
 
-        self.d1_old = self.d1
-        self.d2_old = self.d2
+        self.d1_old = self.d1.copy()
+        self.d2_old = self.d2.copy()
         self.ref_twist_old = self.ref_twist.copy()
         self.tangent_old = self.tangent.copy()
         
@@ -386,9 +386,17 @@ class ElasticRod:
         for i in range(self.ne):
             # Extract segments (3 elements) from 'x' to compute the tangent vector.
             self.tangent[i, :] = self.x[4 * (i + 1): 4 * (i + 1) + 3] - self.x[4 * i: 4 * i + 3]
+            # if i < 30:
+            #     print("TANGENT", i , ": ", self.tangent[i, :])
 
             # Normalize the tangent vector.
             self.tangent[i, :] = self.tangent[i, :] / np.linalg.norm(self.tangent[i, :])
+        
+        # for i in range(self.ne):
+        #     # Extract segments (3 elements) from 'x' to compute the tangent vector.
+        #     # self.tangent[i, :] = self.x[4 * (i + 1): 4 * (i + 1) + 3] - self.x[4 * i: 4 * i + 3]
+        #     if i < 30:
+        #         print("TANGENT2", i , ": ", self.tangent[i, :])
     
     def __compute_twist_bar(self):
         """Compute the twist deformation."""
@@ -403,6 +411,7 @@ class ElasticRod:
             t1 = self.tangent[i]
             d1_vector = np.zeros(3)
             d1_vector = self.__parallel_transport(self, self.d1_old[i], t0, t1, d1_vector)
+            # print("D1 VECTOR", d1_vector)
             self.d1[i] = d1_vector
             self.d2[i] = np.cross(t1, d1_vector)
 
@@ -419,7 +428,10 @@ class ElasticRod:
             d1_tmp = np.cross(t0, t1)  # Compute the cross product again
 
         self.d1[0, :] = d1_tmp  # Store the result in the first row of d1
-        self.d1[0, :] = np.cross(t0, d1_tmp)  # Store the cross product of t0 and d1_tmp in d2
+        self.d2[0, :] = np.cross(t0, d1_tmp)  # Store the cross product of t0 and d1_tmp in d2
+
+        # print("ROW d1", d1_tmp)
+        # print("ROW d1", self.d2)
 
         # Loop over all elements and compute space-parallel transport
         for i in range(self.ne - 1):
@@ -443,8 +455,11 @@ class ElasticRod:
             ss = math.sin(angle) # Compute the sine of the angle
 
             # Update m1 and m2 based on the cosine and sine values
+            # print("D1", i , self.d1)
             self.m1[i, :] = cs * self.d1[i, :] + ss * self.d2[i, :]
             self.m2[i, :] = -ss * self.d1[i, :] + cs * self.d2[i, :]
+
+        # print("M1: ", self.m1[i, :])
 
     def __compute_edge_len(self):
         """Compute the length of each edge."""
@@ -475,20 +490,22 @@ class ElasticRod:
             t1 = self.tangent[i, :]      # Get the ith row of the tangent array
             self.kb[i, :] = 2.0 * np.cross(t0, t1) / (1.0 + np.dot(t0, t1))
 
+        print("KB Row:", i , ":", self.kb[i, :])
+
         # Second loop: Compute kappa using m1, m2, and kb
         for i in range(1, self.ne):
             m1e = self.m1[i - 1, :]  # Get the (i-1)th row of m1
             m2e = self.m2[i - 1, :]  # Get the (i-1)th row of m2
             m1f = self.m1[i, :]      # Get the ith row of m1
             m2f = self.m2[i, :]      # Get the ith row of m2
+            # print("m1e", m1e)
 
             # Calculate the values for kappa
-            # print("KAPPA SELF ")
             self.kappa[i, 0] = 0.5 * np.dot(self.kb[i, :], (m2e + m2f))  # First component of kappa
-            # print(self.kappa[i, 0])
             self.kappa[i, 1] = -0.5 * np.dot(self.kb[i, :], (m1e + m1f))  # Second component of kappa
-            # print(self.kappa[i, 1])
-        # print(self.kappa_bar)
+
+            # print("KAPPA1", self.kappa[i,0])
+            # print("KAPPA2", self.kappa[i,1])
 
     @staticmethod
     def __parallel_transport(self, d1_1: np.ndarray, t1: np.ndarray, t2: np.ndarray, 

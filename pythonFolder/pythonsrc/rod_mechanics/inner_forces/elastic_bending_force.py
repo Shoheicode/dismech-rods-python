@@ -345,28 +345,45 @@ class ElasticBendingForce(BaseForce):
                 self.kappa1 = limb.kappa[i, 0]
                 self.kappa2 = limb.kappa[i, 1]
 
+                # print("KAPPA1", self.kappa1)
+                # print("KAPPA2", self.kappa2)
+
                 self.kbLocal = limb.kb[i]
 
                 # Compute Jacobians
                 self.jacobian_computation()
 
                 self.len = limb.voronoi_len[i]
+                # print("LENGHT", i , ": ", self.len)
                 self.relevantPart[:,0] = self.gradKappa1[i,:]
+                # if i == 5:
+                #     print("relevantPart",i ,": ",  self.relevantPart[:, 0])
                 self.relevantPart[:,1] = self.gradKappa2[i,:]
+                if i == 5:
+                    print("relevantPart1", self.relevantPart[:,1])
 
                 # Compute kappaL
                 self.kappaL = limb.kappa[i] - limb.kappa_bar[i]
+                if i == 5:
+                    print("kappaL", i , ": ", self.kappaL)
 
                 temp = -1.0 / limb.voronoi_len[i] * np.dot(self.kappaL.T, self.EIMatrices[limb_idx])
+                if i == 5:
+                    print("TEMP VALUE", temp)
                 
                 self.Jbb += temp[0] * self.DDkappa1 + temp[1] * self.DDkappa2
+                # if i == 5:
+                #     print(self.Jbb)
 
                 # Add Jacobians depending on node joints
                 if limb.is_node_joint[i-1] != 1 and limb.is_node_joint[i] != 1 and limb.is_node_joint[i+1] != 1:
+                    # print(i)
                     for j in range(11):
                         for k in range(11):
                             ind1 = 4 * i - 4 + j
                             ind2 = 4 * i - 4 + k
+                            if i == 5 and j == 1:
+                                print("JBB, ind1:", ind1 ,"ind2: ", ind2, "JBB: ", -self.Jbb[k,j])
                             self.stepper.add_jacobian(ind1, ind2, -self.Jbb[k, j], limb_idx)
                 else:
                     n1 = limb.joint_ids[i - 1][0]

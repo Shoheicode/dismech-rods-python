@@ -32,12 +32,12 @@ class ImplicitTimeStepper(BaseTimeStepper):
         self.adaptive_time_stepping = sim_params.adaptive_time_stepping != 0
         self.solver_type = solver_type
 
-        print("FREE DOF",self.freeDOF)
+        # print("FREE DOF",self.freeDOF)
 
         self.Jacobian = np.zeros((self.freeDOF, self.freeDOF))
         # print("FREE DOF", )
-        print("HELLO FROM THE OTHER SIDE", len(self.Jacobian[1:]))
-        print(self.Jacobian)
+        # print("HELLO FROM THE OTHER SIDE", len(self.Jacobian[1:]))
+        # print(self.Jacobian)
         self.dgbsv_jacobian = None
         # self.ia = None
 
@@ -94,7 +94,7 @@ class ImplicitTimeStepper(BaseTimeStepper):
     def set_zero(self):
         # Reset or zero out any matrices or structures as necessary.
         super().set_zero()
-        print("SET ZERO")
+        # print("SET ZERO")
         if self.solver_type == "PARDISO_SOLVER":
             self.non_zero_elements.clear()
             self.ia.fill(0)
@@ -106,7 +106,7 @@ class ImplicitTimeStepper(BaseTimeStepper):
     def update(self):
         # Update the system state; implementation needed based on your requirements.
         super().update()
-        print("UPDATE IS RUNNING")
+        # print("UPDATE IS RUNNING")
         if self.solver_type == "PARDISO_SOLVER":
             # print("I AM RUNNING PARDISO")
             self.ia = np.zeros(self.freeDOF + 1, dtype=int)
