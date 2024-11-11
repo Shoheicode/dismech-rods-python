@@ -359,17 +359,18 @@ class ElasticBendingForce(BaseForce):
                 # if i == 5:
                 #     print("relevantPart",i ,": ",  self.relevantPart[:, 0])
                 self.relevantPart[:,1] = self.gradKappa2[i,:]
-                if i == 5:
-                    print("relevantPart1", self.relevantPart[:,1])
+                # if i == 5:
+                #     print("relevantPart1", self.relevantPart[:,1])
 
                 # Compute kappaL
                 self.kappaL = limb.kappa[i] - limb.kappa_bar[i]
-                if i == 5:
-                    print("kappaL", i , ": ", self.kappaL)
+                # if i == 5:
+                    # print("kappaL", i , ": ", self.kappaL)
 
                 temp = -1.0 / limb.voronoi_len[i] * np.dot(self.kappaL.T, self.EIMatrices[limb_idx])
-                if i == 5:
-                    print("TEMP VALUE", temp)
+                # if i == 5:
+                #     print("DDKAPPA1", self.DDkappa1)
+                    # print("DDKAPPA2", self.DDkappa2)
                 
                 self.Jbb += temp[0] * self.DDkappa1 + temp[1] * self.DDkappa2
                 # if i == 5:
@@ -534,14 +535,20 @@ class ElasticBendingForce(BaseForce):
         self.tilde_d2_3d = self.cross_mat(self.tilde_d2)
 
         tmp = np.cross(self.tf, self.tilde_d2)
+        # print("TMP", tmp)
         self.tf_c_d2t_o_tt = np.outer(tmp, self.tilde_t)
+        # print("self.tf_c_d2t_o_tt", self.tf_c_d2t_o_tt)
         self.tt_o_tf_c_d2t = self.tf_c_d2t_o_tt.T
+        # print("self.tt_o_tf_c_d2t", self.tt_o_tf_c_d2t)
         self.kb_o_d2e = np.outer(self.kb_local, self.d2e.T)
+        print("self.d2e.T", self.d2e.T)
         self.d2e_o_kb = self.kb_o_d2e.T
 
         self.D2kappa1De2 = (1.0 / self.norm2_e * (2 * self.kappa1 * self.tt_o_tt - self.tf_c_d2t_o_tt - self.tt_o_tf_c_d2t) 
                     - self.kappa1 / (self.chi * self.norm2_e) * (self.Id3 - np.outer(self.te, self.te))
                     + 1.0 / (4.0 * self.norm2_e) * (self.kb_o_d2e + self.d2e_o_kb))
+        
+        # print("SELF D2Kappa1DE2", self.D2kappa1De2)
 
         tmp = np.cross(self.te, self.tilde_d2)
         self.te_c_d2t_o_tt = np.outer(tmp, self.tilde_t)
