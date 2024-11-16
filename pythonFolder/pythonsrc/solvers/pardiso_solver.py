@@ -39,6 +39,8 @@ class PardisoSolver(BaseSolver):
         
         ia = np.array(self.stepper.ia, copy = True)
 
+        # print()
+
         # Cumulative sum for CSR indexing
         # ia[1:] = np.cumsum(ia[:-1]) + ia[1:]
         for i in range(n - 1):
