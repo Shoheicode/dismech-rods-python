@@ -97,8 +97,10 @@ class ImplicitTimeStepper(BaseTimeStepper):
         # print("SET ZERO")
         if self.solver_type == "PARDISO_SOLVER":
             self.non_zero_elements.clear()
-            self.ia.fill(0)
-            self.ia[0] = 1
+            # self.ia.fill(0)
+            for i in range(0, self.freeDOF):
+                self.ia[i+1] = 0
+            # self.ia[0] = 1
         elif self.solver_type == "DGBSV_SOLVER":
             self.dgbsv_jacobian.fill(0)
         self.Jacobian.fill(0)

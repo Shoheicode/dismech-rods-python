@@ -204,6 +204,7 @@ class ElasticRod:
                 curr_dx = abs(dx[offset + c])
                 if curr_dx > max_dx:
                     max_dx = curr_dx
+        print("MAX DX", max_dx)
         return max_dx
 
     def update_guess(self, weight:float, dt:float):
@@ -490,7 +491,7 @@ class ElasticRod:
             t1 = self.tangent[i, :]      # Get the ith row of the tangent array
             self.kb[i, :] = 2.0 * np.cross(t0, t1) / (1.0 + np.dot(t0, t1))
 
-        print("KB Row:", i , ":", self.kb[i, :])
+        # print("KB Row:", i , ":", self.kb[i, :])
 
         # Second loop: Compute kappa using m1, m2, and kb
         for i in range(1, self.ne):

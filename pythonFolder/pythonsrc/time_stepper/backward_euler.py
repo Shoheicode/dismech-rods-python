@@ -35,7 +35,7 @@ class BackwardEuler(ImplicitTimeStepper):
             # print(self.Force)
             normf = np.linalg.norm(self.Force)
             print(self.iter)
-            print("FORM", normf)
+            # print("FORM", normf)
 
             if self.iter == 0:
                 normf0 = normf
@@ -111,14 +111,18 @@ class BackwardEuler(ImplicitTimeStepper):
         al, au = 0, 1
         a = 1
 
+        print("FORCE: ")
         # print(self.Force.T)
 
         # Compute the initial slope
         q0 = 0.5 * np.power(np.linalg.norm(self.Force), 2)
+        print("Q0: ", q0)
         # print("FORCE T VALUE", self.Force.T)
         # print("DX VALUES", self.DX)
         # print(self.Jacobian)
         dq0 = -np.dot(self.Force.T, np.dot(self.Jacobian, self.DX))#[0]
+
+        print("DQ0:", dq0)
 
         success = False
         m2, m1 = 0.9, 0.1
@@ -151,8 +155,11 @@ class BackwardEuler(ImplicitTimeStepper):
 
         # Reset positions with optimal alpha
         self.alpha = a
+
+        print("ALPHA:", self.alpha)
         for limb in self.limbs:
             limb.x = limb.x_ls.copy()
+            print(limb.x)
         for joint in self.joints:
             joint.x = joint.x_ls.copy()
 

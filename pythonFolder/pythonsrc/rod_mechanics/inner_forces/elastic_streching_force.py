@@ -33,6 +33,7 @@ class ElasticStretchingForce(BaseForce):
 
                 # Calculate strain (epsX) for the edge based on current and reference length
                 self.epsX = limb.edge_len[i] / limb.ref_len[i] - 1.0
+                # print("EPSX", self.epsX)
 
                 # Calculate the force vector 'f' using EA (Young's modulus * cross-sectional area)
                 self.f = limb.EA * limb.tangent[i, :] * self.epsX  # NumPy row access
@@ -102,6 +103,7 @@ class ElasticStretchingForce(BaseForce):
                 
                 # Define u and v (displacement vectors)
                 self.u = self.dxx
+                # print("U VALUE", i , ":", self.u)
                 self.v = self.u.reshape(-1, 1)  # Reshape to a column vector
 
                 # Compute M0 matrix for the edge, based on elasticity and displacement
@@ -128,7 +130,8 @@ class ElasticStretchingForce(BaseForce):
                         ind1 = 4*i + j
                         ind2 = 4*i + k
                         # print("IND1: ", ind1, "IND2: ", ind2)
-                        # print("JSS VALUE, k: ", k ,"j :",  j, -self.JSS[k, j])
+                        # if k == 1 and j == 1:
+                            # print("JSS VALUE, k: ", k ,"j :",  j, -self.JSS[k, j])
                         self.stepper.add_jacobian(ind1, ind2, -self.JSS[k, j], limb_idx)
 
             limb_idx += 1  # Move to the next limb
