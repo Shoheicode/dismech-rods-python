@@ -68,7 +68,7 @@ class BaseTimeStepper(ABC):
     
     # Abstract methods (pure virtual in C++)
     def init_stepper(self):
-        print("IO AJKLJ")
+        # print("IO AJKLJ")
         self.forces.setup_force_stepper_access(self)
     
     @abstractmethod

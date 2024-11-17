@@ -24,7 +24,7 @@ class BackwardEuler(ImplicitTimeStepper):
         # print("NEWTON METHOD RUNNING")
 
         while not solved:
-            print("NOT SOLVED")
+            # print("NOT SOLVED")
             self.prep_system_for_iteration()
             self.forces.compute_forces_and_jacobian(dt)
             # print(dt)
@@ -41,10 +41,10 @@ class BackwardEuler(ImplicitTimeStepper):
                 normf0 = normf
 
             # Force tolerance check
-            print("NORMYYY", normf)
-            print("NORM", normf0 * self.ftol)
+            # print("NORMYYY", normf)
+            # print("NORM", normf0 * self.ftol)
             if normf <= normf0 * self.ftol:
-                print("NORMF")
+                # print("NORMF")
                 solved = True
                 self.iter += 1
                 continue
@@ -70,7 +70,7 @@ class BackwardEuler(ImplicitTimeStepper):
             max_dx = 0
             for idx, limb in enumerate(self.limbs):
                 # print("INDEX", idx)
-                curr_dx = limb.update_newton_x(self.dx, self.offsets[idx], self.alpha)
+                curr_dx = limb.update_newton_x(self.DX, self.offsets[idx], self.alpha)
                 max_dx = max(max_dx, curr_dx)
 
             # print("MAX DX:", max_dx)
@@ -95,7 +95,8 @@ class BackwardEuler(ImplicitTimeStepper):
                     solved = True
 
         # print("ITER", self.iter)
-        print("LEAVING ")
+        # print("LEAVING ")
+        # print(dt)
 
         return dt
 
@@ -111,28 +112,31 @@ class BackwardEuler(ImplicitTimeStepper):
         al, au = 0, 1
         a = 1
 
-        print("FORCE: ")
+        # print("FORCE: ")
         # print(self.Force.T)
 
         # Compute the initial slope
         q0 = 0.5 * np.power(np.linalg.norm(self.Force), 2)
-        print("Q0: ", q0)
+        # print("Q0: ", q0)
         # print("FORCE T VALUE", self.Force.T)
         # print("DX VALUES", self.DX)
         # print(self.Jacobian)
         dq0 = -np.dot(self.Force.T, np.dot(self.Jacobian, self.DX))#[0]
 
-        print("DQ0:", dq0)
+        # print("DQ0:", dq0)
 
         success = False
         m2, m1 = 0.9, 0.1
 
         while not success:
+            limb_idx = 0
             for joint in self.joints:
                 joint.x = joint.x_ls.copy()
-            for idx, limb in enumerate(self.limbs):
+            for limb in self.limbs:
                 limb.x = limb.x_ls.copy()
-                limb.update_newton_x(self.dx, self.offsets[idx], self.alpha)
+                limb.update_newton_x(self.DX, self.offsets[limb_idx], self.alpha)
+
+            limb_idx+=1
 
             self.prep_system_for_iteration()
             self.forces.compute_force(dt)
@@ -156,10 +160,10 @@ class BackwardEuler(ImplicitTimeStepper):
         # Reset positions with optimal alpha
         self.alpha = a
 
-        print("ALPHA:", self.alpha)
+        # print("ALPHA:", self.alpha)
         for limb in self.limbs:
             limb.x = limb.x_ls.copy()
-            print(limb.x)
+            # print(limb.x)
         for joint in self.joints:
             joint.x = joint.x_ls.copy()
 
