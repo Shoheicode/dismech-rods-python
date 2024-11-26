@@ -202,9 +202,10 @@ class ElasticRod:
 
             if (ind - 3) % 4 != 0:  # Non-theta degree of freedom
                 curr_dx = abs(dx[offset + c])
+                # print(dx[offset + c])
                 if curr_dx > max_dx:
                     max_dx = curr_dx
-        # print("MAX DX", max_dx)
+        print("MAX DX", max_dx)
         return max_dx
 
     def update_guess(self, weight:float, dt:float):

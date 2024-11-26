@@ -34,10 +34,15 @@ class ImplicitMidpoint(BackwardEuler):
 
         # Compute position at T = t + 0.5 * dt
         self.dt = 2 * self.newton_method(0.5 * self.dt)
+        print("DT VALUE: ", self.dt)
 
         for limb in self.limbs:
             # Compute velocity at T = t + 0.5 * dt
+            print("PRINT LIMBX", limb.x)
+            print("PRINT LIMB BEFORE", limb.x0)
             limb.u = (limb.x - limb.x0) / (0.5 * self.dt)
+
+            # print("U POSITION", limb.u)
 
             # Compute position at T = t + dt
             limb.x = 2 * limb.x - limb.x0
@@ -47,10 +52,14 @@ class ImplicitMidpoint(BackwardEuler):
             #     print("Z POSITION", i, ":", limb.x[i*4+2])
             limb.x0 = limb.x
 
+            # print("LIMB VALUE X", limb.x)
+
             # Compute velocity at T = t + dt
             limb.u = 2 * limb.u - limb.u0
-            # print("U POSITION: ", limb.u)
+            
             limb.u0 = limb.u
+
+            # print("U POSITION2: ", limb.u0)
 
         # Update the system for the next time step
         self.update_system_for_next_time_step()

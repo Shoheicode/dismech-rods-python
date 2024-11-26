@@ -34,8 +34,8 @@ class BackwardEuler(ImplicitTimeStepper):
             # print("FORCE")
             # print(self.Force)
             normf = np.linalg.norm(self.Force)
-            print(self.iter)
-            # print("FORM", normf)
+            # print(self.iter)
+            print("FORM", normf)
 
             if self.iter == 0:
                 normf0 = normf
@@ -68,12 +68,15 @@ class BackwardEuler(ImplicitTimeStepper):
 
             # Newton update
             max_dx = 0
-            for idx, limb in enumerate(self.limbs):
+            idx = 0
+            for limb in self.limbs:
                 # print("INDEX", idx)
-                curr_dx = limb.update_newton_x(self.DX, self.offsets[idx], self.alpha)
+                # print(self.dx)
+                curr_dx = limb.update_newton_x(self.dx, self.offsets[idx], self.alpha)
                 max_dx = max(max_dx, curr_dx)
+                idx+=1
 
-            # print("MAX DX:", max_dx)
+            print("MAX DX:", max_dx)
             # print("dt:", dt)
             # print("dt:", self.dtol)
 
@@ -117,13 +120,13 @@ class BackwardEuler(ImplicitTimeStepper):
 
         # Compute the initial slope
         q0 = 0.5 * np.power(np.linalg.norm(self.Force), 2)
-        # print("Q0: ", q0)
+        print("Q0: ", q0)
         # print("FORCE T VALUE", self.Force.T)
         # print("DX VALUES", self.DX)
         # print(self.Jacobian)
         dq0 = -np.dot(self.Force.T, np.dot(self.Jacobian, self.DX))#[0]
 
-        # print("DQ0:", dq0)
+        print("DQ0:", dq0)
 
         success = False
         m2, m1 = 0.9, 0.1
@@ -134,14 +137,14 @@ class BackwardEuler(ImplicitTimeStepper):
                 joint.x = joint.x_ls.copy()
             for limb in self.limbs:
                 limb.x = limb.x_ls.copy()
-                limb.update_newton_x(self.DX, self.offsets[limb_idx], self.alpha)
-
-            limb_idx+=1
+                limb.update_newton_x(self.dx, self.offsets[limb_idx], self.alpha)
+                limb_idx+=1
 
             self.prep_system_for_iteration()
             self.forces.compute_force(dt)
 
             q = 0.5 * np.power(np.linalg.norm(self.Force), 2)
+            print("Q VALUE: ", q)
             slope = (q - q0) / a
 
             if m2 * dq0 <= slope <= m1 * dq0:
@@ -163,6 +166,7 @@ class BackwardEuler(ImplicitTimeStepper):
         # print("ALPHA:", self.alpha)
         for limb in self.limbs:
             limb.x = limb.x_ls.copy()
+            # print(limb.x)
             # print(limb.x)
         for joint in self.joints:
             joint.x = joint.x_ls.copy()
