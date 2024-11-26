@@ -36,17 +36,17 @@ class ImplicitMidpoint(BackwardEuler):
         if self.forces.cf:
             self.forces.cf.broad_phase_collision_detection()
 
-        print("NEWTON METHOD")
-        print("STEP FORWARD RUNNING IN TIME IMPLICIT's Euler")
+        # print("NEWTON METHOD")
+        # print("STEP FORWARD RUNNING IN TIME IMPLICIT's Euler")
 
         # Compute position at T = t + 0.5 * dt
         self.dt = 2 * self.newton_method(0.5 * self.dt)
-        print("DT VALUE: ", self.dt)
+        # print("DT VALUE: ", self.dt)
 
         for limb in self.limbs:
             # Compute velocity at T = t + 0.5 * dt
-            print("PRINT LIMBX", limb.x)
-            print("PRINT LIMB BEFORE", limb.x0)
+            # print("PRINT LIMBX", limb.x)
+            # print("PRINT LIMB BEFORE", limb.x0)
             limb.u = (limb.x - limb.x0) / (0.5 * self.dt)
 
             # print("U POSITION", limb.u)
@@ -59,7 +59,7 @@ class ImplicitMidpoint(BackwardEuler):
             #     print("Z POSITION", i, ":", limb.x[i*4+2])
             limb.x0 = limb.x.copy()
 
-            print("LIMB VALUE X0", limb.x)
+            # print("LIMB VALUE X0", limb.x)
 
             # Compute velocity at T = t + dt
             limb.u = 2 * limb.u - limb.u0

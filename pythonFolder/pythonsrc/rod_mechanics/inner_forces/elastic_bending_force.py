@@ -576,7 +576,7 @@ class ElasticBendingForce(BaseForce):
         # print("TF_C_D1T_oTT", self.tf_c_d1t_o_tt)
         self.tt_o_tf_c_d1t = self.tf_c_d1t_o_tt.T
         self.kb_o_d1e = np.outer(self.kb_local, self.d1e)
-        print("KB_O_KB", self.kb_o_d1e)
+        # print("KB_O_KB", self.kb_o_d1e)
         self.d1e_o_kb = self.kb_o_d1e.T
 
         self.D2kappa2De2 = (1.0 / self.norm2_e * (2 * self.kappa2 * self.tt_o_tt + self.tf_c_d1t_o_tt + self.tt_o_tf_c_d1t)
