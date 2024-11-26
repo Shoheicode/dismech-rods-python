@@ -20,9 +20,15 @@ class ImplicitMidpoint(BackwardEuler):
         # Set initial time step
         self.dt = self.orig_dt
 
+        # for limb in self.limbs:
+        #     print("LIMB pALUE", limb.x0)
+
         # Initial guess using last solution
         for limb in self.limbs:
             limb.update_guess(0.01, 0.5 * self.dt)
+
+        # for limb in self.limbs:
+        #     print("LIMB BALUE", limb.x0)
 
         # print(self.forces.cf)
 
@@ -30,7 +36,8 @@ class ImplicitMidpoint(BackwardEuler):
         if self.forces.cf:
             self.forces.cf.broad_phase_collision_detection()
 
-        # print("NEWTON METHOD")
+        print("NEWTON METHOD")
+        print("STEP FORWARD RUNNING IN TIME IMPLICIT's Euler")
 
         # Compute position at T = t + 0.5 * dt
         self.dt = 2 * self.newton_method(0.5 * self.dt)
@@ -50,18 +57,20 @@ class ImplicitMidpoint(BackwardEuler):
             #     # print("X POSITION", i, ":", limb.x[i*4])
             #     # print("Y POSITION", i, ":", limb.x[i*4+1])
             #     print("Z POSITION", i, ":", limb.x[i*4+2])
-            limb.x0 = limb.x
+            limb.x0 = limb.x.copy()
 
-            # print("LIMB VALUE X", limb.x)
+            print("LIMB VALUE X0", limb.x)
 
             # Compute velocity at T = t + dt
             limb.u = 2 * limb.u - limb.u0
             
-            limb.u0 = limb.u
+            limb.u0 = limb.u.copy()
 
             # print("U POSITION2: ", limb.u0)
 
         # Update the system for the next time step
         self.update_system_for_next_time_step()
+        # for limb in self.limbs:
+        #     print("LIMB BALUE", limb.x0)
 
         return self.dt

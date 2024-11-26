@@ -16,7 +16,7 @@ def convert_float_to_scientific_str(value):
 def get_robot_description(argc, argv,soft_robots:SoftRobots, forces: ForceContainer, logger: WorldLogger, sim_params: SimParams, render_params: RenderParams):
 
     sim_params.dt = 5e-2
-    sim_params.sim_time = 0.10
+    sim_params.sim_time = 1.00
     sim_params.dtol = 1e-3
     sim_params.enable_2d_sim = True
     sim_params.integrator = IntegratorMethod.IMPLICIT_MIDPOINT

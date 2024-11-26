@@ -187,6 +187,8 @@ class BackwardEuler(ImplicitTimeStepper):
         # Run Newton's method to find the next time step
         self.dt = self.newton_method(self.dt)
 
+        print("STEP FORWARD RUNNING IN TIME BACKWARD's Euler")
+
         # Update limb positions and velocities
         for limb in self.limbs:
             limb.u = (limb.x - limb.x0) / self.dt

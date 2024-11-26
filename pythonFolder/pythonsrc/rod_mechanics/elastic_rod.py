@@ -95,9 +95,9 @@ class ElasticRod:
 
         # print(self.x)
 
-        self.x0 = self.x.copy()
+        self.x0 = np.copy(self.x)
         self.u = np.zeros(self.ndof)
-        self.u0 = self.u.copy()
+        self.u0 = np.copy(self.u)
 
         # Unconstrained and constrained DOFs
         self.ncons = 0
@@ -211,9 +211,12 @@ class ElasticRod:
     def update_guess(self, weight:float, dt:float):
         """Update the guess for the next time step using a weighted combination of velocities and displacements."""
         # print("UNCONSTRAINED MAP", self.unconstrained_map)
+        # print("BEFORE", self.x0)
         for c in range(self.uncons):
             ind = self.unconstrained_map[c]
             self.x[ind] = self.x0[ind] + weight * self.u[ind] * dt
+        # print("X VALUE", self.x)
+        # print("AFTER", self.x0)
             # print("self.x:" , ind , ":", self.x[ind])
 
     def enable_2d_sim(self):
