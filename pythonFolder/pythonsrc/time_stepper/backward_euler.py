@@ -61,6 +61,8 @@ class BackwardEuler(ImplicitTimeStepper):
                 continue
 
             # Solve equations of motion
+
+            # print("HELLO")
             
             self.integrator()
             if self.line_search:
@@ -198,7 +200,7 @@ class BackwardEuler(ImplicitTimeStepper):
         return self.dt
     
     def update_system_for_next_time_step(self):
-        # print("BACK WARD EULER RIGHT")
+        print("BACK WARD EULER RIGHT")
         self.prep_system_for_iteration()
 
         # Update controllers

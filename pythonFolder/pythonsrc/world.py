@@ -21,7 +21,7 @@ class world:
         self.stepper:BaseTimeStepper= None
 
         self.forces.add_force(ElasticStretchingForce(soft_robots))
-        # self.forces.add_force(ElasticBendingForce(soft_robots))
+        self.forces.add_force(ElasticBendingForce(soft_robots))
         # self.forces.add_force(ElasticTwistingForce(soft_robots))
 
         # if sim_params.integrator not in [IntegratorMethod.FORWARD_EULER, IntegratorMethod.VERLET_POSITION]:
