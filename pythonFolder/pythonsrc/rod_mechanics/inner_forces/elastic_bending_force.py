@@ -573,6 +573,10 @@ class ElasticBendingForce(BaseForce):
                                                     + self.tt_o_te_c_d2t - self.tilde_d2_3d))
         self.D2kappa1DfDe = self.D2kappa1DeDf.T
 
+        if i == 1:
+            print("SELF D2kappa1DeDf: ", i , self.D2kappa1DeDf)
+            print("SELF D2kappa1DeDf", self.D2kappa1DeDf)
+
         # if i <= 5:
         #     print("SELF D2kappa1Df2: ", i , self.D2kappa1DeDf)
 
@@ -591,12 +595,17 @@ class ElasticBendingForce(BaseForce):
         self.d1e_o_kb = self.kb_o_d1e.T
 
         self.D2kappa2De2 = (1.0 / self.norm2_e * (2 * self.kappa2 * self.tt_o_tt + self.tf_c_d1t_o_tt + self.tt_o_tf_c_d1t)
-                    - self.kappa2 / (self.chi * self.norm2_e) * (self.Id3 - np.outer(self.te, self.te))
+                    - self.kappa2 / (self.chi * self.norm2_e) * (self.Id3 - self.te* self.te.T)
                     - 1.0 / (4.0 * self.norm2_e) * (self.kb_o_d1e + self.d1e_o_kb))
 
-        # if i == 1:
-        #     print("D2kappa2de2: ", i , self.D2kappa2De2)
-        # print("KAPPA 2", self.kappa2)
+        if i == 1:
+            print('1', self.norm2_e)
+            print('2', self.kappa2)
+            print('3', self.tt_o_tt)
+            print('4', self.tf_c_d1t_o_tt)
+            print('5', self.tt_o_tf_c_d1t)
+            print('self.kb_o_d1e', self.kb_o_d1e)
+            print('self.d1e_o_kb', self.d1e_o_kb)
 
         tmp = np.cross(self.te, self.tilde_d1)
         self.te_c_d1t_o_tt = np.outer(tmp, self.tilde_t)
@@ -608,6 +617,9 @@ class ElasticBendingForce(BaseForce):
                     - self.kappa2 / (self.chi * self.norm2_f) * (self.Id3 - np.outer(self.tf, self.tf))
                     - 1.0 / (4.0 * self.norm2_f) * (self.kb_o_d1f + self.d1f_o_kb))
         
+        if i == 1:
+            print("D2kappa2de2: ", i , self.D2kappa2De2)
+            print("D2kappa2Df2: ", i , self.D2kappa2Df2)
         
 
         self.D2kappa2DeDf = (-self.kappa2 / (self.chi * self.norm_e * self.norm_f) * (self.Id3 + np.outer(self.te, self.tf))
