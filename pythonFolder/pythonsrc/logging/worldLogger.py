@@ -14,6 +14,7 @@ class WorldLogger(ABC):
         self.period = period
         self.num_lines_header = 0
         self.file_name_prefix = file_name_prefix
+        self.world_ptr = None
 
         if self.file_name_prefix == "":
             raise ValueError("Must specify a prefix for the worldLogger file name!")
@@ -103,6 +104,7 @@ class WorldLogger(ABC):
         """
         Log world data to the file, at a periodic rate.
         """
+        print("DATA PRINTs")
         if self.world_ptr.get_time_step() % self.period == 0:
             with open(self.file_name, 'a') as f:
                 f.write(self.get_log_data() + "\n")

@@ -24,7 +24,7 @@ class ElasticBendingForce(BaseForce):
     d1f = np.zeros(3)
     d2e = np.zeros(3)
     d2f = np.zeros(3)
-    tilde_t = np.zeros(3)
+    tilde_t = np.zeros(3) # []
     tilde_d1 = np.zeros(3)
     tilde_d2 = np.zeros(3)
     Dkappa1De = np.zeros(3)
@@ -163,6 +163,11 @@ class ElasticBendingForce(BaseForce):
                 self.d1f = limb.m1[i, :]
                 self.d2f = limb.m2[i, :]
 
+                # print("SELFTE: ", self.te)
+                # print("SELFTf: ", self.tf)
+                # print("SELFd1e: ", self.d1e)
+                # print("SELFd2e: ", self.d2e)
+
                 self.chi = 1.0 + np.dot(self.te, self.tf)
                 self.tilde_t = (self.te + self.tf) / self.chi
                 self.tilde_d1 = (self.d1e + self.d1f) / self.chi
@@ -191,6 +196,7 @@ class ElasticBendingForce(BaseForce):
                 self.gradKappa2[i, 3] = -0.5 * np.dot(self.kb_local, self.d2e)
                 self.gradKappa2[i, 7] = -0.5 * np.dot(self.kb_local, self.d2f)
 
+
             # Second loop
             for i in range(1, limb.ne):
                 self.relevantPart[:, 0] = self.gradKappa1[i, :]
@@ -201,8 +207,7 @@ class ElasticBendingForce(BaseForce):
                 # print(self.kappaL)
 
                 self.f = -np.dot(self.relevantPart, np.dot(self.EIMatrices[limb_idx], self.kappaL)) / limb.voronoi_len[i]
-                # print("FORCE COMPUTE BENDINGD")
-                # print(self.f)
+                # print("FORCE COMPUTE", self.f)
 
                 if limb.is_node_joint[i - 1] != 1 and limb.is_node_joint[i] != 1 and limb.is_node_joint[i + 1] != 1:
                     self.ci = 4 * i - 4
@@ -312,7 +317,7 @@ class ElasticBendingForce(BaseForce):
             joint_idx += 1
     
     def compute_force_and_jacobian(self, dt):
-        print("ELASTIC BENDING FORCE ")
+        # print("ELASTIC BENDING FORCE ")
         self.compute_force(dt)
 
         # print(self.stepper)
@@ -355,13 +360,16 @@ class ElasticBendingForce(BaseForce):
                 self.jacobian_computation(i)
 
                 self.len = limb.voronoi_len[i]
+
+                
                 # print("LENGHT", i , ": ", self.len)
                 self.relevantPart[:,0] = self.gradKappa1[i,:]
-                # if i <= 5:
-                #     print("relevantPart col 0",i ,": ",  self.relevantPart[:, 0])
-                # self.relevantPart[:,1] = self.gradKappa2[i,:]
-                # if i <= 5:
-                #     print("relevantPart col 1", self.relevantPart[:,1])
+                self.relevantPart[:,1] = self.gradKappa2[i,:]
+
+                # print("RELEVANT PART ", self.relevantPart)
+
+                self.Jbb =  (-1.0 / limb.voronoi_len[i]) * np.dot(self.relevantPart, np.dot(self.EIMatrices[limb_idx], self.relevantPart.T))
+                # np.dot(self.relevantPart, np.dot(self.EIMatrices[limb_idx], self.kappaL))
 
                 # Compute kappaL
                 self.kappaL = limb.kappa[i] - limb.kappa_bar[i]
@@ -374,6 +382,7 @@ class ElasticBendingForce(BaseForce):
                     # print("DDKAPPA2", self.DDkappa2)
                 
                 self.Jbb += temp[0] * self.DDkappa1 + temp[1] * self.DDkappa2
+                # print("JBB", self.Jbb)
 
                 # if i <=5:
                 #     print(self.Jbb)
@@ -552,8 +561,8 @@ class ElasticBendingForce(BaseForce):
         self.D2kappa1De2 = (1.0 / self.norm2_e * (2 * self.kappa1 * self.tt_o_tt - self.tf_c_d2t_o_tt - self.tt_o_tf_c_d2t) 
                     - self.kappa1 / (self.chi * self.norm2_e) * (self.Id3 - np.outer(self.te, self.te))
                     + 1.0 / (4.0 * self.norm2_e) * (self.kb_o_d2e + self.d2e_o_kb))
-        if i == 1:
-            print("SELF D2Kappa1DE2", self.D2kappa1De2)
+        # if i == 1:
+            # print("SELF D2Kappa1DE2", self.D2kappa1De2)
 
         tmp = np.cross(self.te, self.tilde_d2)
         self.te_c_d2t_o_tt = np.outer(tmp, self.tilde_t)
@@ -565,17 +574,17 @@ class ElasticBendingForce(BaseForce):
                     - self.kappa1 / (self.chi * self.norm2_f) * (self.Id3 - np.outer(self.tf, self.tf))
                     + 1.0 / (4.0 * self.norm2_f) * (self.kb_o_d2f + self.d2f_o_kb))
 
-        if i == 1:
-            print("SELF D2kappa1Df2", self.D2kappa1Df2)
+        # if i == 1:
+        #     print("SELF D2kappa1Df2", self.D2kappa1Df2)
 
         self.D2kappa1DeDf = (-self.kappa1 / (self.chi * self.norm_e * self.norm_f) * (self.Id3 + np.outer(self.te, self.tf))
                         + 1.0 / (self.norm_e * self.norm_f) * (2 * self.kappa1 * self.tt_o_tt - self.tf_c_d2t_o_tt 
                                                     + self.tt_o_te_c_d2t - self.tilde_d2_3d))
         self.D2kappa1DfDe = self.D2kappa1DeDf.T
 
-        if i == 1:
-            print("SELF D2kappa1DeDf: ", i , self.D2kappa1DeDf)
-            print("SELF D2kappa1DeDf", self.D2kappa1DeDf)
+        # if i == 1:
+        #     print("SELF D2kappa1DeDf: ", i , self.D2kappa1DeDf)
+        #     print("SELF D2kappa1DeDf", self.D2kappa1DeDf)
 
         # if i <= 5:
         #     print("SELF D2kappa1Df2: ", i , self.D2kappa1DeDf)
@@ -595,17 +604,19 @@ class ElasticBendingForce(BaseForce):
         self.d1e_o_kb = self.kb_o_d1e.T
 
         self.D2kappa2De2 = (1.0 / self.norm2_e * (2 * self.kappa2 * self.tt_o_tt + self.tf_c_d1t_o_tt + self.tt_o_tf_c_d1t)
-                    - self.kappa2 / (self.chi * self.norm2_e) * (self.Id3 - self.te* self.te.T)
+                    - self.kappa2 / (self.chi * self.norm2_e) * (self.Id3 - self.te.reshape(1, 3) @ np.transpose(self.te.reshape(1, 3)))
                     - 1.0 / (4.0 * self.norm2_e) * (self.kb_o_d1e + self.d1e_o_kb))
 
-        if i == 1:
-            print('1', self.norm2_e)
-            print('2', self.kappa2)
-            print('3', self.tt_o_tt)
-            print('4', self.tf_c_d1t_o_tt)
-            print('5', self.tt_o_tf_c_d1t)
-            print('self.kb_o_d1e', self.kb_o_d1e)
-            print('self.d1e_o_kb', self.d1e_o_kb)
+        # if i == 1:
+        #     print('1', self.norm2_e)
+        #     print('2', self.kappa2)
+        #     print('3', self.tt_o_tt)
+        #     print('4', self.tf_c_d1t_o_tt)
+        #     print('5', self.tt_o_tf_c_d1t)
+        #     print('self.kb_o_d1e', self.kb_o_d1e)
+        #     print('self.d1e_o_kb', self.d1e_o_kb)
+        #     print("self.te", self.te.reshape(1, 3))
+        #     print("self.te trans", np.transpose(self.te.reshape(1, 3)))
 
         tmp = np.cross(self.te, self.tilde_d1)
         self.te_c_d1t_o_tt = np.outer(tmp, self.tilde_t)
@@ -617,9 +628,9 @@ class ElasticBendingForce(BaseForce):
                     - self.kappa2 / (self.chi * self.norm2_f) * (self.Id3 - np.outer(self.tf, self.tf))
                     - 1.0 / (4.0 * self.norm2_f) * (self.kb_o_d1f + self.d1f_o_kb))
         
-        if i == 1:
-            print("D2kappa2de2: ", i , self.D2kappa2De2)
-            print("D2kappa2Df2: ", i , self.D2kappa2Df2)
+        # if i == 1:
+        #     print("D2kappa2de2: ", i , self.D2kappa2De2)
+        #     print("D2kappa2Df2: ", i , self.D2kappa2Df2)
         
 
         self.D2kappa2DeDf = (-self.kappa2 / (self.chi * self.norm_e * self.norm_f) * (self.Id3 + np.outer(self.te, self.tf))
@@ -632,12 +643,17 @@ class ElasticBendingForce(BaseForce):
         self.D2kappa2Dthetae2 = 0.5 * self.kb_local.dot(self.d1e)
         self.D2kappa2Dthetaf2 = 0.5 * self.kb_local.dot(self.d1f)
 
+        # print("Dot product A:", self.D2kappa1Dthetae2)
+        # print("Dot product B:", self.D2kappa1Dthetaf2)
+        # print("Dot product C:", self.D2kappa2Dthetae2)
+        # print("Dot product D:", self.D2kappa2Dthetaf2)
+
         a = (0.5 * self.kb_local.dot(self.d1e)) * self.tilde_t
         b = 1.0 / self.chi * np.cross(self.tf, self.d1e)
         self.D2kappa1DeDthetae = ((1.0 / self.norm_e) * (a - b))
         
-        if i <= 5:
-            print("HEYO", (0.5 * self.kb_local.dot(self.d1e)) * self.tilde_t)
+        # if i <= 5:
+        #     print("HEYO", (0.5 * self.kb_local.dot(self.d1e)) * self.tilde_t)
         self.D2kappa1DeDthetaf = (1.0 / self.norm_e * ((0.5 * self.kb_local.dot(self.d1f)) * self.tilde_t
                                             - 1.0 / self.chi * np.cross(self.tf, self.d1f)))
         a = (0.5 * self.kb_local.dot(self.d1e)) * self.tilde_t
@@ -653,25 +669,24 @@ class ElasticBendingForce(BaseForce):
                                             + 1.0 / self.chi * np.cross(self.te, self.d2e)))
         self.D2kappa2DfDthetaf = (1.0 / self.norm_f * ((0.5 * self.kb_local.dot(self.d2f)) * self.tilde_t
                                             + 1.0 / self.chi * np.cross(self.te, self.d2f)))
-        if (i ==1):
-            print("A VALUE:", a)
-            print("B VALUE:", b)
-            print("norm e", self.norm_e)
-            print("self.kb_local",i,  self.kb_local)
-            print("self.d1e", i , self.d1e)
-            print("self.tilde_t", i , self.tilde_t)
-            print("self.chi",i, self.chi)
-            print("self.tf",i, self.tf)
-            print("self.d1f", i , self.d1f)
-            print("self.D2kappa1DeDthetaf", i ,": ", self.D2kappa1DeDthetaf)
-            print("self.D2kappa1DeDthetae", i, ": ", self.D2kappa1DeDthetae)
-            print("self.D2kappa1DfDthetaf", i, ": ", self.D2kappa1DfDthetaf)
-            print("self.D2kappa2DeDthetae", i, ": ",self.D2kappa2DeDthetae)
-            print("self.D2kappa2DeDthetaf", i, ": ", self.D2kappa2DeDthetaf)
-            print("self.D2kappa2DfDthetae", i, ":", self.D2kappa2DfDthetae)
-            print("self.D2kappa2DfDthetaf", i, ": ", self.D2kappa2DfDthetaf)
-            
-
+        # if (i ==1):
+            # print("A VALUE:", a)
+            # print("B VALUE:", b)
+            # print("norm e", self.norm_e)
+            # print("self.kb_local",i,  self.kb_local)
+            # print("self.d1e", i , self.d1e)
+            # print("self.tilde_t", i , self.tilde_t)
+            # print("self.chi",i, self.chi)
+            # print("self.tf",i, self.tf)
+            # print("self.d1f", i , self.d1f)
+            # print("self.D2kappa1DeDthetaf", i ,": ", self.D2kappa1DeDthetaf)
+            # print("self.D2kappa1DeDthetae", i, ": ", self.D2kappa1DeDthetae)
+            # print("self.D2kappa1DfDthetae", i, ": ", self.D2kappa1DfDthetae)
+            # print("self.D2kappa1DfDthetaf", i, ": ", self.D2kappa1DfDthetaf)
+            # print("self.D2kappa2DeDthetae", i, ": ",self.D2kappa2DeDthetae)
+            # print("self.D2kappa2DeDthetaf", i, ": ", self.D2kappa2DeDthetaf)
+            # print("self.D2kappa2DfDthetae", i, ":", self.D2kappa2DfDthetae)
+            # print("self.D2kappa2DfDthetaf", i, ": ", self.D2kappa2DfDthetaf)
 
         self.DDkappa1 = np.zeros((11, 11))
         self.DDkappa1[0:3, 0:3] = self.D2kappa1De2
@@ -693,9 +708,17 @@ class ElasticBendingForce(BaseForce):
         self.DDkappa1[4:7, 3] = self.D2kappa1DeDthetae - self.D2kappa1DfDthetae
         self.DDkappa1[8:11, 3] = self.D2kappa1DfDthetae
 
+        self.DDkappa1[3, 0:3] =   self.DDkappa1[0:3, 3].T
+        self.DDkappa1[3, 4:7] =  self.DDkappa1[4:7, 3].T
+        self.DDkappa1[3, 8:11] = self.DDkappa1[8:11, 3].T
+
         self.DDkappa1[0:3, 7] = -self.D2kappa1DeDthetaf
         self.DDkappa1[4:7, 7] = self.D2kappa1DeDthetaf - self.D2kappa1DfDthetaf
         self.DDkappa1[8:11, 7] = self.D2kappa1DfDthetaf
+
+        self.DDkappa1[7, 0:3] = self.DDkappa1[0:3, 7].T
+        self.DDkappa1[7, 4:7] = self.DDkappa1[4:7, 7].T
+        self.DDkappa1[7, 8:11] = self.DDkappa1[8:11, 7].T
 
         self.DDkappa2 = np.zeros((11, 11))
         self.DDkappa2[0:3, 0:3] = self.D2kappa2De2
@@ -715,10 +738,20 @@ class ElasticBendingForce(BaseForce):
         self.DDkappa2[4:7, 3] = self.D2kappa2DeDthetae - self.D2kappa2DfDthetae
         self.DDkappa2[8:11, 3] = self.D2kappa2DfDthetae
 
+        self.DDkappa2[3, 0:3] =   self.DDkappa2[0:3, 3].T
+        self.DDkappa2[3, 4:7] =  self.DDkappa2[4:7, 3].T
+        self.DDkappa2[3, 8:11] = self.DDkappa2[8:11, 3].T
+
+        # print("BEROFE", self.DDkappa2)
         self.DDkappa2[0:3, 7] = -self.D2kappa2DeDthetaf
+        # print("aftero", self.DDkappa2)
         self.DDkappa2[4:7, 7] = self.D2kappa2DeDthetaf - self.D2kappa2DfDthetaf
         self.DDkappa2[8:11, 7] = self.D2kappa2DfDthetaf
 
-        if (i == 1):
-            print("SELF2", i, ": ", self.DDkappa2)
-            print("SELF1", i ,": ", self.DDkappa1)
+        self.DDkappa2[7, 0:3] = self.DDkappa2[0:3, 7].T
+        self.DDkappa2[7, 4:7] = self.DDkappa2[4:7, 7].T
+        self.DDkappa2[7, 8:11] = self.DDkappa2[8:11, 7].T
+
+        # if (i == 1):
+        #     print("SELF2", i, ": ", self.DDkappa2)
+        #     print("SELF1", i ,": ", self.DDkappa1)

@@ -113,6 +113,11 @@ def main():
 
     soft_robots.setup()
 
+    print("LOGGER", lis[4])
+    logger  = lis[4]
+
+    print(logger)
+
     my_world = world(soft_robots, forces, sim_params)
 
     env : derSimulationEnvironment = None

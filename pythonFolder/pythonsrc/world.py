@@ -24,8 +24,8 @@ class world:
         self.forces.add_force(ElasticBendingForce(soft_robots))
         # self.forces.add_force(ElasticTwistingForce(soft_robots))
 
-        # if sim_params.integrator not in [IntegratorMethod.FORWARD_EULER, IntegratorMethod.VERLET_POSITION]:
-        #     self.forces.add_force(InertialForce(soft_robots))
+        if sim_params.integrator not in [IntegratorMethod.FORWARD_EULER, IntegratorMethod.VERLET_POSITION]:
+            self.forces.add_force(InertialForce(soft_robots))
 
         # ("FORCES")
         # (self.forces.get_force())

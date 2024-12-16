@@ -15,9 +15,15 @@ class derSimulationEnvironment(object):
     cmdline_per: int = 0
     def __init__(self, m_world, render_params : RenderParams, logger):
         self.w_p = m_world
+        self.logger_p = logger
         if logger != None:
+            print("HEYOOOO LOGGER")
             self.is_logging = True
         
+        print("I AM RUNNING")
+
+        print(self.logger_p)
+
         if self.is_logging:
             self.logger_p.world_ptr = self.w_p
             self.logger_p.setup()

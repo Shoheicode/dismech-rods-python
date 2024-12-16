@@ -19,6 +19,7 @@ class RodNodeLogger(WorldLogger):
         self.logfile_suffix = logfile_suffix
         self.logging_output_file = logging_output_file
         self.logging_period = logging_period
+        # self.world_ptr = None
 
     # def __del__(self):
     #     """Destructor equivalent in Python, called when the object is deleted."""
@@ -36,9 +37,10 @@ class RodNodeLogger(WorldLogger):
         Returns the data to be logged.
         :return: String data for the log file
         """
+        print("HEYOddfdfd")
         # In a real scenario, this would gather actual data.
         log_data = StringIO()
-        log_data.write(f"{super().world_ptr.get_current_time()}")
+        log_data.write(f"{self.world_ptr.get_current_time()}")
         
         for limb in self.world_ptr.soft_robots.limbs:
             for i in range(limb.nv):

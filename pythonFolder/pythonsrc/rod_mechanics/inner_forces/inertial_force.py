@@ -17,11 +17,6 @@ class InertialForce(BaseForce):
                     continue
                 # Compute force based on mass and velocities
                 self.f = (limb.mass_array[i] / dt) * ((limb.x[i] - limb.x0[i]) / dt - limb.u[i])
-                # if(i < 50):
-                    # print("limb VALUE", i , ":", limb.x[i])
-                    # print("Prev limb value", i, ":", limb.x0[i])
-                #     print("LIMB TEST", i , ": ", limb.x[i] - limb.x0[i])
-                # print(limb.x0)
                 
                 self.stepper.add_force(i, self.f, limb_idx)
             limb_idx += 1
