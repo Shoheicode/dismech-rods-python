@@ -76,6 +76,7 @@ class OpenGLDERSimulationEnvironment(derSimulationEnvironment):
         """
         glutMainLoopEvent()
         glutPostRedisplay()
+        self.cmdlineOutputHelper()
 
     def der_opengl_display(self):
         """
