@@ -86,6 +86,7 @@
 # glutIdleFunc(showScreen)
 # glutMainLoop()
 
+from pythonsrc.simulation_environment.openglDERSimulationEnvironment import OpenGLDERSimulationEnvironment
 from pythonsrc.globalDefinitions import RenderParams, SimParams, RenderEngine
 from pythonsrc.cantlieverExample import get_robot_description
 from pythonsrc.logging.worldLogger import WorldLogger
@@ -102,7 +103,7 @@ def main():
     soft_robots = SoftRobots()
     forces = ForceContainer()
     sim_params = SimParams()
-    render_params = RenderParams(RenderEngine.HEADLESS)
+    render_params = RenderParams(RenderEngine.OPENGL)
 
     logger : WorldLogger = None
 
@@ -126,7 +127,7 @@ def main():
         case RenderEngine.HEADLESS:
             env = HeadlessDERSimulationEnvironment(my_world, render_params, logger)
         case RenderEngine.OPENGL:
-            return "Option 2 selected"
+            env = OpenGLDERSimulationEnvironment(my_world, render_params, logger)
         case _:
             raise RuntimeError("Unknown renderer type provided")
         

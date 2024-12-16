@@ -14,7 +14,7 @@ class WorldLogger(ABC):
         self.period = period
         self.num_lines_header = 0
         self.file_name_prefix = file_name_prefix
-        self.world_ptr = None
+        self.world_ptr:world = None
 
         if self.file_name_prefix == "":
             raise ValueError("Must specify a prefix for the worldLogger file name!")

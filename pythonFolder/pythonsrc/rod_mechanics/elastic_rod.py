@@ -270,12 +270,6 @@ class ElasticRod:
                 self.unconstrained_map[c] = i
                 self.full_to_uncons_map[i] = c
                 c += 1
-        # for i in range(self.ndof):
-        #     # print("IS CONSTRAINED ", i, ": ", self.is_constrained[i])
-        #     print("IS CONSTRAINED ", i, ": ", self.full_to_uncons_map[i])
-        # print("MAPPPP", self.full_to_uncons_map[802])
-
-        # print("setup map",self.unconstrained_map)
     
     def update_map(self):
         self.ncons = 0
@@ -391,17 +385,9 @@ class ElasticRod:
         for i in range(self.ne):
             # Extract segments (3 elements) from 'x' to compute the tangent vector.
             self.tangent[i, :] = self.x[4 * (i + 1): 4 * (i + 1) + 3] - self.x[4 * i: 4 * i + 3]
-            # if i < 30:
-            #     print("TANGENT", i , ": ", self.tangent[i, :])
 
             # Normalize the tangent vector.
             self.tangent[i, :] = self.tangent[i, :] / np.linalg.norm(self.tangent[i, :])
-        
-        # for i in range(self.ne):
-        #     # Extract segments (3 elements) from 'x' to compute the tangent vector.
-        #     # self.tangent[i, :] = self.x[4 * (i + 1): 4 * (i + 1) + 3] - self.x[4 * i: 4 * i + 3]
-        #     if i < 30:
-        #         print("TANGENT2", i , ": ", self.tangent[i, :])
     
     def __compute_twist_bar(self):
         """Compute the twist deformation."""
