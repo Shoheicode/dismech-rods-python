@@ -70,15 +70,9 @@ class ElasticRod:
 
         # Initialize geometry
         self.setup(nodes)
-
-        # print("RUNNING FOR SETUP")
         
         # Initialize state vectors
-        # self.x0 = np.zeros(self.ndof)  # Previous timestep DOFs
-        # self.x = np.zeros(self.ndof)   # Current timestep DOFs
         self.x_ls = np.zeros(self.ndof)  # Line search state
-        # self.u0 = np.zeros(self.ndof)  # Previous timestep velocities
-        # self.u = np.zeros(self.ndof)   # Current timestep velocities
 
     def setup(self, nodes: np.ndarray):
         """Setup basic rod geometry and allocate arrays."""
@@ -262,7 +256,6 @@ class ElasticRod:
     """
 
     def setup_map(self):
-        # print("RUNNING SET UP")
         c = 0
         
         for i in range(self.ndof):
@@ -276,7 +269,6 @@ class ElasticRod:
         for i in range(self.ndof):
             if(self.is_constrained[i] > 0 or self.is_dof_joint[i] == 1):
                 self.ncons+=1
-            # self.ncons = np.sum((self.is_constrained > 0) | (self.is_dof_joint == 1))
         self.uncons = self.ndof - self.ncons
 
         self.unconstrained_map = np.zeros(self.uncons, dtype=int)
