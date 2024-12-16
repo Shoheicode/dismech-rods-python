@@ -44,7 +44,7 @@ def get_robot_description(argc, argv,soft_robots:SoftRobots, forces: ForceContai
     # # ("VEL", velocities)
 
     # # Apply the velocities
-    # soft_robots.applyInitialVelocities(0, velocities)
+    soft_robots.applyInitialVelocities(0, velocities)
 
     gravityVec = [0.0,0.0,-9.8]
     forces.add_force(GravityForce(soft_robots, gravityVec))
