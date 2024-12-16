@@ -31,7 +31,7 @@ def get_robot_description(argc, argv,soft_robots:SoftRobots, forces: ForceContai
     poisson = 0.5
 
     # Create a beam along the x-y plane
-    soft_robots.add_limb(np.array([0.0, 0.0, 0.75]), np.array([0.5, 0.0, 0.75]), n, density, radius, young_mod, poisson)
+    soft_robots.add_limb(np.array([0.0, 0.0, 0.75]), np.array([1.0, 0.0, 0.0]), n, density, radius, young_mod, poisson)
 
     # ("JOINTS",soft_robots.joints)
 
