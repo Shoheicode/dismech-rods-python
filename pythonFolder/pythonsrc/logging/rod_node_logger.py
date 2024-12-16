@@ -37,7 +37,7 @@ class RodNodeLogger(WorldLogger):
         Returns the data to be logged.
         :return: String data for the log file
         """
-        print("HEYOddfdfd")
+        # print("HEYOddfdfd")
         # In a real scenario, this would gather actual data.
         log_data = StringIO()
         log_data.write(f"{self.world_ptr.get_current_time()}")

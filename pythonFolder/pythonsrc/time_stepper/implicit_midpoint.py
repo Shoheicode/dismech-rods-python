@@ -44,9 +44,7 @@ class ImplicitMidpoint(BackwardEuler):
             limb.u = (limb.x - limb.x0) / (0.5 * self.dt)
 
             limb.x = 2 * limb.x - limb.x0
-
-            print("X VALUE: ", limb.x)
-
+            
             limb.x0 = limb.x.copy()
 
             limb.u = 2 * limb.u - limb.u0

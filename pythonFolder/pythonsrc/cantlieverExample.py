@@ -16,8 +16,8 @@ def convert_float_to_scientific_str(value):
 # Main function to define the robot description
 def get_robot_description(argc, argv,soft_robots:SoftRobots, forces: ForceContainer, logger: WorldLogger, sim_params: SimParams, render_params: RenderParams):
 
-    sim_params.dt = 5e-4
-    sim_params.sim_time =1.0
+    sim_params.dt = 5e-3
+    sim_params.sim_time =10.0
     sim_params.dtol = 1e-3
     sim_params.enable_2d_sim = True
     sim_params.integrator = IntegratorMethod.IMPLICIT_MIDPOINT
@@ -39,7 +39,7 @@ def get_robot_description(argc, argv,soft_robots:SoftRobots, forces: ForceContai
     soft_robots.lockEdge(0, 0)
 
     # # Read initial velocity values
-    # velocities = load_txt("examples/cantilever_case/cantilever_init_velocity_n=201.txt")
+    velocities = load_txt("examples/cantilever_case/cantilever_init_velocity_n=201.txt")
 
     # # ("VEL", velocities)
 
